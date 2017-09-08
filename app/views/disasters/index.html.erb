@@ -1,0 +1,17 @@
+<h3>Disasters</h3>
+<p>These are the current global disasters that CrowdRescue functionality has been enabled for. If you don't see one
+  you're looking for here and you'd like functionality to be enabled for it, please contact an admin.</p>
+
+<table class="table table-striped">
+  <tbody>
+    <% @disasters.each do |d| %>
+      <tr>
+        <td><h4><%= d.name %></h4></td>
+        <td><%= d.description %></td>
+        <% # TODO link to stuff like rescue requests etc %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @disasters, renderer: BootstrapPagination::Rails %>

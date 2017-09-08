@@ -13,5 +13,7 @@ Rails.application.routes.draw do
 
   scope '/disasters' do
     root to: 'disasters#index', as: :disasters
+    get 'new', to: 'disasters#new', as: :new_disaster
+    post 'new', to: 'disasters#create', as: :create_disaster
   end
 end

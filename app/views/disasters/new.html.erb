@@ -1,0 +1,20 @@
+<h3>Record a Disaster</h3>
+<p>To enable CrowdRescue for a particular event, enter details of the event here and it will become available to assign
+  data to.</p>
+
+<%= form_for @disaster, url: create_disaster_path do |f| %>
+  <div class="field">
+    <%= f.label :name %><br/>
+    <%= f.text_field :name, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :description %><br/>
+    <p class="text-muted text-small">Describe the event: what's going on and what support can we provide?</p>
+    <%= f.text_area :description, rows: 7, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Create', class: 'btn btn-outline-success' %>
+  </div>
+<% end %>

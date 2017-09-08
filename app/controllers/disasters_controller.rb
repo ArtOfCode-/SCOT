@@ -12,6 +12,7 @@ class DisastersController < ApplicationController
 
   def create
     @disaster = Disaster.create disaster_params
+    @disaster.active = true
     if @disaster.save
       flash[:success] = "Success - disaster response functionality is now available for #{@disaster.name}."
       redirect_to disasters_path
