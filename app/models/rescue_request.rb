@@ -1,0 +1,2 @@
+class RescueRequest < ApplicationRecord
+end

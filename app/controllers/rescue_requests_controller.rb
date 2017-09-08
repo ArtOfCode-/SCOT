@@ -1,0 +1,2 @@
+class RescueRequestsController < ApplicationController
+end

@@ -10,7 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907233425) do
+ActiveRecord::Schema.define(version: 20170908195348) do
+
+  create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "active"
+  end
+
+  create_table "rescue_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.decimal "lat", precision: 10
+    t.decimal "long", precision: 10
+    t.integer "incident_number"
+    t.string "name"
+    t.text "address_line_1"
+    t.text "address_line_2"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.string "zip_code"
+    t.string "twitter"
+    t.string "phone"
+    t.string "email"
+    t.integer "people_count"
+    t.text "medical_conditions"
+    t.text "extra_details"
+    t.string "key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "disaster_id"
+    t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
+  end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -48,4 +80,5 @@ ActiveRecord::Schema.define(version: 20170907233425) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "rescue_requests", "disasters"
 end

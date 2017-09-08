@@ -10,4 +10,8 @@ class Role < ApplicationRecord
             :allow_nil => true
 
   scopify
+
+  def self.global_defaults
+    [:developer, :admin]
+  end
 end
