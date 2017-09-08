@@ -1,0 +1,40 @@
+<h3>Admin: User Permissions</h3>
+
+<%= form_tag admin_roles_path, method: :get, class: 'form-inline' do %>
+  <%= text_field_tag :filter, params[:filter], class: 'form-control form-control-sm mx-2' %>
+  <%= submit_tag 'Filter', class: 'btn btn-outline-primary btn-sm' %>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-muted">ID</th>
+      <th>Username</th>
+      <th>Roles</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |u| %>
+      <tr>
+        <td class="text-muted"><%= u.id %></td>
+        <td><%= u.username %></td>
+        <td><%= u.roles.map { |x| x.name.humanize.titleize }.to_sentence %></td>
+        <td>
+          <%= form_tag admin_add_role_path, class: 'form-inline' do %>
+            <%= hidden_field_tag :user_id, u.id %>
+            <%= select_tag :role_name, options_for_select(@role_names.map { |x| [x.to_s.humanize.titleize, x] }), include_blank: true, class: 'form-control form-control-sm mx-2' %>
+            <%= submit_tag 'Add', class: 'btn btn-outline-danger btn-sm' %>
+          <% end %>
+        </td>
+        <td>
+          <%= form_tag admin_remove_role_path, class: 'form-inline' do %>
+            <%= hidden_field_tag :user_id, u.id %>
+            <%= select_tag :role_name, options_for_select(@role_names.map { |x| [x.to_s.humanize.titleize, x] }), include_blank: true, class: 'form-control form-control-sm mx-2' %>
+            <%= submit_tag 'Remove', class: 'btn btn-outline-danger btn-sm' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

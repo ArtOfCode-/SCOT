@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
@@ -10,5 +11,9 @@ class ApplicationController < ActionController::Base
         render :missing_permission, status: 403
       end
     end
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit :sign_up, keys: [:username]
   end
 end
