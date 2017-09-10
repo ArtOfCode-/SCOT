@@ -16,4 +16,11 @@ Rails.application.routes.draw do
     get 'new', to: 'disasters#new', as: :new_disaster
     post 'new', to: 'disasters#create', as: :create_disaster
   end
+
+  scope '/requests' do
+    root to: 'rescue_requests#new', as: :rescue_requests
+    post 'create', to: 'rescue_requests#create', as: :request_create
+    post 'update', to: 'rescue_requests#update_short', as: :request_update
+    post 'submit', to: 'rescue_requests#update_long', as: :request_submit
+  end
 end
