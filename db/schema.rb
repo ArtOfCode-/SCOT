@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170910205605) do
+ActiveRecord::Schema.define(version: 20170910221809) do
 
   create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -18,6 +18,13 @@ ActiveRecord::Schema.define(version: 20170910205605) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active"
+  end
+
+  create_table "request_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "rescue_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -40,7 +47,9 @@ ActiveRecord::Schema.define(version: 20170910205605) do
     t.bigint "disaster_id"
     t.string "street_address"
     t.integer "apt_no"
+    t.bigint "request_status_id"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
+    t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
   end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -81,4 +90,5 @@ ActiveRecord::Schema.define(version: 20170910205605) do
   end
 
   add_foreign_key "rescue_requests", "disasters"
+  add_foreign_key "rescue_requests", "request_statuses"
 end
