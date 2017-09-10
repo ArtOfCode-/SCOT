@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170908202201) do
+ActiveRecord::Schema.define(version: 20170910205605) do
 
   create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -25,10 +25,7 @@ ActiveRecord::Schema.define(version: 20170908202201) do
     t.decimal "long", precision: 10
     t.integer "incident_number"
     t.string "name"
-    t.text "address_line_1"
-    t.text "address_line_2"
     t.string "city"
-    t.string "state"
     t.string "country"
     t.string "zip_code"
     t.string "twitter"
@@ -41,6 +38,8 @@ ActiveRecord::Schema.define(version: 20170908202201) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "disaster_id"
+    t.string "street_address"
+    t.integer "apt_no"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
   end
 

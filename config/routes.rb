@@ -15,6 +15,17 @@ Rails.application.routes.draw do
     root to: 'disasters#index', as: :disasters
     get 'new', to: 'disasters#new', as: :new_disaster
     post 'new', to: 'disasters#create', as: :create_disaster
+
+    get 'requests', to: 'rescue_requests#index', as: :global_requests
+    scope ':disaster_id' do
+      scope 'requests' do
+        root to: 'rescue_requests#disaster_index', as: :disaster_requests
+        get 'new', to: 'rescue_requests#new', as: :new_disaster_request
+        post 'new', to: 'rescue_requests#create', as: :create_disaster_request
+        post 'update', to: 'rescue_requests#update', as: :update_disaster_request
+        get ':num', to: 'rescue_requests#show', as: :disaster_request
+      end
+    end
   end
 
   scope '/requests' do
