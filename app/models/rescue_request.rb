@@ -1,6 +1,6 @@
 class RescueRequest < ApplicationRecord
   belongs_to :disaster
-  belongs_to :request_status
+  belongs_to :request_status, optional: true
 
   after_create do
     incident_id = (disaster.rescue_requests.maximum(:incident_number) || 0) + 1

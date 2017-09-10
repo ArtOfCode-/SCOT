@@ -1,5 +1,6 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
+  before_action :set_request, except: [:index, :new, :create, :update]
 
   def index
     @requests = RescueRequest.all
@@ -30,9 +31,17 @@ class RescueRequestsController < ApplicationController
     end
   end
 
+  def show
+
+  end
+
   private
 
   def set_disaster
     @disaster = Disaster.find params[:disaster_id]
+  end
+
+  def set_request
+    @request = @disaster.rescue_requests.find_by incident_number: params[:num]
   end
 end

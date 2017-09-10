@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170910221809) do
+ActiveRecord::Schema.define(version: 20170910232525) do
 
   create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(version: 20170910221809) do
   end
 
   create_table "rescue_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.decimal "lat", precision: 10
-    t.decimal "long", precision: 10
+    t.decimal "lat", precision: 20, scale: 15
+    t.decimal "long", precision: 20, scale: 15
     t.integer "incident_number"
     t.string "name"
     t.string "city"
