@@ -1,5 +1,22 @@
 AllCops:
   TargetRubyVersion: 2.4
+  Exclude:
+    - 'config/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'bin/**/*'
+    - 'lib/**/*'
+    - 'script/**/*'
+    - 'test/**/*'
 
 Metrics/LineLength:
   Max: 150
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 50
