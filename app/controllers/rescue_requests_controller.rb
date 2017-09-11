@@ -1,6 +1,8 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
   before_action :set_request, except: [:index, :new, :create, :update]
+  before_action :check_access, only: [:show]
+  before_action :check_triage, only: [:triage_status, :apply_triage_status]
 
   def index
     @disasters = Disaster.all
@@ -30,8 +32,29 @@ class RescueRequestsController < ApplicationController
     end
   end
 
-  def show
+  def show; end
 
+  def triage_status
+    @statuses = RequestStatus.all
+  end
+
+  def apply_triage_status
+    if @request.update(request_status_id: params[:status_id])
+      flash[:success] = "Status updated."
+    else
+      flash[:danger] = "Failed to update status."
+    end
+    redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+  end
+
+  def mark_safe
+    safe = RequestStatus.find_by name: 'Rescued'
+    if @request.update request_status: safe
+      flash[:success] = 'Marked as safe.'
+    else
+      flash[:danger] = "Couldn't mark as safe."
+    end
+    redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
   end
 
   private
@@ -42,5 +65,13 @@ class RescueRequestsController < ApplicationController
 
   def set_request
     @request = @disaster.rescue_requests.find_by incident_number: params[:num]
+  end
+
+  def check_access
+    require_any :developer, :admin, :triage, :rescue
+  end
+
+  def check_triage
+    require_any :developer, :admin, :triage
   end
 end

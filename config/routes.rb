@@ -24,6 +24,9 @@ Rails.application.routes.draw do
         post 'new', to: 'rescue_requests#create', as: :create_disaster_request
         post 'update', to: 'rescue_requests#update', as: :update_disaster_request
         get ':num', to: 'rescue_requests#show', as: :disaster_request
+        get ':num/status', to: 'rescue_requests#triage_status', as: :request_triage_status
+        post ':num/status', to: 'rescue_requests#apply_triage_status', as: :request_apply_status
+        post ':num/safe', to: 'rescue_requests#mark_safe', as: :request_rescue_safe
       end
     end
   end

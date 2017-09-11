@@ -74,9 +74,12 @@
   </tbody>
 </table>
 
-<% if has_any_role? :developer, :admin, :triage %>
-  <%= link_to 'Triage: update request status', request_triage_status_path(disaster_id: @disaster.id, num: @request.incident_number) %><br/>
-<% end %>
-<% if has_any_role? :developer, :admin, :rescue %>
-  <%= link_to 'Rescue: mark as safe', request_rescue_safe_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post %>
+<hr/>
+
+<h4>Update Status</h4>
+<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<%= form_tag request_apply_status_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post, class: 'form-inline' do %>
+  <%= label_tag :status_id, 'New status:', class: 'text-success' %>
+  <%= select_tag :status_id, options_for_select(@statuses.map { |s| [s.name, s.id] }), class: 'form-control form-control-sm mx-2' %>
+  <%= submit_tag 'Save', class: 'btn btn-outline-success btn-sm mx-2' %>
 <% end %>
