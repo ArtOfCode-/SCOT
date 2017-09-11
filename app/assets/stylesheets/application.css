@@ -17,3 +17,7 @@
 label {
     font-weight: bold;
 }
+
+.text-small {
+    font-size: 0.8em;
+}

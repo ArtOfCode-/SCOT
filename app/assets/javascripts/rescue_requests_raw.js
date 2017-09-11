@@ -78,3 +78,11 @@ function initMap() {
     moveToSecondStage(lat, long);
   });
 }
+
+$(document).on('turbolinks:load', function() {
+  $("#disaster").on('change', function() {
+    if ($(this).val()) {
+      location.href = location.protocol + '//' + location.host + '/disasters/' + $(this).val() + '/requests/new';
+    }
+  });
+});

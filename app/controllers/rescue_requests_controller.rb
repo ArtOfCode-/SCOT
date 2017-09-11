@@ -3,7 +3,6 @@ class RescueRequestsController < ApplicationController
   before_action :set_request, except: [:index, :new, :create, :update]
 
   def index
-    @requests = RescueRequest.all
     @disasters = Disaster.all
   end
 
