@@ -1,11 +1,21 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
-  before_action :set_request, except: [:index, :new, :create, :update]
+  before_action :set_request, except: [:index, :new, :create, :update, :disaster_index]
   before_action :check_access, only: [:show]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
 
   def index
     @disasters = Disaster.all
+  end
+
+  def disaster_index
+    status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
+    status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
+    @closed = @disaster.rescue_requests.where(status_query)
+    @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
+    @counts = { closed: @closed.count, active: @active.count }
+
+    @active = @active.paginate(page: params[:page], per_page: 100)
   end
 
   def new; end

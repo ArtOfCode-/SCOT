@@ -1,0 +1,32 @@
+<h1>Rescue Requests for <%= @disaster.name %></h1>
+<p><%= pluralize @active.count, 'request' %> active, <%= pluralize @closed.count, 'request' %> closed.</p>
+
+<h3>Active Requests</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Request ID</th>
+      <th>Reported by</th>
+      <th>Location</th>
+      <th>Request status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @active.each do |req| %>
+      <tr>
+        <td class="text-muted">#<%= @disaster.id %>-<%= req.incident_number %></td>
+        <td><%= req.name %></td>
+        <td><%= req.city %></td>
+        <td><%= req.request_status.name %></td>
+        <td>
+          <% if has_any_role? :developer, :admin, :triage, :rescue %>
+            <%= link_to 'View details', disaster_request_path(disaster_id: @disaster.id, num: req.incident_number) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @active, renderer: BootstrapPagination::Rails %>
