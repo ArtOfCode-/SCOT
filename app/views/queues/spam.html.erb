@@ -3,7 +3,7 @@
   <span class="small text-muted">#<%= @request.disaster.id %>-<%= @request.incident_number %></span>
 </h1>
 
-<p class="text-info"><strong>Current status:</strong> <%#= @request.request_status&.name || '(no status)' %></p>
+<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
 
 <table class="table table-sm details-table">
   <thead>
@@ -19,7 +19,7 @@
     <tr>
       <td>Address</td>
       <td>
-        <%#= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%#= @request.street_address %>,
+        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
         <%= @request.city %> <%= @request.zip_code %>
       </td>
     </tr>
@@ -74,5 +74,10 @@
   </tbody>
 </table>
 
-<%= link_to queues_spam_path do %><button>Skip</button><% end %>
-<%# TODO: Forms for the other 2 options %>
+<%= form_tag :queues_spam_skip, method: "POST" do %>
+  <%= submit_tag "Skip" %>
+<% end %>
+
+<%= form_tag :queues_spam_done, method: "POST" do %>
+  <%= submit_tag "Review Completed" %>
+<% end %>
