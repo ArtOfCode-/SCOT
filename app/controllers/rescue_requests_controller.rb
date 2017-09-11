@@ -10,13 +10,13 @@ class RescueRequestsController < ApplicationController
 
   def update_short
     request = RescueRequest.find(params[:person_id])
-    request.update(params.permit(RescueRequest.column_names).to_h)
+    request.update(params.permit(RescueRequest.column_names - %w[id disaster_id created_at updated_at needs_deduping needs_spam_check needs_validation key]).to_h)
     queue_assess request
   end
 
   def update_long
     request = RescueRequest.find(params[:person_id])
-    request.update(params.permit(RescueRequest.column_names).to_h)
+    request.update(params.permit(RescueRequest.column_names - %w[id disaster_id created_at updated_at needs_deduping needs_spam_check needs_validation key]).to_h)
     queue_assess request
     redirect_to root_path
   end

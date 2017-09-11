@@ -9,5 +9,7 @@ class QueuesController < ApplicationController
 
   def deduping
     @request = RescueRequest.find_by(needs_deduping: true)
+    criteria = @request.attributes.map { |col, val| " #{col} LIKE #{val}" unless val.nil? || val.empty? }.reject { |i| i.nil? || i.empty? }.join(" OR ")
+    @similar_requests = RescueRequest.where(criteria)
   end
 end

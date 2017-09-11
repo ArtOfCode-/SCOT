@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  get 'queues/spam'
-
-  get 'queues/validation'
-
-  get 'queues/deduping'
-
   devise_for :users
 
   root to: 'disasters#index', as: :root
