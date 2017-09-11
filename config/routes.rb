@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'queues/spam'
+
+  get 'queues/validation'
+
+  get 'queues/deduping'
+
   devise_for :users
 
   root to: 'disasters#index', as: :root
@@ -22,5 +28,11 @@ Rails.application.routes.draw do
     post 'create', to: 'rescue_requests#create', as: :request_create
     post 'update', to: 'rescue_requests#update_short', as: :request_update
     post 'submit', to: 'rescue_requests#update_long', as: :request_submit
+  end
+
+  scope '/queues' do
+    get 'spam', to: 'queues#spam', as: :spam_queue
+    get 'deduping', to: 'queues#dedupe', as: :deduping_queue
+    get 'validation', to: 'queues#validation', as: :validation_queue
   end
 end

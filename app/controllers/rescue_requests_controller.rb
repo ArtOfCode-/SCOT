@@ -3,15 +3,43 @@ class RescueRequestsController < ApplicationController
   end
 
   def create
-    render plain: Disaster.find(params[:disaster_id]).rescue_requests.create(lat: params[:lat], long: params[:long]).id
+    request = Disaster.find(params[:disaster_id]).rescue_requests.create(lat: params[:lat], long: params[:long])
+    queue_assess request
+    render plain: request.id
   end
 
   def update_short
-    RescueRequest.find(params[:person_id]).update(params.permit(RescueRequest.column_names).to_h)
+    request = RescueRequest.find(params[:person_id])
+    request.update(params.permit(RescueRequest.column_names).to_h)
+    queue_assess request
   end
 
   def update_long
-    RescueRequest.find(params[:person_id]).update(params.permit(RescueRequest.column_names).to_h)
+    request = RescueRequest.find(params[:person_id])
+    request.update(params.permit(RescueRequest.column_names).to_h)
+    queue_assess request
     redirect_to root_path
+  end
+
+  private
+
+  def queue_assess(request)
+    request.needs_deduping = needs_deduping? request
+    request.needs_spam_check = needs_spam_check? request
+    request.needs_validation = needs_validation? request
+    request.save
+  end
+
+  def needs_deduping?(request)
+    attribute_queries = %w[email name phone].map { |a| "#{a} LIKE '%#{request.send(a)}%'" unless request.send(a).nil? || request.send(a).empty? }.reject(&:nil?).reject(&:empty?)
+    RescueRequest.exists?(attribute_queries.join(' OR '))
+  end
+
+  def needs_spam_check?(request)
+    !request.review_tasks.exists?(type: "spam")
+  end
+
+  def needs_validation?(request)
+    false
   end
 end
