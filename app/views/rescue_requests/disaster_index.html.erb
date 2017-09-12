@@ -2,6 +2,27 @@
 <p><%= pluralize @active.count, 'request' %> active, <%= pluralize @closed.count, 'request' %> closed.</p>
 
 <h3>Active Requests</h3>
+<div class="slide-panel">
+  <span class="slide-header bg-secondary">
+    Filter Requests
+  </span>
+  <div class="slide-body bg-secondary">
+    <%= form_tag disaster_requests_path(disaster_id: @disaster.id), class: 'form-inline', method: :get do %>
+      <%= label_tag :reporter %>
+      <%= text_field_tag :reporter, params[:reporter], class: 'form-control form-control-sm mx-4' %>
+
+      <%= label_tag :city %>
+      <%= text_field_tag :city, params[:city], class: 'form-control form-control-sm mx-4' %>
+
+      <%= label_tag :status_id, 'Status' %>
+      <%= select_tag :status_id, options_for_select(RequestStatus.all.map { |s| [s.name, s.id] }, params[:status_id]),
+                     include_blank: true, class: 'form-control form-control-sm mx-4' %>
+
+      <%= submit_tag 'Apply Filters', class: 'btn btn-primary btn-sm mx-1', name: nil %>
+      <%= link_to 'Reset Filters', disaster_requests_path(disaster_id: @disaster.id), class: 'btn btn-outline-warning btn-sm mx-1' %>
+    <% end %>
+  </div>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -13,7 +34,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @active.each do |req| %>
+    <% @requests.each do |req| %>
       <tr>
         <td class="text-muted">#<%= @disaster.id %>-<%= req.incident_number %></td>
         <td><%= req.name %></td>
@@ -29,4 +50,4 @@
   </tbody>
 </table>
 
-<%= will_paginate @active, renderer: BootstrapPagination::Rails %>
+<%= will_paginate @requests, renderer: BootstrapPagination::Rails %>

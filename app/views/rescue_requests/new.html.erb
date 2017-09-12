@@ -11,7 +11,7 @@
   <h2>Address</h2>
   <p>Based on the location you just selected, we found this address. Make sure this is correct, and then hit Continue.</p>
 
-  <%= form_tag update_disaster_request_path(disaster_id: @disaster.id), remote: true, method: :post, onsubmit: 'longFields();' do %>
+  <%= form_tag update_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', remote: true, method: :post, onsubmit: 'longFields();' do %>
     <%= hidden_field_tag :request_id %>
     
     <%= label_tag :street_address, 'Street Address:' %><br/>
@@ -37,7 +37,7 @@
   <h2>Details &amp; Contact</h2>
   <p>We now need details of the situation you're in, to allow us to correctly prioritize and respond to your request.</p>
 
-  <%= form_tag update_disaster_request_path(disaster_id: @disaster.id), remote: true, method: :post do %>
+  <%= form_tag update_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', remote: true, method: :post do %>
     <%= hidden_field_tag :request_id %>
     <%= hidden_field_tag :com_redir, true %>
 

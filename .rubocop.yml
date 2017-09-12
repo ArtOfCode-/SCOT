@@ -20,3 +20,6 @@ Style/Documentation:
 
 Metrics/AbcSize:
   Max: 50
+
+Style/SymbolArray:
+  Enabled: false

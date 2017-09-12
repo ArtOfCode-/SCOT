@@ -1,8 +1,12 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
   before_action :set_request, except: [:index, :new, :create, :update, :disaster_index]
+  before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe]
   before_action :check_access, only: [:show]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
+  before_action :check_rescue, only: [:mark_safe]
+
+  include AccessLogger
 
   def index
     @disasters = Disaster.all
@@ -14,8 +18,18 @@ class RescueRequestsController < ApplicationController
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
     @counts = { closed: @closed.count, active: @active.count }
-
-    @active = @active.paginate(page: params[:page], per_page: 100)
+    
+    @requests = RescueRequest.all
+    if params[:reporter].present?
+      @requests = @requests.where("name LIKE '%#{params[:reporter]}%'")
+    end
+    if params[:city].present?
+      @requests = @requests.where("city LIKE '%#{params[:city]}%'")
+    end
+    if params[:status_id].present?
+      @requests = @requests.where(request_status_id: params[:status_id])
+    end
+    @requests = @requests.paginate(page: params[:page], per_page: 100)
   end
 
   def new; end
@@ -77,11 +91,25 @@ class RescueRequestsController < ApplicationController
     @request = @disaster.rescue_requests.find_by incident_number: params[:num]
   end
 
+  def set_loggable
+    @loggable = @request
+  end
+
   def check_access
     require_any :developer, :admin, :triage, :rescue
   end
 
   def check_triage
     require_any :developer, :admin, :triage
+  end
+
+  def check_rescue
+    require_any :developer, :admin, :rescue
+  end
+
+  protected
+
+  def log_actions
+    [:show, :triage_status, :apply_triage_status, :mark_safe]
   end
 end

@@ -25,7 +25,7 @@ function longFields() {
 window.onload = function() {
   $('article:not(#stage1)').hide();
 
-  $('form').submit(function() {  
+  $('.js-form').submit(function() {
     var valuesToSubmit = $(this).serialize();
     $.ajax({
         type: "POST",
@@ -48,11 +48,14 @@ window.onload = function() {
     moveToSecondStage(lat, long);
   };
 
-  document.getElementById('use-my-location').addEventListener('click', function(evt) {
-    console.log('Location request (user-initiated)');
-    evt.preventDefault();
-    navigator.geolocation.getCurrentPosition(geoSuccess);
-  });
+  var locationTrigger = document.getElementById('use-my-location');
+  if (locationTrigger) {
+    locationTrigger.addEventListener('click', function(evt) {
+      console.log('Location request (user-initiated)');
+      evt.preventDefault();
+      navigator.geolocation.getCurrentPosition(geoSuccess);
+    });
+  }
 };
 
 function initMap() {

@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170910232525) do
+ActiveRecord::Schema.define(version: 20170912102946) do
+
+  create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.string "action"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["resource_type", "resource_id"], name: "index_access_logs_on_resource_type_and_resource_id"
+    t.index ["user_id"], name: "index_access_logs_on_user_id"
+  end
 
   create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -89,6 +101,7 @@ ActiveRecord::Schema.define(version: 20170910232525) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "access_logs", "users"
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "request_statuses"
 end
