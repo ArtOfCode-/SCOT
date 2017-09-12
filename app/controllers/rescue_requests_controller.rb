@@ -18,8 +18,8 @@ class RescueRequestsController < ApplicationController
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
     @counts = { closed: @closed.count, active: @active.count }
-    
-    @requests = RescueRequest.all
+
+    @requests = @disaster.rescue_requests
     if params[:reporter].present?
       @requests = @requests.where("name LIKE '%#{params[:reporter]}%'")
     end
