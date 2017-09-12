@@ -1,9 +1,9 @@
 <h1>
   Rescue Request for <%= @request.disaster.name %>
-  <span class="small text-muted">#<%= @request.disaster.id %>-<%= @request.incident_number %></span>
+  <span class="small text-muted">#<%#= @request.disaster.id %>-<%#= @request.incident_number %></span>
 </h1>
 
-<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<p class="text-info"><strong>Current status:</strong> <%#= @request.request_status&.name || '(no status)' %></p>
 
 <table class="table table-sm details-table">
   <thead>
@@ -19,7 +19,7 @@
     <tr>
       <td>Address</td>
       <td>
-        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
+        <%#= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%#= @request.street_address %>,
         <%= @request.city %> <%= @request.zip_code %>
       </td>
     </tr>
@@ -75,9 +75,11 @@
 </table>
 
 <%= form_tag :queues_spam_skip, method: "POST" do %>
+  <%= hidden_field_tag :request_id, @request.id %>
   <%= submit_tag "Skip" %>
 <% end %>
 
 <%= form_tag :queues_spam_done, method: "POST" do %>
+  <%= hidden_field_tag :request_id, @request.id %>
   <%= submit_tag "Review Completed" %>
 <% end %>

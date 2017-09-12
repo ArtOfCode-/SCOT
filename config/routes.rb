@@ -26,7 +26,11 @@ Rails.application.routes.draw do
 
   scope '/queues' do
     get 'spam', to: 'queues#spam', as: :spam_queue
-    get 'deduping', to: 'queues#dedupe', as: :deduping_queue
     get 'validation', to: 'queues#validation', as: :validation_queue
+    scope 'deduping' do
+      root to: 'queues#deduping', as: :deduping_queue
+      post 'skip', to: 'queues#dedupe_skip', as: :queues_spam_skip
+      post 'done', to: 'queues#dedupe_done', as: :queues_spam_done
+    end
   end
 end
