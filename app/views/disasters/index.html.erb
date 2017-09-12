@@ -6,7 +6,7 @@
   <tbody>
     <% @disasters.each do |d| %>
       <tr>
-        <td><h4><%= d.name %></h4></td>
+        <td><h4><%= link_to d.name, disaster_requests_path(disaster_id: d.id) %></h4></td>
         <td><%= d.description %></td>
         <% # TODO link to stuff like rescue requests etc %>
       </tr>
