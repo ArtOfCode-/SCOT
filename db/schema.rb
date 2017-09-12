@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170911030848) do
+ActiveRecord::Schema.define(version: 20170912211039) do
+
+  create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.string "action"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["resource_type", "resource_id"], name: "index_access_logs_on_resource_type_and_resource_id"
+    t.index ["user_id"], name: "index_access_logs_on_user_id"
+  end
 
   create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -20,15 +32,28 @@ ActiveRecord::Schema.define(version: 20170911030848) do
     t.boolean "active"
   end
 
+  create_table "request_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "rescue_request_id"
+    t.index ["rescue_request_id"], name: "index_request_priorities_on_rescue_request_id"
+  end
+
+  create_table "request_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "rescue_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.decimal "lat", precision: 10
-    t.decimal "long", precision: 10
+    t.decimal "lat", precision: 20, scale: 15
+    t.decimal "long", precision: 20, scale: 15
     t.integer "incident_number"
     t.string "name"
-    t.text "address_line_1"
-    t.text "address_line_2"
     t.string "city"
-    t.string "state"
     t.string "country"
     t.string "zip_code"
     t.string "twitter"
@@ -41,10 +66,14 @@ ActiveRecord::Schema.define(version: 20170911030848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "disaster_id"
+    t.string "street_address"
+    t.integer "apt_no"
+    t.bigint "request_status_id"
     t.boolean "needs_deduping"
     t.boolean "needs_spam_check"
     t.boolean "needs_validation"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
+    t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
   end
 
   create_table "review_tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -95,7 +124,10 @@ ActiveRecord::Schema.define(version: 20170911030848) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "access_logs", "users"
+  add_foreign_key "request_priorities", "rescue_requests"
   add_foreign_key "rescue_requests", "disasters"
+  add_foreign_key "rescue_requests", "request_statuses"
   add_foreign_key "review_tasks", "rescue_requests"
   add_foreign_key "review_tasks", "users"
 end

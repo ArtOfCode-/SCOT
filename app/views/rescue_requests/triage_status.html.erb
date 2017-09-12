@@ -1,0 +1,85 @@
+<h1>
+  Rescue Request for <%= @disaster.name %>
+  <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
+</h1>
+
+<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Location Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Position (rought lat/long)</td>
+      <td><%= @request.lat %>, <%= @request.long %></td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>
+        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
+        <%= @request.city %> <%= @request.zip_code %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Contact Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Reported by</td>
+      <td><%= @request.name %></td>
+    </tr>
+    <tr>
+      <td>Tel. no</td>
+      <td><%= @request.phone %></td>
+    </tr>
+    <tr>
+      <td>Email address</td>
+      <td><%= @request.email %></td>
+    </tr>
+    <tr>
+      <td>Twitter</td>
+      <td><%= @request.twitter %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Incident Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>People needing assistance</td>
+      <td><%= @request.people_count %></td>
+    </tr>
+    <tr>
+      <td>Medical conditions</td>
+      <td><%= @request.medical_conditions %></td>
+    </tr>
+    <tr>
+      <td>Extra details</td>
+      <td><%= @request.extra_details %></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h4>Update Status</h4>
+<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<%= form_tag request_apply_status_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post, class: 'form-inline' do %>
+  <%= label_tag :status_id, 'New status:', class: 'text-success' %>
+  <%= select_tag :status_id, options_for_select(@statuses.map { |s| [s.name, s.id] }), class: 'form-control form-control-sm mx-2' %>
+  <%= submit_tag 'Save', class: 'btn btn-outline-success btn-sm mx-2' %>
+<% end %>

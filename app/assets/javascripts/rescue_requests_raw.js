@@ -1,9 +1,8 @@
-function nextStep(lat, long) {
-  $.post("/requests/create", {"lat": lat, "lng": long, "disaster_id": $('#stage0 select')[0].value}, function(data) {
-    $('input[name=disaster_id]').val($('#stage0 select')[0].value);
-    $('input[name=person_id').val(data);
+function moveToSecondStage(lat, long) {
+  $.post(location.pathname, {"lat": lat, "long": long}, function(data) {
+    $('input[name=request_id]').val(data['id']);
   });
-  $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long, function(data) {
+  $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long, function(data) {
     var a = data.results[0].address_components;
     $("#street-address").val(a[0].short_name + " " + a[1].short_name);
     $("#city").val(a[4].long_name ? a[4].long_name : '');
@@ -24,17 +23,20 @@ function longFields() {
 }
 
 window.onload = function() {
-  $('article:not(#stage0)').hide();
+  $('article:not(#stage1)').hide();
 
-  $('form').submit(function() {  
+  $('.js-form').submit(function() {
     var valuesToSubmit = $(this).serialize();
     $.ajax({
         type: "POST",
         url: $(this).attr('action'), //sumbits it to the given url of the form
         data: valuesToSubmit,
         dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
-    }).success(function(json){
+    }).done(function(json){
         console.log("success", json);
+        if (json.hasOwnProperty('location') && json['location']) {
+          location.href = json['location'];
+        }
     });
     return false; // prevents normal behaviour
   });
@@ -43,14 +45,17 @@ window.onload = function() {
     var lat = position.coords.latitude;
     var long = position.coords.longitude;
     console.log('POST ', lat, long);
-    nextStep(lat, long);
+    moveToSecondStage(lat, long);
   };
 
-  document.getElementById('use-my-location').addEventListener('click', function(evt) {
-    console.log('Location request (user-initiated)');
-    evt.preventDefault();
-    navigator.geolocation.getCurrentPosition(geoSuccess);
-  });
+  var locationTrigger = document.getElementById('use-my-location');
+  if (locationTrigger) {
+    locationTrigger.addEventListener('click', function(evt) {
+      console.log('Location request (user-initiated)');
+      evt.preventDefault();
+      navigator.geolocation.getCurrentPosition(geoSuccess);
+    });
+  }
 };
 
 function initMap() {
@@ -66,13 +71,21 @@ function initMap() {
     var lat = place.lat();
     var long = place.lng();
     console.log('POST ', lat, long);
-    nextStep(lat, long);
+    moveToSecondStage(lat, long);
   });
 
   google.maps.event.addListener(map, 'click', function(event) {
     var lat = event.latLng.lat();
     var long = event.latLng.lng();
     console.log('POST ', lat, long);
-    nextStep(lat, long);
+    moveToSecondStage(lat, long);
   });
 }
+
+$(document).on('turbolinks:load', function() {
+  $("#disaster").on('change', function() {
+    if ($(this).val()) {
+      location.href = location.protocol + '//' + location.host + '/disasters/' + $(this).val() + '/requests/new';
+    }
+  });
+});

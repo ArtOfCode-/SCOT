@@ -17,3 +17,16 @@
 label {
     font-weight: bold;
 }
+
+.text-small {
+    font-size: 0.8em;
+}
+
+.slide-header {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.slide-body {
+    padding: 5px 10px;
+}

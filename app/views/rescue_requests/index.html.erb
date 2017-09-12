@@ -1,0 +1,14 @@
+<h1>Need assistance?</h1>
+<p>If you're in an emergency, you may be able to submit your details here to get some volunteer assistance on its way.</p>
+
+<div class="card border-danger text-danger text-small mw-75 w-75 mb-4">
+  <div class="card-body">
+    <h5>Fair Warning</h5>
+    <span>While the team of volunteers here will do their utmost to respond to you as quickly as possible, submitting your
+    details here doesn't give you a guarantee of assistance. If you're in a dire emergency, you should also call your
+    local emergency services.</span>
+  </div>
+</div>
+
+<h3>What event are you affected by?</h3>
+<%= select_tag :disaster, options_for_select(@disasters.map { |d| [d.name, d.id] }), class: 'form-control', include_blank: true %>

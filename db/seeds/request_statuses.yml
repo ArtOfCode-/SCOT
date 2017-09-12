@@ -1,0 +1,16 @@
+- name: New
+  description: Requests just created and awaiting review by triage staff.
+
+- name: PendingRescue
+  description: Triage has checked this request and confirmed its validity; the victims are awaiting assistance.
+
+- name: NotEnoughInformation
+  description: >
+    Triage has revealed that this request doesn't contain enough information to effect assistance.
+    Further contact attempts are required to gain the necessary information.
+
+- name: Rescued
+  description: Assistance has been rendered to the affected party; this request is closed.
+
+- name: Closed
+  description: This request has been closed by triage/admin staff.

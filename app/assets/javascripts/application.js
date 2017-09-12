@@ -13,3 +13,11 @@
 //= require rails-ujs
 //= require turbolinks
 //= require_tree .
+
+$(document).on('turbolinks:load', function() {
+  $('.slide-body').hide();
+
+  $('.slide-header').on('click', function() {
+    $(this).siblings('.slide-body').slideToggle(250);
+  });
+});
