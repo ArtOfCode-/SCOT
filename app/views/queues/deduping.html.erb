@@ -1,3 +1,147 @@
-<%# Render the @request in a row at the top, and the others below it in a distanced section. ALlow live editing (?) %>
+<h1>
+  Rescue Request for <%= @request.disaster.name %>
+  <span class="small text-muted">#<%= @request.disaster.id %>-<%= @request.incident_number %></span>
+</h1>
 
-<h1>The dedupe queue doesn't <i>quite</i> exist yet</h1>
+<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Location Details</th>
+      <th colspan="2">Contact Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Position (rought lat/long)</td>
+      <td><%= @request.lat %>, <%= @request.long %></td>
+      <td>Reported by</td>
+      <td><%= @request.name %></td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>
+        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
+        <%= @request.city %> <%= @request.zip_code %>
+      </td>
+      <td>Tel. no</td>
+      <td><%= @request.phone %></td>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+      <td>Email address</td>
+      <td><%= @request.email %></td>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+      <td>Twitter</td>
+      <td><%= @request.twitter %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Incident Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>People needing assistance</td>
+      <td><%= @request.people_count %></td>
+    </tr>
+    <tr>
+      <td>Medical conditions</td>
+      <td><%= @request.medical_conditions %></td>
+    </tr>
+    <tr>
+      <td>Extra details</td>
+      <td><%= @request.extra_details %></td>
+    </tr>
+  </tbody>
+</table>
+
+<% @similar_requests.each do |request| %>
+  <p class="text-info"><strong>Status:</strong> <%= request.request_status&.name || '(no status)' %></p>
+
+  <table class="table table-sm details-table">
+    <thead>
+      <tr>
+        <th colspan="2">Location Details</th>
+        <th colspan="2">Contact Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Position (rought lat/long)</td>
+        <td><%= request.lat %>, <%= request.long %></td>
+        <td>Reported by</td>
+        <td><%= request.name %></td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td>
+          <%= request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= request.street_address %>,
+          <%= request.city %> <%= @request.zip_code %>
+        </td>
+        <td>Tel. no</td>
+        <td><%= request.phone %></td>
+      </tr>
+      <tr>
+        <td colspan="2"></td>
+        <td>Email address</td>
+        <td><%= request.email %></td>
+      </tr>
+      <tr>
+        <td colspan="2"></td>
+        <td>Twitter</td>
+        <td><%= request.twitter %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-sm details-table">
+    <thead>
+      <tr>
+        <th colspan="2">Incident Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>People needing assistance</td>
+        <td><%= request.people_count %></td>
+      </tr>
+      <tr>
+        <td>Medical conditions</td>
+        <td><%= request.medical_conditions %></td>
+      </tr>
+      <tr>
+        <td>Extra details</td>
+        <td><%= request.extra_details %></td>
+      </tr>
+    </tbody>
+  </table>
+  <%= form_tag :dedupe_yes do %>
+    <%= hidden_field_tag :request_id, @request.id %>
+    <%= hidden_field_tag :dupe_of, request.id %>
+    <%= submit_tag "Duplicate of this record" %>
+  <% end %>
+
+  <%= form_tag :dedupe_yes_edit do %>
+    <%= hidden_field_tag :request_id, @request.id %>
+    <%= hidden_field_tag :dupe_of, request.id %>
+    <%= submit_tag "Duplicate of this record & edit" %>
+  <% end %>
+<% end %>
+
+<%= form_tag :dedupe_skip do %>
+  <%= hidden_field_tag :request_id, @request.id %>
+  <%= submit_tag "Skip" %>
+<% end %>
+
+<%= form_tag :dedupe_no do %>
+  <%= hidden_field_tag :request_id, @request.id %>
+  <%= submit_tag "This request is not a duplicate" %>
+<% end %>

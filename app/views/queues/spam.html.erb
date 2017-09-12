@@ -1,51 +1,40 @@
 <h1>
   Rescue Request for <%= @request.disaster.name %>
-  <span class="small text-muted">#<%#= @request.disaster.id %>-<%#= @request.incident_number %></span>
+  <span class="small text-muted">#<%= @request.disaster.id %>-<%= @request.incident_number %></span>
 </h1>
 
-<p class="text-info"><strong>Current status:</strong> <%#= @request.request_status&.name || '(no status)' %></p>
+<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
 
 <table class="table table-sm details-table">
   <thead>
     <tr>
       <th colspan="2">Location Details</th>
+      <th colspan="2">Contact Details</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>Position (rought lat/long)</td>
       <td><%= @request.lat %>, <%= @request.long %></td>
-    </tr>
-    <tr>
-      <td>Address</td>
-      <td>
-        <%#= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%#= @request.street_address %>,
-        <%= @request.city %> <%= @request.zip_code %>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Contact Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
       <td>Reported by</td>
       <td><%= @request.name %></td>
     </tr>
     <tr>
+      <td>Address</td>
+      <td>
+        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
+        <%= @request.city %> <%= @request.zip_code %>
+      </td>
       <td>Tel. no</td>
       <td><%= @request.phone %></td>
     </tr>
     <tr>
+      <td colspan="2"></td>
       <td>Email address</td>
       <td><%= @request.email %></td>
     </tr>
     <tr>
+      <td colspan="2"></td>
       <td>Twitter</td>
       <td><%= @request.twitter %></td>
     </tr>
@@ -74,12 +63,12 @@
   </tbody>
 </table>
 
-<%= form_tag :queues_spam_skip, method: "POST" do %>
+<%= form_tag :spam_not do %>
   <%= hidden_field_tag :request_id, @request.id %>
-  <%= submit_tag "Skip" %>
+  <%= submit_tag "Not Spam" %>
 <% end %>
 
-<%= form_tag :queues_spam_done, method: "POST" do %>
+<%= form_tag :spam_spam do %>
   <%= hidden_field_tag :request_id, @request.id %>
-  <%= submit_tag "Review Completed" %>
+  <%= submit_tag "Spam" %>
 <% end %>
