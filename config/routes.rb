@@ -37,4 +37,9 @@ Rails.application.routes.draw do
     post 'update', to: 'rescue_requests#update_short', as: :request_update
     post 'submit', to: 'rescue_requests#update_long', as: :request_submit
   end
+
+  scope '/api' do
+    get 'geojson', to: 'api#geojson', as: :api_geojson
+    get 'csv', to: 'api#csv', as: :api_csv
+  end
 end
