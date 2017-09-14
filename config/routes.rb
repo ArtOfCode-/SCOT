@@ -42,4 +42,11 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  scope '/api' do
+    scope 'requests' do
+      get 'geojson', to: 'api#geojson', as: :api_geojson
+      get 'csv', to: 'api#csv', as: :api_csv
+    end
+  end
 end
