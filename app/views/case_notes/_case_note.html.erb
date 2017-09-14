@@ -1,0 +1,11 @@
+<div class="card border-info my-4">
+  <div class="card-body">
+    <%= case_note.content %>
+  </div>
+  <div class="card-footer text-light bg-info py-1 text-small">
+    By <%= case_note.user.present? ? case_note.user.username : 'System' %> at <%= case_note.created_at.strftime("%H:%M %d %b %Y") %> -
+    <%= link_to 'edit', edit_case_note_path(request_id: rid, id: case_note.id), class: 'text-light' %> -
+    <%= link_to 'delete', destroy_case_note_path(request_id: rid, id: case_note.id), data: { confirm: 'Are you sure?' },
+                method: :delete, class: 'text-warning' %>
+  </div>
+</div>

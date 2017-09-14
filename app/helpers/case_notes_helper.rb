@@ -1,0 +1,2 @@
+module CaseNotesHelper
+end
