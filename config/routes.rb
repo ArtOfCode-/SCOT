@@ -32,9 +32,14 @@ Rails.application.routes.draw do
   end
 
   scope '/requests' do
-    root to: 'rescue_requests#new', as: :rescue_requests
-    post 'create', to: 'rescue_requests#create', as: :request_create
-    post 'update', to: 'rescue_requests#update_short', as: :request_update
-    post 'submit', to: 'rescue_requests#update_long', as: :request_submit
+    scope ':request_id' do
+      scope 'notes' do
+        get 'new', to: 'case_notes#new', as: :new_case_note
+        post 'new', to: 'case_notes#create', as: :create_case_note
+        get ':id/edit', to: 'case_notes#edit', as: :edit_case_note
+        patch ':id/edit', to: 'case_notes#update', as: :update_case_note
+        delete ':id', to: 'case_notes#destroy', as: :destroy_case_note
+      end
+    end
   end
 end

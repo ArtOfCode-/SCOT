@@ -1,0 +1,12 @@
+<%= form_for @case_note, url: url do |f| %>
+  <%= f.hidden_field :rescue_request_id, value: params[:request_id] %>
+
+  <div class="field my-2">
+    <%= f.label :content %><br/>
+    <%= f.text_area :content, rows: 7, cols: 100, class: 'form-control' %>
+  </div>
+
+  <div class="actions my-2">
+    <%= f.submit 'Save', name: nil, class: 'btn btn-outline-primary' %>
+  </div>
+<% end %>

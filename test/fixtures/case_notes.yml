@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rescue_request: one
+  user: one
+  content: MyText
+
+two:
+  rescue_request: two
+  user: two
+  content: MyText
