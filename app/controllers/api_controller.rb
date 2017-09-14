@@ -1,8 +1,9 @@
+require "csv"
+
 class ApiController < ApplicationController
   def geojson
-    features = []
-    Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
-      features.push({
+    render json: Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
+      {
         type: "feature",
         geometry: {
           type: "point",
@@ -13,11 +14,19 @@ class ApiController < ApplicationController
           city: request.city,
           status: request.request_status.name
         }
-      })
+      }
     end
-    render json: features
   end
 
   def csv
+    output = CSV.generate do |csv|
+      requests = Disaster.find(params[:disaster_id]).rescue_requests
+      columns = %w[name city status lat long]
+      csv << columns
+      requests.map do |request|
+        csv << columns.map { |i| i == "status" ? request.request_status.name : request.send(i) }
+      end
+    end
+    send_data output, type: "text/csv", filename: "export.csv", disposition: "attachment"
   end
 end
