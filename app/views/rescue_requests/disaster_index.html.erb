@@ -35,7 +35,7 @@
   </thead>
   <tbody>
     <% @requests.each do |req| %>
-      <tr>
+      <tr style="background-color: <%= req.color_code %>">
         <td class="text-muted">#<%= @disaster.id %>-<%= req.incident_number %></td>
         <td><%= req.name %></td>
         <td><%= req.city %></td>
