@@ -16,7 +16,7 @@
 
       <%= label_tag :status_id, 'Status' %>
       <%= select_tag :status_id, options_for_select(RequestStatus.all.map { |s| [s.name, s.id] }, params[:status_id]),
-                     include_blank: true, class: 'form-control form-control-sm mx-4' %>
+                     include_blank: true, class: 'form-control form-control-sm mx-4', multiple: true %>
 
       <%= submit_tag 'Apply Filters', class: 'btn btn-primary btn-sm mx-1', name: nil %>
       <%= link_to 'Reset Filters', disaster_requests_path(disaster_id: @disaster.id), class: 'btn btn-outline-warning btn-sm mx-1' %>

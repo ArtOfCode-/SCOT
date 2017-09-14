@@ -26,7 +26,7 @@ class RescueRequestsController < ApplicationController
     if params[:city].present?
       @requests = @requests.where("city LIKE '%#{params[:city]}%'")
     end
-    if params[:status_id].present?
+    if params[:status_id].present? && !params[:status_id].all?(&:empty?)
       @requests = @requests.where(request_status_id: params[:status_id])
     end
     @requests = @requests.paginate(page: params[:page], per_page: 100)
