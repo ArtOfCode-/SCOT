@@ -23,8 +23,10 @@ class QueuesController < ApplicationController
 
   def deduping
     @request = RescueRequest.find_by(needs_deduping: nil)
-    criteria = @request.attributes.select {|col, _val| %w[lat long twitter phone email medical conditions extra_details street_address].include? col }.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote(val.to_s)}" unless val.nil? || val.to_s.empty? }.reject { |i| i.nil? || i.empty? }.join(" OR ")
-    @similar_requests = RescueRequest.where(criteria)
+    possible_duplicate_columns = %w[lat long twitter phone email medical conditions extra_details street_address]
+    filtered_request = @request.attributes.select { |col, _val| possible_duplicate_columns.include? col }
+    conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote(val.to_s)}" unless val.to_s.empty? }.reject { |i| i.to_s.empty? }.join(" OR ")
+    @similar_requests = RescueRequest.where(conditions)
   end
 
   def dedupe_skip
