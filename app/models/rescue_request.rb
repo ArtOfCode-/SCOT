@@ -9,15 +9,4 @@ class RescueRequest < ApplicationRecord
     status = RequestStatus.where(name: 'New').first
     update(incident_number: incident_id, request_status: status)
   end
-
-  def color_code
-    colors = {
-      "new" => "white",
-      "pendingrescue" => "#B6EDF2",
-      "notenoughinformation" => "white",
-      "rescued" => "#226404",
-      "closed" => "white"
-    }
-    colors[request_status.name.downcase]
-  end
 end

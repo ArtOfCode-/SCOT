@@ -35,7 +35,7 @@
   </thead>
   <tbody>
     <% @requests.each do |req| %>
-      <tr style="background-color: <%= req.color_code %>">
+      <tr class="<%= req.request_status.name.downcase %>">
         <td class="text-muted">#<%= @disaster.id %>-<%= req.incident_number %></td>
         <td><%= req.name %></td>
         <td><%= req.city %></td>

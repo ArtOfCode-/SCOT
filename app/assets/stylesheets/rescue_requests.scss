@@ -6,3 +6,14 @@
   width: 100%;
   height: 600px;
 }
+
+// It's !important because bootstrap will override it with the
+// default table color alternating style.
+
+.pendingrescue {
+  background-color: #B6EDF2 !important;
+}
+
+.rescued {
+  background-color: #226404 !important;
+}
