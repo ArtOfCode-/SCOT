@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  user: one
+  rescue_request: one
+  outcome: MyString
+
+two:
+  type: 
+  user: two
+  rescue_request: two
+  outcome: MyString

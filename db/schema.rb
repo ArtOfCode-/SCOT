@@ -79,8 +79,22 @@ ActiveRecord::Schema.define(version: 20170914220036) do
     t.string "street_address"
     t.integer "apt_no"
     t.bigint "request_status_id"
+    t.boolean "needs_deduping"
+    t.boolean "needs_spam_check"
+    t.boolean "needs_validation"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
     t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
+  end
+
+  create_table "review_tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "review_type"
+    t.bigint "user_id"
+    t.bigint "rescue_request_id"
+    t.string "outcome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rescue_request_id"], name: "index_review_tasks_on_rescue_request_id"
+    t.index ["user_id"], name: "index_review_tasks_on_user_id"
   end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -126,4 +140,6 @@ ActiveRecord::Schema.define(version: 20170914220036) do
   add_foreign_key "request_priorities", "rescue_requests"
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "request_statuses"
+  add_foreign_key "review_tasks", "rescue_requests"
+  add_foreign_key "review_tasks", "users"
 end

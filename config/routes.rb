@@ -49,4 +49,20 @@ Rails.application.routes.draw do
       get 'csv', to: 'api#csv', as: :api_csv
     end
   end
+
+  scope '/queues' do
+    scope 'spam' do
+      root to: 'queues#spam', as: :spam_queue
+      post 'spam', to: 'queues#spam_spam', as: :spam_spam
+      post 'not', to: 'queues#spam_not', as: :spam_not
+    end
+    get 'validation', to: 'queues#validation', as: :validation_queue
+    scope 'deduping' do
+      root to: 'queues#deduping', as: :deduping_queue
+      post 'skip', to: 'queues#dedupe_skip', as: :dedupe_skip
+      post 'yes', to: 'queues#dedupe_yes', as: :dedupe_yes
+      post 'no', to: 'queues#dedupe_no', as: :dedupe_no
+      post 'edit', to: 'queues#dedupe_yes_edit', as: :dedupe_yes_edit
+    end
+  end
 end
