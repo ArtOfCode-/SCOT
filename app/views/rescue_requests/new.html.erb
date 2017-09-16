@@ -62,6 +62,9 @@
       have available, etc. Please <strong>also include injuries or wounds here</strong>.</span><br/>
     <%= text_area_tag :medical_conditions, '', rows: 10, cols: 100, class: 'form-control' %><br/>
 
+    <%= label_tag :media, "Related Tweet:" %>
+    <%= text_field_tag :media, '', class: 'form-control' %><br/>
+
     <%= label_tag :extra_details, "Extra details:" %><br/>
     <%= text_area_tag :extra_details, '', rows: 7, cols: 100, class: 'form-control' %><br/>
 
