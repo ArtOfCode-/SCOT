@@ -15,7 +15,7 @@
     <%= hidden_field_tag :request_id %>
     
     <%= label_tag :street_address, 'Street Address:' %><br/>
-    <%= text_field_tag :street_address, '', class: 'form-control', id: 'street-address' %><br/>
+    <%= text_field_tag :street_address, '', class: 'form-control', id: 'street_address' %><br/>
 
     <%= label_tag :apt_no, 'Apartment Number:' %><br/>
     <%= text_field_tag :apt_no, '', class: 'form-control', id: 'apt-no' %><br/>
@@ -24,10 +24,13 @@
     <%= text_field_tag :city, '', class: 'form-control', id: 'city' %><br/>
 
     <%= label_tag :zip_code, 'Zip/Postal Code:' %><br/>
-    <%= text_field_tag :zip_code, '', class: 'form-control', id: 'zip-code' %><br/>
+    <%= text_field_tag :zip_code, '', class: 'form-control', id: 'zip_code' %><br/>
+
+    <%= label_tag :state, 'State:' %><br/>
+    <%= text_field_tag :state, '', class: 'form-control', id: 'state' %><br/>
 
     <%= label_tag :country, 'Country:' %><br/>
-    <%= text_field_tag :country, '', class: 'form-control' %><br/>
+    <%= text_field_tag :country, '', class: 'form-control', id: 'country' %><br/>
 
     <%= submit_tag 'Continue', class: 'btn btn-outline-primary' %>
   <% end %>

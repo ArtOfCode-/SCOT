@@ -4,9 +4,21 @@ function moveToSecondStage(lat, long) {
   });
   $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long, function(data) {
     var a = data.results[0].address_components;
-    $("#street-address").val(a[0].short_name + " " + a[1].short_name);
-    $("#city").val(a[4].long_name ? a[4].long_name : '');
-    // $("#zip-code").val(a[8].long_name ? a[8].long_name : '');
+    var conv = {
+      "route": "street_address",
+      "street_number": "street_address",
+      "locality": "city",
+      "postal_code": "zip_code",
+      "administrative_area_level_1": "state",
+      "country": "country"
+    }
+    for (var i = 0; i < a.length; i++) {
+      var component = a[i];
+      var e = $("#"+conv[component.types[0]]);
+      e.val(e.val() + (e.val() == '' ? '' : " ") + component.long_name);
+      console.log(component);
+      console.log(e);
+    }
     $('article:not(#stage2)').hide();
     $('article#stage2').show();
   });
