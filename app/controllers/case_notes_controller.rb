@@ -49,7 +49,7 @@ class CaseNotesController < ApplicationController
   end
 
   def note_params
-    params.require(:case_note).permit(:content, :rescue_request_id)
+    params.require(:case_note).permit(:content, :rescue_request_id, :medical)
   end
 
   def set_case_note

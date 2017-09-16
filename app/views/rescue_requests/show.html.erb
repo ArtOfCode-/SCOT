@@ -77,7 +77,7 @@
 <h3>Case Notes <span class="text-small"><%= link_to 'Add', new_case_note_path(request_id: @request.id) %></span></h3>
 <% if @request.case_notes.any? %>
   <% @request.case_notes.each do |cn| %>
-    <%= render 'case_notes/case_note', case_note: cn, rid: @request.id %>
+    <%= render 'case_notes/case_note', case_note: cn, rid: @request.id unless cn.medical && !current_user.has_role?(:medical) %>
   <% end %>
 <% else %>
   <p><em>No notes.</em></p>
