@@ -4,6 +4,7 @@
 </h1>
 
 <p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<p class="text-warning"><strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
 
 <table class="table table-sm details-table">
   <thead>

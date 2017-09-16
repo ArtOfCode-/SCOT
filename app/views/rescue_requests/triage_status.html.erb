@@ -4,6 +4,7 @@
 </h1>
 
 <p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<p class="text-warning"><strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
 
 <table class="table table-sm details-table">
   <thead>
@@ -82,4 +83,16 @@
   <%= label_tag :status_id, 'New status:', class: 'text-success' %>
   <%= select_tag :status_id, options_for_select(@statuses.map { |s| [s.name, s.id] }), class: 'form-control form-control-sm mx-2' %>
   <%= submit_tag 'Save', class: 'btn btn-outline-success btn-sm mx-2' %>
+<% end %>
+
+<br>
+
+<% if current_user.has_role? :medical %>
+  <h4>Update Medical Status</h4>
+  <p class="text-info"><strong>Current status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
+  <%= form_tag request_apply_medical_status_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post, class: 'form-inline' do %>
+    <%= label_tag :status_id, 'New status:', class: 'text-success' %>
+    <%= select_tag :status_id, options_for_select(@medical_statuses.map { |s| [s.name, s.id] }), class: 'form-control form-control-sm mx-2' %>
+    <%= submit_tag 'Save', class: 'btn btn-outline-success btn-sm mx-2' %>
+  <% end %>
 <% end %>

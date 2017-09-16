@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         get ':num', to: 'rescue_requests#show', as: :disaster_request
         get ':num/status', to: 'rescue_requests#triage_status', as: :request_triage_status
         post ':num/status', to: 'rescue_requests#apply_triage_status', as: :request_apply_status
+        post ':num/medical_status', to: 'rescue_requests#apply_medical_triage_status', as: :request_apply_medical_status
         post ':num/safe', to: 'rescue_requests#mark_safe', as: :request_rescue_safe
       end
     end

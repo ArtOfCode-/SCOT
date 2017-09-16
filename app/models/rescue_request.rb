@@ -1,6 +1,7 @@
 class RescueRequest < ApplicationRecord
   belongs_to :disaster
   belongs_to :request_status, optional: true
+  belongs_to :medical_status, optional: true
   belongs_to :request_priority, optional: true
   has_many :case_notes
 
