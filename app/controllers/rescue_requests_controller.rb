@@ -2,7 +2,7 @@ class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
   before_action :set_request, except: [:index, :new, :create, :update, :disaster_index]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe]
-  before_action :check_access, only: [:show]
+  before_action :check_access, only: [:show, :edit]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]
 
@@ -50,13 +50,19 @@ class RescueRequestsController < ApplicationController
 
     # Yes, there is a reason I did this in such a convoluted way.
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
-      render json: { status: 'success', request: @request.as_json, location: redirect }
+      if params[:redirect]
+        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+      else
+        render json: { status: 'success', request: @request.as_json, location: redirect }
+      end
     else
       render json: { status: 'failed' }, status: 500
     end
   end
 
   def show; end
+
+  def edit; end
 
   def triage_status
     @statuses = RequestStatus.all
