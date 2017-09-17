@@ -76,7 +76,7 @@ class RescueRequestsController < ApplicationController
   def apply_medical_triage_status
     prev_status = @request.medical_status&.name || "(no status)"
     if @request.update(medical_status_id: params[:status_id])
-      @request.case_notes.create(user_id: nil, medical: true, content: "Changed status from #{prev_status} to #{@request.medical_status.name}")
+      @request.case_notes.create(user_id: nil, medical: true, content: "#{current_user.username} changed status from #{prev_status} to #{@request.medical_status.name}")
       flash[:success] = "Status updated."
     else
       flash[:danger] = "Failed to update status."
