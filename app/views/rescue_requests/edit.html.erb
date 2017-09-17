@@ -77,6 +77,12 @@
     </tr>
   </thead>
   <tbody>
+    <% if current_user.has_any_role? :medical, :developer %>
+    <tr>
+      <td><%= label_tag :chart_code, "Chart Code" %></td>
+      <td><%= text_field_tag :chart_code, @request.chart_code %></td>
+    </tr>
+    <% end %>
     <tr>
       <td><%= label_tag :people_count, "People needing assistance" %></td>
       <td><%= text_field_tag :people_count, @request.people_count %></td>

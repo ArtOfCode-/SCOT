@@ -9,6 +9,7 @@
 </h1>
 
 <p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<p class="text-warning"><strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
 
 <table class="table table-sm details-table">
   <thead>
@@ -68,6 +69,12 @@
     </tr>
   </thead>
   <tbody>
+    <% if current_user.has_any_role? :medical, :developer %>
+    <tr>
+      <td>Chart Code</td>
+      <td><%= @request.chart_code %></td>
+    </tr>
+    <% end %>
     <tr>
       <td>People needing assistance</td>
       <td><%= @request.people_count %></td>
@@ -115,7 +122,7 @@ window.onload = function(){
 <h3>Case Notes <span class="text-small"><%= link_to 'Add', new_case_note_path(request_id: @request.id) %></span></h3>
 <% if @request.case_notes.any? %>
   <% @request.case_notes.each do |cn| %>
-    <%= render 'case_notes/case_note', case_note: cn, rid: @request.id %>
+    <%= render 'case_notes/case_note', case_note: cn, rid: @request.id unless cn.medical && !current_user.has_any_role?(:developer, :medical) %>
   <% end %>
 <% else %>
   <p><em>No notes.</em></p>

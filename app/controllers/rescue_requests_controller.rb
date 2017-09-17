@@ -5,6 +5,7 @@ class RescueRequestsController < ApplicationController
   before_action :check_access, only: [:show, :edit]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]
+  before_action :check_medical, only: [:apply_medical_triage_status] 
 
   include AccessLogger
 
@@ -46,7 +47,8 @@ class RescueRequestsController < ApplicationController
   def update
     @request = RescueRequest.find params[:request_id]
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) : nil
-    cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id]
+    cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id chart_code]
+    cn.push "chart_code" if current_user.has_any_role? :medical, :developer
 
     prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
     # Yes, there is a reason I did this in such a convoluted way.
@@ -69,10 +71,22 @@ class RescueRequestsController < ApplicationController
 
   def triage_status
     @statuses = RequestStatus.all
+    @medical_statuses = MedicalStatus.all
   end
 
   def apply_triage_status
     if @request.update(request_status_id: params[:status_id])
+      flash[:success] = "Status updated."
+    else
+      flash[:danger] = "Failed to update status."
+    end
+    redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+  end
+
+  def apply_medical_triage_status
+    prev_status = @request.medical_status&.name || "(no status)"
+    if @request.update(medical_status_id: params[:status_id])
+      @request.case_notes.create(user_id: nil, medical: true, content: "#{current_user.username} changed status from #{prev_status} to #{@request.medical_status.name}")
       flash[:success] = "Status updated."
     else
       flash[:danger] = "Failed to update status."
@@ -114,6 +128,10 @@ class RescueRequestsController < ApplicationController
 
   def check_rescue
     require_any :developer, :admin, :rescue
+  end
+
+  def check_medical
+    require_any :developer, :medical
   end
 
   protected
