@@ -1,0 +1,7 @@
+<%= form_for @request_status, url: request_status_update_path(num: @request_status.id) do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name, class: 'form-control' %><br>
+  <%= f.label :description %>
+  <%= f.text_area :description, rows: 7, cols: 100, class: 'form-control'  %><br>
+  <%= f.submit %>
+<% end %>

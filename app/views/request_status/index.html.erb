@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+    <th>Name</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <% @request_statuses.each do |status| %>
+    <tr>
+      <td><%= link_to status.name.to_s, request_status_edit_path(num: status.id) %></td>
+      <td><%= status.description %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Create a new rescue request status", :request_status_new %>
