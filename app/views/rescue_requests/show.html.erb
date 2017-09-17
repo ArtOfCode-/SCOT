@@ -69,6 +69,12 @@
     </tr>
   </thead>
   <tbody>
+    <% if current_user.has_any_role? :medical, :developer %>
+    <tr>
+      <td>Chart Code</td>
+      <td><%= @request.chart_code %></td>
+    </tr>
+    <% end %>
     <tr>
       <td>People needing assistance</td>
       <td><%= @request.people_count %></td>

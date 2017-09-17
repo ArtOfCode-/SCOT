@@ -47,7 +47,8 @@ class RescueRequestsController < ApplicationController
   def update
     @request = RescueRequest.find params[:request_id]
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) : nil
-    cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id]
+    cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id chart_code]
+    cn.push "chart_code" if current_user.has_any_role? :medical, :developer
 
     prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
     # Yes, there is a reason I did this in such a convoluted way.
