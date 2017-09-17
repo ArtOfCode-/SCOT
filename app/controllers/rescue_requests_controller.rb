@@ -74,7 +74,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def apply_medical_triage_status
-    if current_user.has_role?(:medical) && @request.update(medical_status_id: params[:status_id])
+    if @request.update(medical_status_id: params[:status_id])
       flash[:success] = "Status updated."
     else
       flash[:danger] = "Failed to update status."
