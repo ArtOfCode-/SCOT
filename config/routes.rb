@@ -43,6 +43,22 @@ Rails.application.routes.draw do
     end
   end
 
+  scope '/request_statuses' do
+    root to: 'request_status#index', as: :request_status_index
+    get ':num/edit', to: 'request_status#edit', as: :request_status_edit
+    get 'new', to: 'request_status#new', as: :request_status_new
+    post 'create', to: 'request_status#create', as: :request_status_create
+    patch 'update', to: 'request_status#update', as: :request_status_update
+  end
+
+  scope '/medical_statuses' do
+    root to: 'medical_status#index', as: :medical_status_index
+    get ':num/edit', to: 'medical_status#edit', as: :medical_status_edit
+    get 'new', to: 'medical_status#new', as: :medical_status_new
+    post 'create', to: 'medical_status#create', as: :medical_status_create
+    patch 'update', to: 'medical_status#update', as: :medical_status_update
+  end
+
   scope '/api' do
     scope 'requests' do
       get 'geojson', to: 'api#geojson', as: :api_geojson
