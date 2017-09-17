@@ -121,7 +121,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def check_medical
-    require_any :developera, :medical
+    require_any :developer, :medical
   end
 
   protected
