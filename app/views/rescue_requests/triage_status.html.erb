@@ -87,7 +87,7 @@
 
 <br>
 
-<% if current_user.has_role? :developer, :medical %>
+<% if current_user.has_any_role? :developer, :medical %>
   <h4>Update Medical Status</h4>
   <p class="text-info"><strong>Current status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
   <%= form_tag request_apply_medical_status_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post, class: 'form-inline' do %>
