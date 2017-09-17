@@ -1,0 +1,95 @@
+<h1>
+  Editing Rescue Request for <%= @disaster.name %>
+  <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
+</h1>
+
+<%= form_tag update_disaster_request_path(@disaster, @request) do %>
+<%= hidden_field_tag :request_id, @request.id %>
+<%= hidden_field_tag :redirect, true %>
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Location Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= label_tag :lat, "Latitude" %></td>
+      <td><%= text_field_tag :lat, @request.lat %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :long, "Longitude" %></td>
+      <td><%= text_field_tag :long, @request.long %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :apt_no, "Apartment Number" %></td>
+      <td><%= text_field_tag :apt_no, @request.apt_no %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :street_address, "Street Address" %></td>
+      <td><%= text_field_tag :street_address, @request.street_address %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :city, "City" %></td>
+      <td><%= text_field_tag :city, @request.city %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :zip_code, "Zip Code" %></td>
+      <td><%= text_field_tag :zip_code, @request.zip_code %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :country, "Country" %></td>
+      <td><%= text_field_tag :country, @request.country %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Contact Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= label_tag :name, "Reported by" %></td>
+      <td><%= text_field_tag :name, @request.name %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :phone, "Tel. no" %></td>
+      <td><%= text_field_tag :phone, @request.phone %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :email, "Email address" %></td>
+      <td><%= text_field_tag :email, @request.email %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :twitter, "Twitter" %></td>
+      <td><%= text_field_tag :twitter, @request.twitter %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Incident Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= label_tag :people_count, "People needing assistance" %></td>
+      <td><%= text_field_tag :people_count, @request.people_count %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :medical_conditions, "Medical conditions" %></td>
+      <td><%= text_field_tag :medical_conditions, @request.medical_conditions %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag :extra_details, "Extra details" %></td>
+      <td><%= text_field_tag :extra_details, @request.extra_details %></td>
+    </tr>
+  </tbody>
+</table>
+<%= submit_tag "Finish", class: 'btn btn-outline-success' %>
+<% end %>

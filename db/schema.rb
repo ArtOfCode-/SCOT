@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20170917151357) do
     t.integer "apt_no"
     t.bigint "request_status_id"
     t.bigint "medical_status_id"
+    t.string "media"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
     t.index ["medical_status_id"], name: "index_rescue_requests_on_medical_status_id"
     t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"

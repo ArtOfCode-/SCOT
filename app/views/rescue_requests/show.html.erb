@@ -1,3 +1,8 @@
+<nav>
+  <a href="<%= disaster_requests_path(@disaster) %>">Disaster Home</a>&nbsp;|&nbsp;
+  <a href="<%= edit_disaster_request_path(@disaster, @request) %>">Edit</a>
+</nav>
+
 <h1>
   Rescue Request for <%= @disaster.name %>
   <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
@@ -50,6 +55,10 @@
       <td>Twitter</td>
       <td><%= @request.twitter %></td>
     </tr>
+    <tr>
+      <td>Original Post</td>
+      <td><%= @request.media %></td>
+    </tr>
   </tbody>
 </table>
 
@@ -74,6 +83,35 @@
     </tr>
   </tbody>
 </table>
+
+<div id="tweet"></div><br>
+
+<script>
+window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));
+
+var previous_onload = window.onload;
+window.onload = function(){
+  previous_onload();
+  twttr.widgets.createTweet(
+  '<%= @request.media.to_s.split("/").last %>',
+  document.getElementById('tweet'))
+};
+</script>
 
 <h3>Case Notes <span class="text-small"><%= link_to 'Add', new_case_note_path(request_id: @request.id) %></span></h3>
 <% if @request.case_notes.any? %>
