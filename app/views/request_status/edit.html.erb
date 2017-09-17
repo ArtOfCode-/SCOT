@@ -1,6 +1,4 @@
-<%= form_for @request_status, url: request_status_update_path do |f| %>
-  <%= f.hidden_field :id, value: @request_status.id %>
-
+<%= form_for @request_status, url: request_status_update_path(num: @request_status.id) do |f| %>
   <%= f.label :name %>
   <%= f.text_field :name, class: 'form-control' %><br>
   <%= f.label :description %>

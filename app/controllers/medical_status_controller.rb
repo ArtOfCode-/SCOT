@@ -1,18 +1,17 @@
 class MedicalStatusController < ApplicationController
   before_action :check_access
+  before_action :set_status, only: [:edit, :update]
 
   def index
     @medical_statuses = MedicalStatus.all
   end
 
   def update
-    MedicalStatus.find(params[:medical_status][:id]).update(params[:medical_status].permit(%w[name description]))
+    @medical_status.update(params[:medical_status].permit(%w[name description]))
     redirect_to action: :index
   end
 
-  def edit
-    @medical_status = MedicalStatus.find(params[:num])
-  end
+  def edit; end
 
   def new; end
 
@@ -21,7 +20,13 @@ class MedicalStatusController < ApplicationController
     redirect_to action: :index
   end
 
+  private
+
   def check_access
     require_any :developer, :admin, :medical
+  end
+
+  def set_status
+    @medical_status = MedicalStatus.find(params[:num])
   end
 end
