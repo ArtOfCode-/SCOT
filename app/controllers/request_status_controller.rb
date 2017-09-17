@@ -1,4 +1,6 @@
 class RequestStatusController < ApplicationController
+  before_action :check_access
+  
   def index
     @request_statuses = RequestStatus.all
   end
@@ -17,5 +19,11 @@ class RequestStatusController < ApplicationController
   def create
     RequestStatus.create(params[:request_status].permit(%w[name description]))
     redirect_to action: :index
+  end
+
+  private
+
+  def check_access
+    require_any :developer, :admin
   end
 end
