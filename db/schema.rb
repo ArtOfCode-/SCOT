@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170916190021) do
+ActiveRecord::Schema.define(version: 20170917151357) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -41,6 +41,13 @@ ActiveRecord::Schema.define(version: 20170916190021) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active"
+  end
+
+  create_table "medical_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.string "created_at"
+    t.string "updated_at"
   end
 
   create_table "request_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -80,7 +87,9 @@ ActiveRecord::Schema.define(version: 20170916190021) do
     t.string "street_address"
     t.integer "apt_no"
     t.bigint "request_status_id"
+    t.bigint "medical_status_id"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
+    t.index ["medical_status_id"], name: "index_rescue_requests_on_medical_status_id"
     t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
   end
 
@@ -126,5 +135,6 @@ ActiveRecord::Schema.define(version: 20170916190021) do
   add_foreign_key "case_notes", "users"
   add_foreign_key "request_priorities", "rescue_requests"
   add_foreign_key "rescue_requests", "disasters"
+  add_foreign_key "rescue_requests", "medical_statuses"
   add_foreign_key "rescue_requests", "request_statuses"
 end

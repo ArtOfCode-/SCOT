@@ -5,6 +5,7 @@ class RescueRequestsController < ApplicationController
   before_action :check_access, only: [:show]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]
+  before_action :check_medical, only: [:apply_medical_triage_status] 
 
   include AccessLogger
 
@@ -115,6 +116,10 @@ class RescueRequestsController < ApplicationController
 
   def check_rescue
     require_any :developer, :admin, :rescue
+  end
+
+  def check_medical
+    require_any :developera, :medical
   end
 
   protected

@@ -6,7 +6,7 @@
     <%= f.text_area :content, rows: 7, cols: 100, class: 'form-control' %>
   </div>
 
-  <% if current_user.has_role? :medical %>
+  <% if current_user.has_role? :developer, :medical %>
   <div class="field my-2">
     <%= f.label :medical, "Private to medical staff?" %>
     <%= f.check_box :medical, checked: true %>
