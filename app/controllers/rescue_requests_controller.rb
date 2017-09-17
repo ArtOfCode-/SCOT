@@ -48,7 +48,7 @@ class RescueRequestsController < ApplicationController
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) : nil
     cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id]
 
-    prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id]
+    prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
     # Yes, there is a reason I did this in such a convoluted way.
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
       changes = prev_values.map {|k,v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v == @request.attributes[k] }
