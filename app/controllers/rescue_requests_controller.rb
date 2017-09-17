@@ -2,7 +2,7 @@ class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
   before_action :set_request, except: [:index, :new, :create, :update, :disaster_index]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe]
-  before_action :check_access, only: [:show]
+  before_action :check_access, only: [:show, :edit]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]
 
@@ -48,15 +48,24 @@ class RescueRequestsController < ApplicationController
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) : nil
     cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id]
 
+    prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
     # Yes, there is a reason I did this in such a convoluted way.
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
-      render json: { status: 'success', request: @request.as_json, location: redirect }
+      changes = prev_values.map {|k,v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v == @request.attributes[k] }
+      @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}")
+      if params[:redirect]
+        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+      else
+        render json: { status: 'success', request: @request.as_json, location: redirect }
+      end
     else
       render json: { status: 'failed' }, status: 500
     end
   end
 
   def show; end
+
+  def edit; end
 
   def triage_status
     @statuses = RequestStatus.all

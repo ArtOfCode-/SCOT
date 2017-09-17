@@ -1,3 +1,8 @@
+<nav>
+  <a href="<%= disaster_requests_path(@disaster) %>">Disaster Home</a>&nbsp;|&nbsp;
+  <a href="<%= edit_disaster_request_path(@disaster, @request) %>">Edit</a>
+</nav>
+
 <h1>
   Rescue Request for <%= @disaster.name %>
   <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
