@@ -11,6 +11,14 @@
 <p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
 <p class="text-warning"><strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
 
+<% if @duplicates.count > 0 %>
+<p><%= pluralize @duplicates.count, 'Duplicate' %>: <%= raw(@duplicates.map { |dupe| link_to sanitize(dupe.name), disaster_request_path(disaster_id: @disaster.id, num: dupe.id) }.join(", ")) %></p>
+<% end %>
+
+<% if @duplicate_of %>
+<p>Duplicate of: <%= link_to @duplicate_of.name, disaster_request_path(disaster_id: @disaster.id, num: @duplicate_of.id) %></p>
+<% end %>
+
 <table class="table table-sm details-table">
   <thead>
     <tr>

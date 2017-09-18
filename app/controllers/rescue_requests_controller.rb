@@ -65,7 +65,10 @@ class RescueRequestsController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    @duplicates = RescueRequest.where(dupe_of: @request.id)
+    @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of > 0
+  end
 
   def edit; end
 
