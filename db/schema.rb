@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170917154130) do
+ActiveRecord::Schema.define(version: 20170918010654) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -33,6 +33,19 @@ ActiveRecord::Schema.define(version: 20170917154130) do
     t.boolean "medical"
     t.index ["rescue_request_id"], name: "index_case_notes_on_rescue_request_id"
     t.index ["user_id"], name: "index_case_notes_on_user_id"
+  end
+
+  create_table "dedupe_reviews", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "rescue_request_id"
+    t.string "outcome"
+    t.bigint "user_id"
+    t.bigint "dupe_of_id"
+    t.integer "suggested_duplicates"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dupe_of_id"], name: "index_dedupe_reviews_on_dupe_of_id"
+    t.index ["rescue_request_id"], name: "index_dedupe_reviews_on_rescue_request_id"
+    t.index ["user_id"], name: "index_dedupe_reviews_on_user_id"
   end
 
   create_table "disasters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -90,6 +103,8 @@ ActiveRecord::Schema.define(version: 20170917154130) do
     t.bigint "medical_status_id"
     t.string "media"
     t.string "chart_code"
+    t.integer "dupe_of"
+    t.boolean "spam"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
     t.index ["medical_status_id"], name: "index_rescue_requests_on_medical_status_id"
     t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
@@ -104,6 +119,16 @@ ActiveRecord::Schema.define(version: 20170917154130) do
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["name"], name: "index_roles_on_name"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
+  end
+
+  create_table "spam_reviews", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "rescue_request_id"
+    t.string "outcome"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rescue_request_id"], name: "index_spam_reviews_on_rescue_request_id"
+    t.index ["user_id"], name: "index_spam_reviews_on_user_id"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -135,8 +160,12 @@ ActiveRecord::Schema.define(version: 20170917154130) do
   add_foreign_key "access_logs", "users"
   add_foreign_key "case_notes", "rescue_requests"
   add_foreign_key "case_notes", "users"
+  add_foreign_key "dedupe_reviews", "rescue_requests"
+  add_foreign_key "dedupe_reviews", "users"
   add_foreign_key "request_priorities", "rescue_requests"
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "medical_statuses"
   add_foreign_key "rescue_requests", "request_statuses"
+  add_foreign_key "spam_reviews", "rescue_requests"
+  add_foreign_key "spam_reviews", "users"
 end
