@@ -154,6 +154,10 @@ class RescueRequestsController < ApplicationController
     require_any :developer, :medical
   end
 
+  def check_admin
+    require_any :developer, :admin
+  end
+
   protected
 
   def log_actions
