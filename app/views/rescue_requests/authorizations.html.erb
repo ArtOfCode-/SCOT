@@ -1,0 +1,62 @@
+<h1>Authorizations for Request #<%= @request.disaster_id %>-<%= @request.incident_number %></h1>
+<p>As an admin, you can manage who has access to this rescue request, in addition to those who have access via
+  <%= link_to 'roles', admin_roles_path %> on their account. You cannot deny access to someone who has role-based
+  access; to do so, you need to remove their role.</p>
+<p>The following people <em>currently</em> have access to this request:</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-muted">Auth ID</th>
+      <th>User</th>
+      <th>Has access to</th>
+      <th>Until</th>
+      <th>Granted by</th>
+      <th>Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= @authorizations.each do |auth| %>
+      <tr>
+        <td class="text-muted"><%= auth.id %></td>
+        <td><%= auth.user.username %> (<%= auth.user.id %>)</td>
+        <td><%= auth.valid_on %></td>
+        <td><%= auth.expires_at&.strftime("%H:%M %d %b %Y") %></td>
+        <td><%= auth.granted_by.username %> (<%= auth.granted_by.id %>)</td>
+        <td><%= auth.reason %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Authorize access for someone</h3>
+<%= form_for @user_authorization, url: create_authorization_path do |f| %>
+  <%= f.hidden_field :resource_type, 'RescueRequest' %>
+  <%= f.hidden_field :resource_id, @request.id %>
+
+  <div class="field">
+    <%= f.label :user_id, 'User' %><br/>
+    <%= f.select :user_id, options_from_collection_for_select(User.all, 'id', 'username'), include_blank: true, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :valid_on, 'Authorizes' %><br/>
+    <small class="form-text text-muted">The user you're authorizing will be allowed to perform these actions.</small><br/>
+    <%= f.select :valid_on, options_for_select(['new', 'create', 'show', 'edit', 'update', 'destroy'].map { |e| [e.humanize.titleize, e ] }),
+                 multiple: true, include_blank: true, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :expires_at, 'Expires' %><br/>
+    <%= f.date_select :expires_at, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :reason %><br/>
+    <%= f.text_area :reason, rows: 3, cols: 80, class: 'form-control' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Authorize', class: 'btn btn-outline-danger' %>
+  </div>
+<% end %>
