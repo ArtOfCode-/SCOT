@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170917154130) do
+ActiveRecord::Schema.define(version: 20170919092508) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -106,6 +106,20 @@ ActiveRecord::Schema.define(version: 20170917154130) do
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
   end
 
+  create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.bigint "user_id"
+    t.integer "granted_by_id"
+    t.string "valid_on"
+    t.text "reason"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id"], name: "index_user_authorizations_on_resource_type_and_resource_id"
+    t.index ["user_id"], name: "index_user_authorizations_on_user_id"
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -139,4 +153,5 @@ ActiveRecord::Schema.define(version: 20170917154130) do
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "medical_statuses"
   add_foreign_key "rescue_requests", "request_statuses"
+  add_foreign_key "user_authorizations", "users"
 end

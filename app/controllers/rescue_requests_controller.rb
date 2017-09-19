@@ -56,7 +56,9 @@ class RescueRequestsController < ApplicationController
       changes = prev_values.map {|k,v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v.to_s == @request.attributes[k].to_s }.reject { |i| i.nil? || i.empty? }
       @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}")
       if params[:redirect]
-        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+        key = SecureRandom.hex 32
+        @request.update key: key
+        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: key)
       else
         render json: { status: 'success', request: @request.as_json, location: redirect }
       end
@@ -119,7 +121,19 @@ class RescueRequestsController < ApplicationController
   end
 
   def check_access
-    require_any :developer, :admin, :triage, :rescue
+    if params[:key].present? && params[:key] == @request.key
+      Rails.logger.info "Granted access to RescueRequest##{@request.id} based on key #{params[:key]}."
+      return
+    end
+
+    if current_user.present? && current_user.authorized_to?(action_name.to_sym, @request)
+      authorization = current_user.authorization_for(action_name.to_sym, @request).first
+      Rails.logger.info "Granted access to RescueRequest##{@request.id} based on UserAuthorization##{authorization.id}."
+      Rails.logger.info "Authorization for #{current_user.id} on #{authorization.valid_on} granted by #{authorization.granted_by.id}."
+      return
+    end
+
+    require_any :developer, :admin, :triage, :rescue, :medical
   end
 
   def check_triage
