@@ -31,8 +31,8 @@
 
 <h3>Authorize access for someone</h3>
 <%= form_for @user_authorization, url: create_authorization_path do |f| %>
-  <%= f.hidden_field :resource_type, 'RescueRequest' %>
-  <%= f.hidden_field :resource_id, @request.id %>
+  <%= f.hidden_field :resource_type, value: 'RescueRequest' %>
+  <%= f.hidden_field :resource_id, value: @request.id %>
 
   <div class="field">
     <%= f.label :user_id, 'User' %><br/>
