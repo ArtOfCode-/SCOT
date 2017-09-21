@@ -15,12 +15,12 @@ class RescueRequestsController < ApplicationController
 
   def disaster_index
     status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
-    status_query = (status_ids.map { |s| "request_status_id = #{s}" } + ["(dupe_of > 0 AND dupe_of is not null)"]).join(' OR ')
+    status_query = status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
     @counts = { closed: @closed.count, active: @active.count }
 
-    @requests = @active # @disaster.rescue_requests
+    @requests = @disaster.rescue_requests
     if params[:reporter].present?
       @requests = @requests.where("name LIKE '%#{params[:reporter]}%'")
     end
