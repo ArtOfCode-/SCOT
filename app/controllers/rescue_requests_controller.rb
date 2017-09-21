@@ -52,7 +52,7 @@ class RescueRequestsController < ApplicationController
 
     prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
     # Yes, there is a reason I did this in such a convoluted way.
-    if ((current_user.present? && current_user.has_any_role?(:triage, :medical, :developer, :admin)) || session[:key] == @request.key) && @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
+    if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
       changes = prev_values.map {|k,v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v.to_s == @request.attributes[k].to_s }.reject { |i| i.nil? || i.empty? }
       @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}") if current_user.present?
       flash[:info] = "We've set a cookie on this device only that will allow you to view your own information. Once that cookie gets cleared, you will no longer have access to this information." unless @request.key == session[:key]
