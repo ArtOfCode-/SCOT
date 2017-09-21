@@ -19,10 +19,12 @@ class CaseNotesController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    redirect_back(fallback_location: disaster_request_path(num: @case_note.rescue_request.id, disaster_id: @case_note.rescue_request.disaster.id)) unless @case_note.user == current_user
+  end
 
   def update
-    if @case_note.update note_params
+    if @case_note.user == current_user && @case_note.update(note_params)
       flash[:success] = 'Case note saved.'
       redirect_to disaster_request_path(disaster_id: @case_note.rescue_request.disaster_id, num: @case_note.rescue_request.incident_number)
     else
@@ -34,7 +36,7 @@ class CaseNotesController < ApplicationController
   def destroy
     did = @case_note.rescue_request.disaster_id
     num = @case_note.rescue_request.incident_number
-    if @case_note.destroy
+    if @case_note.user == current_user && @case_note.destroy
       flash[:success] = 'Removed case note successfully.'
     else
       flash[:danger] = "Couldn't remove case note."
