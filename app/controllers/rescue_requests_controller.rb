@@ -67,7 +67,7 @@ class RescueRequestsController < ApplicationController
 
   def show
     @duplicates = RescueRequest.where(dupe_of: @request.id)
-    @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of > 0
+    @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of.to_i > 0
   end
 
   def edit; end
@@ -78,7 +78,9 @@ class RescueRequestsController < ApplicationController
   end
 
   def apply_triage_status
+    previous_status = @request.request_status.name
     if @request.update(request_status_id: params[:status_id])
+      @request.case_notes.create(content: "#{current_user.username} changed the satatus from #{previous_status} to #{@request.request_status.name}.")
       flash[:success] = "Status updated."
     else
       flash[:danger] = "Failed to update status."

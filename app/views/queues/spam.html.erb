@@ -105,13 +105,11 @@ window.twttr = (function(d, s, id) {
   return t;
 }(document, "script", "twitter-wjs"));
 
-var previous_onload = window.onload;
-window.onload = function(){
-  previous_onload();
+$(document).ready(function(){
   twttr.widgets.createTweet(
   '<%= @rescue_request.media.to_s.split("/").last %>',
   document.getElementById('tweet'))
-};
+});
 </script>
 
 <%= form_tag :spam_complete do %>

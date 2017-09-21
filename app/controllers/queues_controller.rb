@@ -24,6 +24,8 @@ class QueuesController < ApplicationController
       target.update(dupe_of: 0) if target.dupe_of == nil
       current_user.dedupe_reviews.create(rescue_request_id: original.id, outcome: "dupe", dupe_of_id: target.id, suggested_duplicates: params[:suggested_duplicates])
       original.update(dupe_of: params[:dupe_of])
+      original.case_notes.create(content: "#{current_user.username} closed this as a duplicate of ##{target.id}. It was previously #{original.request_status.name}.")
+      original.update request_status: RequestStatus.find_by(name: "Closed")
     elsif params[:skip]
       current_user.dedupe_reviews.create(rescue_request_id: original.id, outcome: "skip", suggested_duplicates: params[:suggested_duplicates])
     elsif params[:not]
