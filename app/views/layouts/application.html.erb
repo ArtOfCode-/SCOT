@@ -24,7 +24,7 @@
           <li class="nav-item"><%= link_to 'home', root_path, class: 'nav-link' %></li>
           <% if current_user %>
           <% if current_user.has_any_role? :developer, :triage, :queue %>
-          <li class="nav-item"><%= link_to 'dedupe queue', dedupe_queue_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'dedupe queue', try(:dedupe_queue_path), class: 'nav-link' %></li>
           <% end %>
           <% if current_user.has_any_role? :developer, :admin %>
           <li class="nav-item"><%= link_to 'manage statuses', request_status_index_path, class: 'nav-link' %></li>
