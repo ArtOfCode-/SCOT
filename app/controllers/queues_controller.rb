@@ -2,6 +2,7 @@ class QueuesController < ApplicationController
   def dedupe
     @original = RescueRequest.find_by(dupe_of: nil)
     if @original.nil?
+      flash[:info] = "There are no more records to deduplicate!"
       redirect_to :disasters
       return
     end

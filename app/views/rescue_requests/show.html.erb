@@ -12,7 +12,7 @@
 <p class="text-warning"><strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
 
 <% if @duplicates.count > 0 %>
-<p><%= pluralize @duplicates.count, 'Duplicate' %>: <%= raw(@duplicates.map { |dupe| link_to sanitize(dupe.name), disaster_request_path(disaster_id: @disaster.id, num: dupe.id) }.join(", ")) %></p>
+<p><%= pluralize @duplicates.count, 'Duplicate' %>: <%= raw(@duplicates.map { |dupe| link_to dupe.name, disaster_request_path(disaster_id: @disaster.id, num: dupe.id) }.join(", ")) %></p>
 <% end %>
 
 <% if @duplicate_of %>
