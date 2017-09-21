@@ -69,7 +69,7 @@
     </tr>
   </thead>
   <tbody>
-    <% if current_user.has_any_role? :medical, :developer %>
+    <% if current_user.present? && current_user.has_any_role?(:medical, :developer) %>
     <tr>
       <td>Chart Code</td>
       <td><%= @request.chart_code %></td>

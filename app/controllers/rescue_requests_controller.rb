@@ -48,17 +48,18 @@ class RescueRequestsController < ApplicationController
     @request = RescueRequest.find params[:request_id]
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) : nil
     cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id chart_code]
-    cn.push "chart_code" if current_user.has_any_role? :medical, :developer
+    cn.push "chart_code" if current_user.present? && current_user.has_any_role?(:medical, :developer)
 
     prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
     # Yes, there is a reason I did this in such a convoluted way.
-    if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
+    if ((current_user.present? && current_user.has_any_role?(:triage, :medical, :developer, :admin)) || session[:key] == @request.key) && @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
       changes = prev_values.map {|k,v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v.to_s == @request.attributes[k].to_s }.reject { |i| i.nil? || i.empty? }
-      @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}")
+      @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}") if current_user.present?
+      flash[:info] = "We've set a cookie on this device only that will allow you to view your own information. Once that cookie gets cleared, you will no longer have access to this information." unless @request.key == session[:key]
+      key = SecureRandom.hex 32
+      session[:key] = key if @request.update key: key
       if params[:redirect]
-        key = SecureRandom.hex 32
-        @request.update key: key
-        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: key)
+        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
       else
         render json: { status: 'success', request: @request.as_json, location: redirect }
       end
@@ -121,7 +122,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def check_access
-    if params[:key].present? && params[:key] == @request.key
+    if session[:key].present? && @request.present? && session[:key] == @request.key
       Rails.logger.info "Granted access to RescueRequest##{@request.id} based on key #{params[:key]}."
       return
     end
