@@ -15,7 +15,7 @@ class RescueRequestsController < ApplicationController
 
   def disaster_index
     status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
-    status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
+    status_query = status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
     @counts = { closed: @closed.count, active: @active.count }
@@ -68,7 +68,10 @@ class RescueRequestsController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    @duplicates = RescueRequest.where(dupe_of: @request.id)
+    @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of.to_i > 0
+  end
 
   def edit; end
 
@@ -78,7 +81,9 @@ class RescueRequestsController < ApplicationController
   end
 
   def apply_triage_status
+    previous_status = @request.request_status.name
     if @request.update(request_status_id: params[:status_id])
+      @request.case_notes.create(content: "#{current_user.username} changed the satatus from #{previous_status} to #{@request.request_status.name}.")
       flash[:success] = "Status updated."
     else
       flash[:danger] = "Failed to update status."

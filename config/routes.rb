@@ -63,6 +63,17 @@ Rails.application.routes.draw do
     end
   end
 
+  scope '/queues' do
+    scope 'dedupe' do
+      root to: 'queues#dedupe', as: :dedupe_queue
+      post 'complete', to: 'queues#dedupe_complete', as: :dedupe_complete
+    end
+    scope 'spam' do
+      root to: 'queues#spam', as: :spam_queue
+      post 'complete', to: 'queues#spam_complete', as: :spam_complete
+    end
+  end
+
   scope '/api' do
     scope 'requests' do
       get 'geojson', to: 'api#geojson', as: :api_geojson

@@ -1,0 +1,121 @@
+<h1>
+  Rescue Request for <%= @disaster.name %>
+  <span class="small text-muted">#<%= @disaster.id %>-<%= @rescue_request.incident_number %></span>
+</h1>
+
+<p class="text-info"><strong>Current status:</strong> <%= @rescue_request.request_status&.name || '(no status)' %></p>
+<p class="text-warning"><strong>Current medical status:</strong> <%= @rescue_request.medical_status&.name || '(no status)' %></p>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Location Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Position (rought lat/long)</td>
+      <td><%= @rescue_request.lat %>, <%= @rescue_request.long %></td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>
+        <%= @rescue_request.apt_no.present? ? "Apt. #{@rescue_request.apt_no}, ": '' %><%= @rescue_request.street_address %>,
+        <%= @rescue_request.city %> <%= @rescue_request.zip_code %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Contact Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Reported by</td>
+      <td><%= @rescue_request.name %></td>
+    </tr>
+    <tr>
+      <td>Tel. no</td>
+      <td><%= @rescue_request.phone %></td>
+    </tr>
+    <tr>
+      <td>Email address</td>
+      <td><%= @rescue_request.email %></td>
+    </tr>
+    <tr>
+      <td>Twitter</td>
+      <td><%= @rescue_request.twitter %></td>
+    </tr>
+    <tr>
+      <td>Original Post</td>
+      <td><%= @rescue_request.media %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Incident Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if current_user.has_any_role? :medical, :developer %>
+    <tr>
+      <td>Chart Code</td>
+      <td><%= @rescue_request.chart_code %></td>
+    </tr>
+    <% end %>
+    <tr>
+      <td>People needing assistance</td>
+      <td><%= @rescue_request.people_count %></td>
+    </tr>
+    <tr>
+      <td>Medical conditions</td>
+      <td><%= @rescue_request.medical_conditions %></td>
+    </tr>
+    <tr>
+      <td>Extra details</td>
+      <td><%= @rescue_request.extra_details %></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="tweet"></div><br>
+
+<script>
+window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));
+
+$(document).ready(function(){
+  twttr.widgets.createTweet(
+  '<%= @rescue_request.media.to_s.split("/").last %>',
+  document.getElementById('tweet'))
+});
+</script>
+
+<%= form_tag :spam_complete do %>
+  <%= hidden_field_tag :rescue_request_id, @rescue_request.id %>
+
+  <%= submit_tag "Spam", name: "outcome", value: "spam" %>
+  <%= submit_tag "Not Spam", name: "outcome", value: "not" %>
+  <%= submit_tag "Skip", name: "outcome", value: "skip" %>
+<% end %>

@@ -15,4 +15,7 @@ class User < ApplicationRecord
     valid = potentials.map { |p| p.valid_on.split(',').include?(action.to_s) ? p.id : nil }.compact
     UserAuthorization.where(id: valid)
   end
+
+  has_many :spam_reviews
+  has_many :dedupe_reviews
 end

@@ -1,0 +1,2 @@
+class DedupeReview < ApplicationRecord
+end
