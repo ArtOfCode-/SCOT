@@ -12,6 +12,6 @@ class Role < ApplicationRecord
   scopify
 
   def self.global_defaults
-    %i[developer admin triage rescue]
+    %i[developer admin triage rescue medical]
   end
 end
