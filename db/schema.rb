@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170919092508) do
+ActiveRecord::Schema.define(version: 20170922202930) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -131,6 +131,20 @@ ActiveRecord::Schema.define(version: 20170919092508) do
     t.index ["user_id"], name: "index_spam_reviews_on_user_id"
   end
 
+  create_table "suggested_edits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.bigint "user_id"
+    t.string "result"
+    t.integer "reviewed_by_id"
+    t.text "new_values"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id"], name: "index_suggested_edits_on_resource_type_and_resource_id"
+    t.index ["user_id"], name: "index_suggested_edits_on_user_id"
+  end
+
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "resource_type"
     t.bigint "resource_id"
@@ -182,5 +196,6 @@ ActiveRecord::Schema.define(version: 20170919092508) do
   add_foreign_key "rescue_requests", "request_statuses"
   add_foreign_key "spam_reviews", "rescue_requests"
   add_foreign_key "spam_reviews", "users"
+  add_foreign_key "suggested_edits", "users"
   add_foreign_key "user_authorizations", "users"
 end

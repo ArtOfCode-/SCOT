@@ -52,6 +52,7 @@ class QueuesController < ApplicationController
   end
 
   def suggested_edit
+    @suggested_edit = SuggestedEdit.find_by(reviewed_by_id: nil)
   end
 
   def suggested_edit_complete

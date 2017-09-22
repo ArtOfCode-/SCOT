@@ -4,6 +4,7 @@ class RescueRequest < ApplicationRecord
   belongs_to :medical_status, optional: true
   belongs_to :request_priority, optional: true
   has_many :case_notes
+  has_many :suggested_edits
 
   after_create do
     incident_id = (disaster.rescue_requests.maximum(:incident_number) || 0) + 1
