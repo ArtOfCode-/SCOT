@@ -1,2 +1,109 @@
-<h1>Queues#suggested_edit</h1>
-<p>Find me in app/views/queues/suggested_edit.html.erb</p>
+<p>Edit summary: <%= @suggested_edit.comment %></p>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Location Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Latitude</td>
+      <td><%= display_diff_for :lat %></td>
+    </tr>
+    <tr>
+      <td>Longitude</td>
+      <td><%= display_diff_for :long %></td>
+    </tr>
+    <tr>
+      <td>Apartment Number</td>
+      <td><%= display_diff_for :apt_no %></td>
+    </tr>
+    <tr>
+      <td>Street Address</td>
+      <td><%= display_diff_for :street_address %></td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td><%= display_diff_for :city %></td>
+    </tr>
+    <tr>
+      <td>Zip Code</td>
+      <td><%= display_diff_for :zip_code %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Contact Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Reported by</td>
+      <td><%= display_diff_for :name %></td>
+    </tr>
+    <tr>
+      <td>Tel. no</td>
+      <td><%= display_diff_for :phone %></td>
+    </tr>
+    <tr>
+      <td>Email address</td>
+      <td><%= display_diff_for :email %></td>
+    </tr>
+    <tr>
+      <td>Twitter</td>
+      <td><%= display_diff_for :twitter %></td>
+    </tr>
+    <tr>
+      <td>Original Post</td>
+      <td><%= display_diff_for :media %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-sm details-table">
+  <thead>
+    <tr>
+      <th colspan="2">Incident Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if current_user.present? && current_user.has_any_role?(:medical, :developer) %>
+    <tr>
+      <td>Chart Code</td>
+      <td><%= display_diff_for :chart_code %></td>
+    </tr>
+    <% end %>
+    <tr>
+      <td>People needing assistance</td>
+      <td><%= display_diff_for :people_count %></td>
+    </tr>
+    <tr>
+      <td>Medical conditions</td>
+      <td><%= display_diff_for :medical_conditions %></td>
+    </tr>
+    <tr>
+      <td>Extra details</td>
+      <td><%= display_diff_for :extra_details %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to "Edit further", edit_disaster_request_path(num: @request.id, disaster_id: @request.disaster_id) %>
+<%= form_tag :suggested_edit_complete do %>
+  <%= hidden_field_tag :suggested_edit_id, @suggested_edit.id %>
+  <%= submit_tag "Approve Edit", name: :approve %>
+  <%= submit_tag "Reject Edit", name: :reject %>
+<% end %>
+
+<h3>Case Notes</h3>
+<% if @request.case_notes.any? %>
+  <% @request.case_notes.each do |cn| %>
+    <%= render 'case_notes/case_note', case_note: cn, rid: @request.id unless cn.medical && !current_user.has_any_role?(:developer, :medical) %>
+  <% end %>
+<% else %>
+  <p><em>No notes.</em></p>
+<% end %>

@@ -121,9 +121,8 @@ class RescueRequestsController < ApplicationController
 
   def suggest_edit_submit
     new_values = params.permit(RescueRequest.column_names - PROHIBITED_FIELDS).to_h.map do |field, value|
-      value == @request[field] ? nil : [field, value]
+      value.to_s == @request[field].to_s ? nil : [field, value]
     end.reject(&:nil?).to_h
-    puts new_values
     if current_user.suggested_edits.create(resource: @request, comment: params[:suggested_edit_comment], new_values: new_values)
       flash[:info] = "Your suggested edit was submitted"
       redirect_to action: :show

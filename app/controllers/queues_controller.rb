@@ -2,15 +2,15 @@ class QueuesController < ApplicationController
   def dedupe
     @original = RescueRequest.find_by(dupe_of: nil)
     if @original.nil?
-      flash[:info] = "There are no more records to deduplicate!"
-      redirect_to :disasters
-      return
+      flash[:info] = "There are no records to deduplicate!"
+      queue_complete_redirect
+    else
+      @disaster = @original.disaster
+      possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
+      filtered_request = @original.attributes.select { |col, _val| possible_duplicate_columns.include? col }
+      conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote("%#{val.to_s}%")}" unless val.to_s.empty? }.reject { |i| i.to_s.empty? }.join(" OR ")
+      @suggested_dupes = RescueRequest.where(conditions).where.not(id: @original.id)
     end
-    @disaster = @original.disaster
-    possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
-    filtered_request = @original.attributes.select { |col, _val| possible_duplicate_columns.include? col }
-    conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote("%#{val.to_s}%")}" unless val.to_s.empty? }.reject { |i| i.to_s.empty? }.join(" OR ")
-    @suggested_dupes = RescueRequest.where(conditions).where.not(id: @original.id)
   end
 
   # Dupe_of 0 means that it's a new record
@@ -38,10 +38,11 @@ class QueuesController < ApplicationController
   def spam
     @rescue_request = RescueRequest.find_by(spam: nil)
     if @rescue_request.nil?
-      redirect_to :disasters
-      return
+      flash[:info] = "There are no records to spam check!"
+      queue_complete_redirect
+    else
+      @disaster = @rescue_request.disaster
     end
-    @disaster = @rescue_request.disaster
   end
 
   def spam_complete
@@ -53,8 +54,37 @@ class QueuesController < ApplicationController
 
   def suggested_edit
     @suggested_edit = SuggestedEdit.find_by(reviewed_by_id: nil)
+    if @suggested_edit.nil?
+      flash[:info] = "There are no suggested edits to review!"
+      queue_complete_redirect
+    else
+      @request = @suggested_edit.resource
+    end
   end
 
   def suggested_edit_complete
+    @suggested_edit = SuggestedEdit.find(params[:suggested_edit_id])
+    if params[:reject]
+      @suggested_edit.result = "reject"
+      @suggested_edit.reviewed_by_id = current_user.id
+    elsif params[:approve]
+      @suggested_edit.result = "approve"
+      @suggested_edit.reviewed_by_id = current_user.id
+      rescue_request = @suggested_edit.resource
+      flash[:warning] = "Edits unable to be committed. " unless rescue_request.update(@suggested_edit.new_values)
+    end
+    flash[:danger] = "Unable to save suggested edit review." unless @suggested_edit.save
+    if SuggestedEdit.all.count > 0
+      redirect_to action: :suggested_edit
+    else
+      flash[:sucess] = "No more suggested edits to review!"
+      redirect_to disaster_request_path(disaster_id: @suggested_edit.resource.disaster_id)
+    end
+  end
+
+  private
+
+  def queue_complete_redirect
+    request.referer == request.original_url ? redirect_to(:disasters) : redirect_back(fallback_location: :disasters)
   end
 end

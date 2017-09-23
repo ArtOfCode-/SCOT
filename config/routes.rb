@@ -74,6 +74,10 @@ Rails.application.routes.draw do
       root to: 'queues#spam', as: :spam_queue
       post 'complete', to: 'queues#spam_complete', as: :spam_complete
     end
+    scope 'suggested_edit' do
+      root to: 'queues#suggested_edit', as: :suggested_edit_queue
+      post 'complete', to: 'queues#suggested_edit_complete', as: :suggested_edit_complete
+    end
   end
 
   scope '/api' do
