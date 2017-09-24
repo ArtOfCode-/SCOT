@@ -66,19 +66,19 @@ class QueuesController < ApplicationController
     @suggested_edit = SuggestedEdit.find(params[:suggested_edit_id])
     if params[:reject]
       @suggested_edit.result = "reject"
-      @suggested_edit.reviewed_by_id = current_user.id
+      @suggested_edit.reviewed_by = current_user
     elsif params[:approve]
       @suggested_edit.result = "approve"
-      @suggested_edit.reviewed_by_id = current_user.id
+      @suggested_edit.reviewed_by = current_user
       rescue_request = @suggested_edit.resource
       flash[:warning] = "Edits unable to be committed. " unless rescue_request.update(@suggested_edit.new_values)
     end
     flash[:danger] = "Unable to save suggested edit review." unless @suggested_edit.save
-    if SuggestedEdit.all.count > 0
+    if SuggestedEdit.where(reviewed_by: nil).count > 0
       redirect_to action: :suggested_edit
     else
       flash[:sucess] = "No more suggested edits to review!"
-      redirect_to disaster_request_path(disaster_id: @suggested_edit.resource.disaster_id)
+      redirect_to disaster_requests_path(disaster_id: @suggested_edit.resource.disaster_id)
     end
   end
 
