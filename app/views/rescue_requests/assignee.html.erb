@@ -1,0 +1,13 @@
+<h1>Assignee for Request #<%= @disaster.id %>-<%= @request.incident_number %></h1>
+<p class="text-info">This request is currently assigned to <%= @request.assignee&.username || 'nobody' %>.</p>
+
+<%= form_tag apply_request_assignee_path, method: :post do %>
+  <div class="field">
+    <%= label_tag :aid, 'New Assignee' %><br/>
+    <%= select_tag :aid, options_from_collection_for_select(User.all, 'id', 'username'), include_blank: true, class: 'form-control' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= submit_tag 'Save', class: 'btn btn-outline-success' %>
+  </div>
+<% end %>

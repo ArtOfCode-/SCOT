@@ -8,7 +8,11 @@
   <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
 </h1>
 
-<p class="text-info"><strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %></p>
+<p class="text-info">
+  <strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %><br/>
+  <strong>Assigned to: </strong> <%= @request.assignee&.username || '(nobody)' %>
+    <%= link_to '(change)', change_request_assignee_path(disaster_id: @disaster.id, num: @request.incident_number) %>
+</p>
 <p class="text-warning"><strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %></p>
 
 <% if @duplicates.count > 0 %>

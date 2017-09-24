@@ -27,6 +27,8 @@ Rails.application.routes.draw do
         get ':num', to: 'rescue_requests#show', as: :disaster_request
         get ':num/status', to: 'rescue_requests#triage_status', as: :request_triage_status
         get ':num/auth', to: 'rescue_requests#authorizations', as: :request_authorizations
+        get ':num/assignee', to: 'rescue_requests#assignee', as: :change_request_assignee
+        post ':num/assignee', to: 'rescue_requests#apply_assignee', as: :apply_request_assignee
         post ':num/status', to: 'rescue_requests#apply_triage_status', as: :request_apply_status
         post ':num/medical_status', to: 'rescue_requests#apply_medical_triage_status', as: :request_apply_medical_status
         post ':num/safe', to: 'rescue_requests#mark_safe', as: :request_rescue_safe

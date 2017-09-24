@@ -3,6 +3,7 @@ class RescueRequest < ApplicationRecord
   belongs_to :request_status, optional: true
   belongs_to :medical_status, optional: true
   belongs_to :request_priority, optional: true
+  belongs_to :assignee, class_name: 'User', optional: true
   has_many :case_notes
 
   after_create do

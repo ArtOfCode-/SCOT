@@ -118,6 +118,17 @@ class RescueRequestsController < ApplicationController
     @user_authorization = UserAuthorization.new
   end
 
+  def assignee; end
+
+  def apply_assignee
+    if @request.update(assignee_id: params[:aid])
+      flash[:success] = "Updated assignee."
+    else
+      flash[:danger] = "Failed to update assignee."
+    end
+    redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+  end
+
   private
 
   def set_disaster
