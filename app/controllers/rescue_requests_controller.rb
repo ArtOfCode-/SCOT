@@ -5,7 +5,8 @@ class RescueRequestsController < ApplicationController
   before_action :check_access, only: [:show, :edit, :update]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]
-  before_action :check_medical, only: [:apply_medical_triage_status] 
+  before_action :check_medical, only: [:apply_medical_triage_status]
+  before_action :check_admin, only: [:authorizations]
 
   include AccessLogger
 
@@ -112,6 +113,11 @@ class RescueRequestsController < ApplicationController
     redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
   end
 
+  def authorizations
+    @authorizations = UserAuthorization.where(resource: @request).where('expires_at > ?', DateTime.now)
+    @user_authorization = UserAuthorization.new
+  end
+
   private
 
   def set_disaster
@@ -152,6 +158,10 @@ class RescueRequestsController < ApplicationController
 
   def check_medical
     require_any :developer, :medical
+  end
+
+  def check_admin
+    require_any :developer, :admin
   end
 
   protected

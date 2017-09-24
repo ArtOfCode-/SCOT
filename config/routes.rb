@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         get ':num/edit', to: 'rescue_requests#edit', as: :edit_disaster_request
         get ':num', to: 'rescue_requests#show', as: :disaster_request
         get ':num/status', to: 'rescue_requests#triage_status', as: :request_triage_status
+        get ':num/auth', to: 'rescue_requests#authorizations', as: :request_authorizations
         post ':num/status', to: 'rescue_requests#apply_triage_status', as: :request_apply_status
         post ':num/medical_status', to: 'rescue_requests#apply_medical_triage_status', as: :request_apply_medical_status
         post ':num/safe', to: 'rescue_requests#mark_safe', as: :request_rescue_safe
@@ -78,6 +79,13 @@ Rails.application.routes.draw do
     scope 'requests' do
       get 'geojson', to: 'api#geojson', as: :api_geojson
       get 'csv', to: 'api#csv', as: :api_csv
+    end
+  end
+
+  scope '/users' do
+    scope 'authorizations' do
+      post 'new', to: 'user_authorizations#create', as: :create_authorization
+      delete ':id', to: 'user_authorizations#destroy', as: :destroy_authorization
     end
   end
 end
