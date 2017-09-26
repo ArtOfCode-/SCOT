@@ -9,6 +9,10 @@ Rails.application.routes.draw do
       post 'add', to: 'roles#add_role', as: :admin_add_role
       post 'remove', to: 'roles#remove_role', as: :admin_remove_role
     end
+
+    scope 'accesses' do
+      get ':resource_type/:resource_id', to: 'access_logs#on_resource', as: :resource_access_logs
+    end
   end
 
   scope '/disasters' do

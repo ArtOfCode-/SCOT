@@ -1,6 +1,6 @@
 <nav>
   <a href="<%= disaster_requests_path(@disaster) %>">Disaster Home</a>&nbsp;|&nbsp;
-  <a href="<%= edit_disaster_request_path(@disaster, @request) %>">Edit</a>
+  <a href="<%= edit_disaster_request_path(@disaster, @request.incident_number) %>">Edit</a>
 </nav>
 
 <h1>
@@ -144,5 +144,8 @@ window.onload = function(){
   <%= link_to 'Triage: update request status', request_triage_status_path(disaster_id: @disaster.id, num: @request.incident_number) %><br/>
 <% end %>
 <% if has_any_role? :developer, :admin, :rescue %>
-  <%= link_to 'Rescue: mark as safe', request_rescue_safe_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post %>
+  <%= link_to 'Rescue: mark as safe', request_rescue_safe_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post %><br/>
+<% end %>
+<% if has_any_role? :developer, :admin %>
+  <%= link_to 'Admin: access logs', resource_access_logs_path(resource_type: @request.class.to_s, resource_id: @request.id), class: 'text-danger' %>
 <% end %>

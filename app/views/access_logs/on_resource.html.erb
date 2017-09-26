@@ -1,0 +1,26 @@
+<h1>Access Logs for <%= params[:resource_type] %>#<%= params[:resource_id] %></h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-muted">ID</th>
+      <th>User</th>
+      <th>Access Codepath</th>
+      <th>URI</th>
+      <th>At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @logs.each do |log| %>
+      <tr>
+        <td class="text-muted"><%= log.id %></td>
+        <td><%= log.user&.username || '(Anonymous)' %></td>
+        <td><%= log.action %></td>
+        <td><%= log.url %></td>
+        <td title="<%= log.created_at %>"><%= time_ago_in_words log.created_at %> ago</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @logs, renderer: BootstrapPagination::Rails %>

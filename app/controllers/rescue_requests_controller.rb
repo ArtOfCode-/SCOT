@@ -178,6 +178,6 @@ class RescueRequestsController < ApplicationController
   protected
 
   def log_actions
-    [:show, :triage_status, :apply_triage_status, :mark_safe]
+    [:show, :edit, :triage_status, :apply_triage_status, :mark_safe]
   end
 end
