@@ -1,0 +1,19 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  username: myuser
+  password: mypass
+  host: 127.0.0.1
+  port: 3306
+
+development:
+  <<: *default
+  database: crowdrescue_dev
+
+test:
+  <<: *default
+  database: crowdrescue_test
+
+production:
+  <<: *default
+  database: crowdrescue_prod
