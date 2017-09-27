@@ -72,6 +72,7 @@ class RescueRequestsController < ApplicationController
   def show
     @duplicates = RescueRequest.where(dupe_of: @request.id)
     @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of.to_i > 0
+    @timeline = (@request.case_notes + @request.contact_attempts).sort_by(&:created_at).reverse
   end
 
   def edit; end

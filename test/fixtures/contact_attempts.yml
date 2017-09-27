@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  rescue_request: one
+  medium: MyString
+  outcome: MyString
+  details: MyText
+
+two:
+  user: two
+  rescue_request: two
+  medium: MyString
+  outcome: MyString
+  details: MyText

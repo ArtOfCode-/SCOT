@@ -1,0 +1,3 @@
+<h1>Edit Contact Attempt on Request #<%= @request.disaster_id %>-<%= @request.incident_number %></h1>
+
+<%= render 'form', url: edit_contact_attempt_path(request_id: @request.id, id: @attempt.id) %>

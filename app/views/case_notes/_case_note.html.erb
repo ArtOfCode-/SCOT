@@ -1,13 +1,16 @@
-<div class="card border-info my-4">
+<div class="card border-danger my-4">
+  <div class="card-header border-danger py-1">
+    Case Note <span class="text-muted mx-1" title="<%= case_note.created_at %>"><%= time_ago_in_words case_note.created_at %> ago</span>
+  </div>
   <div class="card-body">
     <%= raw(sanitize(case_note.content).gsub("\n", "<br>")) %>
   </div>
-  <div class="card-footer text-light bg-info py-1 text-small">
+  <div class="card-footer border-danger py-1 text-small">
     By <%= case_note.user.present? ? case_note.user.username : 'System' %> at <%= case_note.created_at.strftime("%H:%M %d %b %Y") %>
-    <% if case_note.user.present? && case_note.user == current_user %>
-    &nbsp;-&nbsp;<%= link_to 'edit', edit_case_note_path(request_id: rid, id: case_note.id), class: 'text-light' %> -
+    <% if (case_note.user.present? && case_note.user == current_user) || has_any_role?(:developer, :admin) %>
+    &nbsp;-&nbsp;<%= link_to 'edit', edit_case_note_path(request_id: rid, id: case_note.id) %> -
     <%= link_to 'delete', destroy_case_note_path(request_id: rid, id: case_note.id), data: { confirm: 'Are you sure?' },
-                method: :delete, class: 'text-warning' %>
+                method: :delete, class: 'text-danger' %>
     <% end %>
   </div>
 </div>

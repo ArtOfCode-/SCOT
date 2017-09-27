@@ -49,6 +49,14 @@ Rails.application.routes.draw do
         patch ':id/edit', to: 'case_notes#update', as: :update_case_note
         delete ':id', to: 'case_notes#destroy', as: :destroy_case_note
       end
+
+      scope 'contacts' do
+        get 'new', to: 'contact_attempts#new', as: :new_contact_attempt
+        post 'new', to: 'contact_attempts#create', as: :create_contact_attempt
+        get ':id/edit', to: 'contact_attempts#edit', as: :edit_contact_attempt
+        patch ':id/edit', to: 'contact_attempts#update', as: :update_contact_attempt
+        delete ':id', to: 'contact_attempts#destroy', as: :destroy_contact_attempt
+      end
     end
   end
 
