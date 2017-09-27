@@ -1,6 +1,6 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
-  before_action :set_request, except: [:index, :new, :create, :update, :disaster_index]
+  before_action :set_request, except: [:index, :new, :create, :disaster_index]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe]
   before_action :check_access, only: [:show, :edit, :update]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
@@ -16,7 +16,7 @@ class RescueRequestsController < ApplicationController
 
   def disaster_index
     status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
-    status_query = status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
+    status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
     @counts = { closed: @closed.count, active: @active.count }
@@ -37,9 +37,9 @@ class RescueRequestsController < ApplicationController
   def new; end
 
   def create
-    @request = @disaster.rescue_requests.new(lat: params[:lat], long: params[:long])
+    @request = @disaster.rescue_requests.new(lat: params[:lat], long: params[:long], key: SecureRandom.hex(32))
     if @request.save
-      render json: { status: 'success', id: @request.id }
+      render json: { status: 'success', id: @request.id, key: @request.key }
     else
       render json: { status: 'failed' }, status: 500
     end
@@ -47,7 +47,7 @@ class RescueRequestsController < ApplicationController
 
   def update
     @request = RescueRequest.find params[:request_id]
-    redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) : nil
+    redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key]) : nil
     cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id chart_code]
     cn.push "chart_code" if current_user.present? && current_user.has_any_role?(:medical, :developer)
 
@@ -56,9 +56,6 @@ class RescueRequestsController < ApplicationController
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
       changes = prev_values.map {|k,v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v.to_s == @request.attributes[k].to_s }.reject { |i| i.nil? || i.empty? }
       @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}") if current_user.present?
-      flash[:info] = "We've set a cookie on this device only that will allow you to view your own information. Once that cookie gets cleared, you will no longer have access to this information." unless @request.key == session[:key]
-      key = SecureRandom.hex 32
-      session[:key] = key if @request.update key: key
       if params[:redirect]
         redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
       else
@@ -137,7 +134,11 @@ class RescueRequestsController < ApplicationController
   end
 
   def set_request
-    @request = @disaster.rescue_requests.find_by incident_number: params[:num]
+    if params[:num].present?
+      @request = @disaster.rescue_requests.find_by incident_number: params[:num]
+    elsif params[:request_id].present?
+      @request = RescueRequest.find params[:request_id]
+    end
   end
 
   def set_loggable
@@ -145,7 +146,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def check_access
-    if session[:key].present? && @request.present? && session[:key] == @request.key
+    if params[:key].present? && @request.present? && params[:key] == @request.key
       Rails.logger.info "Granted access to RescueRequest##{@request.id} based on key #{params[:key]}."
       return
     end

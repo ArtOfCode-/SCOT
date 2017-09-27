@@ -1,6 +1,7 @@
 function moveToSecondStage(lat, long) {
   $.post(location.pathname, {"lat": lat, "long": long}, function(data) {
     $('input[name=request_id]').val(data['id']);
+    requestAccessKey = data['key'];
   });
   $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long, function(data) {
     var a = data.results[0].address_components;
@@ -11,11 +12,11 @@ function moveToSecondStage(lat, long) {
       "postal_code": "zip_code",
       "administrative_area_level_1": "state",
       "country": "country"
-    }
+    };
     for (var i = 0; i < a.length; i++) {
       var component = a[i];
       var e = $("#"+conv[component.types[0]]);
-      e.val(e.val() + (e.val() == '' ? '' : " ") + component.long_name);
+      e.val(e.val() + (e.val() === '' ? '' : " ") + component.long_name);
       console.log(component);
       console.log(e);
     }
@@ -34,11 +35,19 @@ function longFields() {
   $('article#stage3').show();
 }
 
+var requestAccessKey = null;
+
 window.onload = function() {
   $('article:not(#stage1)').hide();
 
   $('.js-form').submit(function() {
-    var valuesToSubmit = $(this).serialize();
+    var arrayData = $(this).serializeArray();
+    var jsonData = {};
+    arrayData.forEach(function (x) {
+      jsonData[x['name']] = x['value'];
+    });
+    var valuesToSubmit = Object.assign(jsonData, { key: requestAccessKey });
+    console.log('Submitting', valuesToSubmit);
     $.ajax({
         type: "POST",
         url: $(this).attr('action'), //sumbits it to the given url of the form
@@ -48,6 +57,9 @@ window.onload = function() {
         console.log("success", json);
         if (json.hasOwnProperty('location') && json['location']) {
           location.href = json['location'];
+        }
+        if (json.hasOwnProperty('key') && json['key']) {
+          requestAccessKey = json['key'];
         }
     });
     return false; // prevents normal behaviour
