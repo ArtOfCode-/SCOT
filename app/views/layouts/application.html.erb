@@ -22,17 +22,23 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item"><%= link_to 'home', root_path, class: 'nav-link' %></li>
-          <% if current_user %>
-          <% if current_user.has_any_role? :developer, :triage, :queue %>
-          <li class="nav-item"><%= link_to 'dedupe queue', try(:dedupe_queue_path), class: 'nav-link' %></li>
-          <% end %>
-          <% if current_user.has_any_role? :developer, :admin %>
-          <li class="nav-item"><%= link_to 'manage statuses', request_status_index_path, class: 'nav-link' %></li>
-          <% end %>
-          <% if current_user.has_any_role? :developer, :medical %>
-          <li class="nav-item"><%= link_to 'manage medical statuses', medical_status_index_path, class: 'nav-link' %></li>
-          <% end %>
-          <% end %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
+            <div class="dropdown-menu">
+              <% if user_signed_in? %>
+                <% if current_user.has_any_role? :developer, :triage, :queue %>
+                  <%= link_to 'dedupe queue', dedupe_queue_path, class: 'dropdown-item' %>
+                <% end %>
+                <div class="dropdown-divider"></div>
+                <% if current_user.has_any_role? :developer, :admin %>
+                  <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
+                <% end %>
+                <% if current_user.has_any_role? :developer, :medical %>
+                  <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
+                <% end %>
+              <% end %>
+            </div>
+          </li>
         </ul>
 
         <ul class="navbar-right navbar-nav">
