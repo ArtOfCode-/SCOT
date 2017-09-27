@@ -12,14 +12,35 @@ AllCops:
 Metrics/LineLength:
   Max: 150
 
+Metrics/MethodLength:
+  Max: 30
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Max: 30
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/Documentation:
   Enabled: false
 
-Metrics/AbcSize:
-  Max: 50
-
 Style/SymbolArray:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/PredicateName:
+  Enabled: false
+
+Style/NumericPredicate:
   Enabled: false
