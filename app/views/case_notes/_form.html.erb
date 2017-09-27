@@ -9,7 +9,7 @@
   <% if current_user.has_any_role? :developer, :medical %>
   <div class="field my-2">
     <%= f.label :medical, "Private to medical staff?" %>
-    <%= f.check_box :medical, checked: true %>
+    <%= f.check_box :medical, checked: @case_note.medical? %>
   </div>
   <% end %>
 

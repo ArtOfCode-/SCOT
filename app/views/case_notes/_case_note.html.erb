@@ -1,6 +1,9 @@
 <div class="card border-danger my-4">
   <div class="card-header border-danger py-1">
     Case Note <span class="text-muted mx-1" title="<%= case_note.created_at %>"><%= time_ago_in_words case_note.created_at %> ago</span>
+    <% if case_note.medical? %>
+      <span class="text-danger mx-1">(medical only)</span>
+    <% end %>
   </div>
   <div class="card-body">
     <%= raw(sanitize(case_note.content).gsub("\n", "<br>")) %>
