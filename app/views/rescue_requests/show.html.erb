@@ -1,6 +1,10 @@
 <nav>
-  <a href="<%= disaster_requests_path(@disaster) %>">Disaster Home</a>&nbsp;|&nbsp;
-  <a href="<%= edit_disaster_request_path(@disaster, @request.incident_number) %>">Edit</a>
+  <%= link_to "Disaster Home", disaster_requests_path(@disaster) %>&nbsp;|&nbsp;
+  <% if current_user.present? && current_user.has_any_role?(*%i[developer admin triage medical]) %>
+  <%= link_to "Edit", edit_disaster_request_path(@disaster, @request) %>
+  <% elsif current_user.present? %>
+  <%= link_to "Suggest Edit", suggest_edit_disaster_request_path(@disaster, @request) %>
+  <% end %>
 </nav>
 
 <h1>

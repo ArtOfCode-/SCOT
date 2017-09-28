@@ -10,6 +10,8 @@ class RescueRequestsController < ApplicationController
 
   include AccessLogger
 
+  PROHIBITED_FIELDS = %w[id incident_number key created_at updated_at disaster_id]
+
   def index
     @disasters = Disaster.all
   end
@@ -48,10 +50,10 @@ class RescueRequestsController < ApplicationController
   def update
     @request = RescueRequest.find params[:request_id]
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key]) : nil
-    cn = RescueRequest.column_names - %w[id incident_number key created_at updated_at disaster_id chart_code]
+    cn = RescueRequest.column_names - PROHIBITED_FIELDS - %w[chart_code]
     cn.push 'chart_code' if current_user.present? && current_user.has_any_role?(:medical, :developer)
 
-    prev_values = @request.attributes.except %w[updated_at created_at id medical_status_id request_status_id disaster_id]
+    prev_values = @request.attributes.except PROHIBITED_FIELDS
     # Yes, there is a reason I did this in such a convoluted way.
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
       changes = prev_values.map { |k, v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v.to_s == @request.attributes[k].to_s }
@@ -127,6 +129,24 @@ class RescueRequestsController < ApplicationController
       flash[:danger] = 'Failed to update assignee.'
     end
     redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
+  end
+
+  def suggest_edit
+    @suggesting = true
+    render :edit
+  end
+
+  def suggest_edit_submit
+    new_values = params.permit(RescueRequest.column_names - PROHIBITED_FIELDS).to_h.map do |field, value|
+      value.to_s == @request[field].to_s ? nil : [field, value]
+    end.reject(&:nil?).to_h
+    if current_user.suggested_edits.create(resource: @request, comment: params[:suggested_edit_comment], new_values: new_values)
+      flash[:info] = "Your suggested edit was submitted"
+      redirect_to action: :show
+    else
+      flash[:warning] = "Failed to save suggested edit"
+      redirect_to action: :suggested_edit
+    end
   end
 
   private

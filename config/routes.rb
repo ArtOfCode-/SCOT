@@ -27,7 +27,9 @@ Rails.application.routes.draw do
         get 'new', to: 'rescue_requests#new', as: :new_disaster_request
         post 'new', to: 'rescue_requests#create', as: :create_disaster_request
         post 'update', to: 'rescue_requests#update', as: :update_disaster_request
+        post ':num/suggest_edit', to: 'rescue_requests#suggest_edit_submit', as: :suggested_edit_submit
         get ':num/edit', to: 'rescue_requests#edit', as: :edit_disaster_request
+        get ':num/suggest_edit', to: 'rescue_requests#suggest_edit', as: :suggest_edit_disaster_request
         get ':num', to: 'rescue_requests#show', as: :disaster_request
         get ':num/status', to: 'rescue_requests#triage_status', as: :request_triage_status
         get ':num/auth', to: 'rescue_requests#authorizations', as: :request_authorizations
@@ -86,6 +88,10 @@ Rails.application.routes.draw do
     scope 'spam' do
       root to: 'queues#spam', as: :spam_queue
       post 'complete', to: 'queues#spam_complete', as: :spam_complete
+    end
+    scope 'suggested_edit' do
+      root to: 'queues#suggested_edit', as: :suggested_edit_queue
+      post 'complete', to: 'queues#suggested_edit_complete', as: :suggested_edit_complete
     end
   end
 

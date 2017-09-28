@@ -1,10 +1,16 @@
 class QueuesController < ApplicationController
   def dedupe
     @original = RescueRequest.find_by(dupe_of: nil)
+    @disaster = @original.disaster.id
     if @original.nil?
       flash[:info] = 'There are no more records to deduplicate!'
       redirect_to :disasters
-      return
+    else
+      @disaster = @original.disaster
+      possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
+      filtered_request = @original.attributes.select { |col, _val| possible_duplicate_columns.include? col }
+      conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote("%#{val.to_s}%")}" unless val.to_s.empty? }.reject { |i| i.to_s.empty? }.join(" OR ")
+      @suggested_dupes = RescueRequest.where(conditions).where.not(id: @original.id)
     end
     @disaster = @original.disaster
     possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
@@ -40,11 +46,13 @@ class QueuesController < ApplicationController
 
   def spam
     @rescue_request = RescueRequest.find_by(spam: nil)
+    @disaster = @rescue_request.disaster.id
     if @rescue_request.nil?
+      flash[:info] = "There are no records to spam check!"
       redirect_to :disasters
-      return
+    else
+      @disaster = @rescue_request.disaster
     end
-    @disaster = @rescue_request.disaster
   end
 
   def spam_complete
@@ -54,7 +62,35 @@ class QueuesController < ApplicationController
     redirect_to action: :spam
   end
 
-  def suggested_edit; end
+  def suggested_edit
+    @suggested_edit = SuggestedEdit.find_by(reviewed_by: nil)
+    @disaster = @suggested_edit.resource.disaster.id
+    if @suggested_edit.nil?
+      flash[:info] = "There are no suggested edits to review!"
+      redirect_to :disasters
+    else
+      @request = @suggested_edit.resource
+    end
+  end
 
-  def suggested_edit_complete; end
+  def suggested_edit_complete
+    @suggested_edit = SuggestedEdit.find(params[:suggested_edit_id])
+    @disaster = @suggested_edit.resource.disaster.id
+    if params[:reject]
+      @suggested_edit.result = "reject"
+      @suggested_edit.reviewed_by = current_user
+    elsif params[:approve]
+      @suggested_edit.result = "approve"
+      @suggested_edit.reviewed_by = current_user
+      rescue_request = @suggested_edit.resource
+      flash[:warning] = "Edits unable to be committed. " unless rescue_request.update(@suggested_edit.new_values)
+    end
+    flash[:danger] = "Unable to save suggested edit review." unless @suggested_edit.save
+    if SuggestedEdit.where(reviewed_by: nil).count > 0
+      redirect_to action: :suggested_edit
+    else
+      flash[:sucess] = "No more suggested edits to review!"
+      redirect_to disaster_requests_path(disaster_id: @suggested_edit.resource.disaster_id)
+    end
+  end
 end

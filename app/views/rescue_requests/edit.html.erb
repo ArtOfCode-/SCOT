@@ -1,9 +1,9 @@
 <h1>
-  Editing Rescue Request for <%= @disaster.name %>
+  <%= @suggesting ? "Suggesting Edit on" : "Editing"%> Rescue Request for <%= @disaster.name %>
   <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
 </h1>
 
-<%= form_tag update_disaster_request_path(@disaster, @request) do %>
+<%= form_tag @suggesting ? suggested_edit_submit_path(@disaster, @request) : update_disaster_request_path(@disaster, @request) do %>
 <%= hidden_field_tag :request_id, @request.id %>
 <%= hidden_field_tag :redirect, true %>
 <table class="table table-sm details-table">
@@ -97,5 +97,10 @@
     </tr>
   </tbody>
 </table>
+
+<% if @suggesting %>
+<%= text_area_tag :suggested_edit_comment, "", placeholder: "Explain why you're suggesting this edit", class: "form-control" %>
+<br>
+<% end %>
 <%= submit_tag "Finish", class: 'btn btn-outline-success' %>
 <% end %>
