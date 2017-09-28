@@ -1,10 +1,6 @@
 <nav>
-  <%= link_to "Disaster Home", disaster_requests_path(@disaster) %>&nbsp;|&nbsp;
-  <% if current_user.present? && current_user.has_any_role?(*%i[developer admin triage medical]) %>
-  <%= link_to "Edit", edit_disaster_request_path(@disaster, @request) %>
-  <% elsif current_user.present? %>
-  <%= link_to "Suggest Edit", suggest_edit_disaster_request_path(@disaster, @request) %>
-  <% end %>
+  <%= link_to 'Disaster Home', disaster_requests_path(@disaster) %>&nbsp;|&nbsp;
+  <%= link_to 'Edit', suggest_edit_disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) %>
 </nav>
 
 <h1>

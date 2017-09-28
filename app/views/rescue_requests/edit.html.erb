@@ -1,9 +1,10 @@
 <h1>
-  <%= @suggesting ? "Suggesting Edit on" : "Editing"%> Rescue Request for <%= @disaster.name %>
+  Editing Rescue Request for <%= @disaster.name %>
   <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
 </h1>
 
-<%= form_tag @suggesting ? suggested_edit_submit_path(@disaster, @request) : update_disaster_request_path(@disaster, @request) do %>
+<%= form_tag @suggesting ? suggested_edit_submit_path(disaster_id: @disaster.id, num: @request.incident_number) :
+                           update_disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) do %>
 <%= hidden_field_tag :request_id, @request.id %>
 <%= hidden_field_tag :redirect, true %>
 <table class="table table-sm details-table">
