@@ -1,9 +1,10 @@
 class QueuesController < ApplicationController
   def dedupe
     @original = RescueRequest.find_by(dupe_of: nil)
+    @disaster = @original.disaster.id
     if @original.nil?
       flash[:info] = "There are no records to deduplicate!"
-      queue_complete_redirect
+      redirect_to :disasters
     else
       @disaster = @original.disaster
       possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
@@ -37,9 +38,10 @@ class QueuesController < ApplicationController
 
   def spam
     @rescue_request = RescueRequest.find_by(spam: nil)
+    @disaster = @rescue_request.disaster.id
     if @rescue_request.nil?
       flash[:info] = "There are no records to spam check!"
-      queue_complete_redirect
+      redirect_to :disasters
     else
       @disaster = @rescue_request.disaster
     end
@@ -53,10 +55,11 @@ class QueuesController < ApplicationController
   end
 
   def suggested_edit
-    @suggested_edit = SuggestedEdit.find_by(reviewed_by_id: nil)
+    @suggested_edit = SuggestedEdit.find_by(reviewed_by: nil)
+    @disaster = @suggested_edit.resource.disaster.id
     if @suggested_edit.nil?
       flash[:info] = "There are no suggested edits to review!"
-      queue_complete_redirect
+      redirect_to :disasters
     else
       @request = @suggested_edit.resource
     end
@@ -64,6 +67,7 @@ class QueuesController < ApplicationController
 
   def suggested_edit_complete
     @suggested_edit = SuggestedEdit.find(params[:suggested_edit_id])
+    @disaster = @suggested_edit.resource.disaster.id
     if params[:reject]
       @suggested_edit.result = "reject"
       @suggested_edit.reviewed_by = current_user
@@ -80,11 +84,5 @@ class QueuesController < ApplicationController
       flash[:sucess] = "No more suggested edits to review!"
       redirect_to disaster_requests_path(disaster_id: @suggested_edit.resource.disaster_id)
     end
-  end
-
-  private
-
-  def queue_complete_redirect
-    request.referer == request.original_url ? redirect_to(:disasters) : redirect_back(fallback_location: :disasters)
   end
 end
