@@ -10,7 +10,7 @@ class RescueRequestsController < ApplicationController
 
   include AccessLogger
 
-  PROHIBITED_FIELDS = %w[id incident_number key created_at updated_at disaster_id assignee_id]
+  PROHIBITED_FIELDS = %w[id incident_number key created_at updated_at disaster_id assignee_id].freeze
 
   def index
     @disasters = Disaster.all
@@ -52,7 +52,7 @@ class RescueRequestsController < ApplicationController
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key]) : nil
     cn = RescueRequest.column_names - PROHIBITED_FIELDS - %w[chart_code]
     cn.push 'chart_code' if current_user.present? && current_user.has_any_role?(:medical, :developer)
-    
+
     # Yes, there is a reason I did this in such a convoluted way.
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
       if params[:redirect]
@@ -138,28 +138,19 @@ class RescueRequestsController < ApplicationController
     end.reject(&:nil?).to_h
     old_values = @request.attributes.except PROHIBITED_FIELDS
 
-    if current_user.present? && current_user.has_any_role?(:developer, :admin, :triage, :medical)
-      @edit = current_user.suggested_edits.new(resource: @request, comment: params[:suggested_edit_comment],
-                                               new_values: new_values, old_values: old_values)
-      if @edit.save
-        @edit.approve
-        @request.update new_values
-        flash[:info] = 'Your edits have been applied.'
-        redirect_to action: :show
-      else
-        flash[:warning] = 'Failed to save edit record.'
-        redirect_to action: :suggest_edit
-      end
+    @edit = current_user.suggested_edits.new(resource: @request, comment: params[:suggested_edit_comment],
+                                             new_values: new_values, old_values: old_values)
+    if current_user.present? && current_user.has_any_role?(:developer, :admin, :triage, :medical) && @edit.save
+      @edit.approve
+      @request.update new_values
+      flash[:info] = 'Your edits have been applied.'
+      redirect_to action: :show
+    elsif @edit.save
+      flash[:info] = 'Your suggested edit was submitted.'
+      redirect_to action: :show
     else
-      @edit = current_user.suggested_edits.new(resource: @request, comment: params[:suggested_edit_comment],
-                                               new_values: new_values, old_values: old_values)
-      if @edit.save
-        flash[:info] = 'Your suggested edit was submitted.'
-        redirect_to action: :show
-      else
-        flash[:warning] = 'Failed to save suggested edit.'
-        redirect_to action: :suggest_edit
-      end
+      flash[:warning] = 'Failed to save suggested edit.'
+      redirect_to action: :suggest_edit
     end
   end
 
