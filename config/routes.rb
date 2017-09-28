@@ -59,6 +59,11 @@ Rails.application.routes.draw do
         patch ':id/edit', to: 'contact_attempts#update', as: :update_contact_attempt
         delete ':id', to: 'contact_attempts#destroy', as: :destroy_contact_attempt
       end
+
+      scope 'edits' do
+        post ':id/approve', to: 'suggested_edits#approve', as: :approve_suggested_edit
+        post ':id/reject', to: 'suggested_edits#reject', as: :reject_suggested_edit
+      end
     end
   end
 

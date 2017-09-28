@@ -1,0 +1,22 @@
+<div class="card border-success my-4">
+  <div class="card-header border-success py-1">
+    Suggested Edit <span class="text-muted mx-1" title="<%= edit.created_at %>"><%= time_ago_in_words edit.created_at %> ago</span>
+  </div>
+  <div class="card-body">
+    <strong><%= edit.user.username %> suggested the following changes:</strong>
+    <ul>
+      <% edit.changes.each do |n, v| %>
+        <li>Change <%= n %> from <%= edit.old_values[n] %> to <%= v %></li>
+      <% end %>
+    </ul>
+    Comment: <%= edit.comment %>
+  </div>
+  <div class="card-footer border-success py-1 text-small">
+    <% if edit.result.present? %>
+      <%= edit.result %> <span title="<%= edit.reviewed_at %>"><%= time_ago_in_words edit.reviewed_at %> ago</span> by <%= edit.reviewed_by.username %>
+    <% elsif has_any_role? :developer, :admin, :triage, :medical %>
+      <%= link_to 'approve', approve_suggested_edit_path(request_id: rid, id: edit.id), method: :post, class: 'text-success' %> -
+      <%= link_to 'reject', reject_suggested_edit_path(request_id: rid, id: edit.id), method: :post, class: 'text-danger' %>
+    <% end %>
+  </div>
+</div>

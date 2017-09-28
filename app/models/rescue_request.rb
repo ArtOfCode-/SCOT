@@ -6,7 +6,7 @@ class RescueRequest < ApplicationRecord
   belongs_to :assignee, class_name: 'User', optional: true
   has_many :case_notes
   has_many :contact_attempts
-  has_many :suggested_edits
+  has_many :suggested_edits, as: :resource
 
   after_create do
     incident_id = (disaster.rescue_requests.maximum(:incident_number) || 0) + 1

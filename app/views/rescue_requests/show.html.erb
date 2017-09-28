@@ -153,8 +153,10 @@ window.onload = function(){
   <% @timeline.each do |te| %>
     <% if te.class == CaseNote %>
       <%= render 'case_notes/case_note', case_note: te, rid: @request.id unless te.medical && !current_user.has_any_role?(:developer, :medical) %>
-    <% else %>
+    <% elsif te.class == ContactAttempt %>
       <%= render 'contact_attempts/attempt', attempt: te, rid: @request.id %>
+    <% elsif te.class == SuggestedEdit %>
+      <%= render 'suggested_edits/edit', edit: te, rid: @request.id %>
     <% end %>
   <% end %>
 <% else %>

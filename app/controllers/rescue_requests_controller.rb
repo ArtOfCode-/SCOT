@@ -2,7 +2,7 @@ class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
   before_action :set_request, except: [:index, :new, :create, :disaster_index]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe]
-  before_action :check_access, only: [:show, :edit, :update]
+  before_action :check_access, only: [:show, :edit, :update, :assignee, :apply_assignee]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]
   before_action :check_medical, only: [:apply_medical_triage_status]
@@ -10,7 +10,7 @@ class RescueRequestsController < ApplicationController
 
   include AccessLogger
 
-  PROHIBITED_FIELDS = %w[id incident_number key created_at updated_at disaster_id]
+  PROHIBITED_FIELDS = %w[id incident_number key created_at updated_at disaster_id assignee_id]
 
   def index
     @disasters = Disaster.all
@@ -72,7 +72,7 @@ class RescueRequestsController < ApplicationController
   def show
     @duplicates = RescueRequest.where(dupe_of: @request.id)
     @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of.to_i > 0
-    @timeline = (@request.case_notes + @request.contact_attempts).sort_by(&:created_at).reverse
+    @timeline = (@request.case_notes + @request.contact_attempts + @request.suggested_edits).sort_by(&:created_at).reverse
   end
 
   def edit; end
@@ -140,9 +140,13 @@ class RescueRequestsController < ApplicationController
     new_values = params.permit(RescueRequest.column_names - PROHIBITED_FIELDS).to_h.map do |field, value|
       value.to_s == @request[field].to_s ? nil : [field, value]
     end.reject(&:nil?).to_h
+    old_values = @request.attributes.except PROHIBITED_FIELDS
+
     if current_user.present? && current_user.has_any_role?(:developer, :admin, :triage, :medical)
-      if current_user.suggested_edits.create(resource: @request, comment: params[:suggested_edit_comment],
-                                             new_values: new_values, reviewed_by: current_user, result: 'Approved')
+      @edit = current_user.suggested_edits.new(resource: @request, comment: params[:suggested_edit_comment],
+                                               new_values: new_values, old_values: old_values)
+      if @edit.save
+        @edit.approve
         @request.update new_values
         flash[:info] = 'Your edits have been applied.'
         redirect_to action: :show
@@ -151,7 +155,9 @@ class RescueRequestsController < ApplicationController
         redirect_to action: :suggest_edit
       end
     else
-      if current_user.suggested_edits.create(resource: @request, comment: params[:suggested_edit_comment], new_values: new_values)
+      @edit = current_user.suggested_edits.new(resource: @request, comment: params[:suggested_edit_comment],
+                                               new_values: new_values, old_values: old_values)
+      if @edit.save
         flash[:info] = 'Your suggested edit was submitted.'
         redirect_to action: :show
       else
