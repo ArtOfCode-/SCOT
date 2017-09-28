@@ -52,13 +52,9 @@ class RescueRequestsController < ApplicationController
     redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key]) : nil
     cn = RescueRequest.column_names - PROHIBITED_FIELDS - %w[chart_code]
     cn.push 'chart_code' if current_user.present? && current_user.has_any_role?(:medical, :developer)
-
-    prev_values = @request.attributes.except PROHIBITED_FIELDS
+    
     # Yes, there is a reason I did this in such a convoluted way.
     if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
-      changes = prev_values.map { |k, v| "Changed #{k} from #{v} to #{@request.attributes[k]}" unless v.to_s == @request.attributes[k].to_s }
-                           .reject { |i| i.nil? || i.empty? }
-      @request.case_notes.create(content: "#{current_user.username} committed the following changes:\n#{changes.join("\n")}") if current_user.present?
       if params[:redirect]
         redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
       else
