@@ -141,7 +141,7 @@ class RescueRequestsController < ApplicationController
     @edit = current_user.suggested_edits.new(resource: @request, comment: params[:suggested_edit_comment],
                                              new_values: new_values, old_values: old_values)
     if current_user.present? && current_user.has_any_role?(:developer, :admin, :triage, :medical) && @edit.save
-      @edit.approve
+      @edit.approve current_user
       @request.update new_values
       flash[:info] = 'Your edits have been applied.'
       redirect_to action: :show
