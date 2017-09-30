@@ -1,0 +1,22 @@
+<h1>Reviewing Spam Reviews</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>RR ID</th>
+      <th>Outcome</th>
+      <th>Reviewer</th>
+      <th>Review Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reviews.each do |rev| %>
+    <tr>
+      <td><%= link_to "##{rev.rescue_request.disaster.id}-#{rev.rescue_request.id}", disaster_request_path(num: rev.rescue_request.id, disaster_id: rev.rescue_request.disaster.id) %></td>
+      <td><%= rev.outcome %></td>
+      <td><%= rev.user.username %></td>
+      <td><%= rev.updated_at %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

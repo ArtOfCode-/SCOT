@@ -26,16 +26,40 @@
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
             <div class="dropdown-menu">
               <% if user_signed_in? %>
-                <% if current_user.has_any_role? :developer, :triage, :queue %>
-                  <%= link_to 'dedupe queue', dedupe_queue_path, class: 'dropdown-item' %>
-                <% end %>
-                <div class="dropdown-divider"></div>
                 <% if current_user.has_any_role? :developer, :admin %>
                   <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
                 <% end %>
                 <% if current_user.has_any_role? :developer, :medical %>
+                  <div class="dropdown-divider"></div>
                   <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
                 <% end %>
+              <% end %>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">queues</a>
+            <div class="dropdown-menu">
+              <% if user_signed_in? && current_user.has_any_role?(:developer, :triage, :admin) %>
+                <span class="dropdown-item">
+                  <%= link_to 'dedupe queue', dedupe_queue_path %>
+                  <% if current_user.has_any_role? :developer, :admin %>
+                    <small class="text-right"><%= link_to 'meta', review_dedupe_reviews_path %></small>
+                  <% end %>
+                </span>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-item">
+                  <%= link_to 'spam queue', spam_queue_path %>
+                  <% if current_user.has_any_role? :developer, :admin %>
+                    <small class="text-right"><%= link_to 'meta', review_spam_reviews_path %></small>
+                  <% end %>
+                </span>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-item">
+                  <%= link_to 'suggested edit queue', suggested_edit_queue_path %>
+                  <% if current_user.has_any_role? :developer, :admin %>
+                    <small class="text-right"><%= link_to 'meta', review_suggested_edit_reviews_path %></small>
+                  <% end %>
+                </span>
               <% end %>
             </div>
           </li>

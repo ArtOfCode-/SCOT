@@ -1,7 +1,9 @@
 class QueuesController < ApplicationController
+  before_action :check_admin, only: [:review_spam_reviews, :review_dedupe_reviews, :review_suggested_edit_reviews]
+  before_action :check_triage
+
   def dedupe
     @original = RescueRequest.find_by(dupe_of: nil)
-    @disaster = @original.disaster.id
     if @original.nil?
       flash[:info] = 'There are no more records to deduplicate!'
       redirect_to :disasters
@@ -13,12 +15,6 @@ class QueuesController < ApplicationController
                                    .reject { |i| i.to_s.empty? }.join(' OR ')
       @suggested_dupes = RescueRequest.where(conditions).where.not(id: @original.id)
     end
-    @disaster = @original.disaster
-    possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
-    filtered_request = @original.attributes.select { |col, _val| possible_duplicate_columns.include? col }
-    conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote("%#{val}%")}" unless val.to_s.empty? }
-                                 .reject { |i| i.to_s.empty? }.join(' OR ')
-    @suggested_dupes = RescueRequest.where(conditions).where.not(id: @original.id)
   end
 
   # Dupe_of 0 means that it's a new record
@@ -45,9 +41,12 @@ class QueuesController < ApplicationController
     redirect_to action: :dedupe
   end
 
+  def review_dedupe_reviews
+    @reviews = DedupeReview.all
+  end
+
   def spam
     @rescue_request = RescueRequest.find_by(spam: nil)
-    @disaster = @rescue_request.disaster.id
     if @rescue_request.nil?
       flash[:info] = 'There are no records to spam check!'
       redirect_to :disasters
@@ -63,13 +62,17 @@ class QueuesController < ApplicationController
     redirect_to action: :spam
   end
 
+  def review_spam_reviews
+    @reviews = SpamReview.all
+  end
+
   def suggested_edit
     @suggested_edit = SuggestedEdit.find_by(reviewed_by: nil)
-    @disaster = @suggested_edit.resource.disaster.id
     if @suggested_edit.nil?
       flash[:info] = 'There are no suggested edits to review!'
       redirect_to :disasters
     else
+      @disaster = @suggested_edit.resource.disaster.id
       @request = @suggested_edit.resource
     end
   end
@@ -93,5 +96,19 @@ class QueuesController < ApplicationController
       flash[:sucess] = 'No more suggested edits to review!'
       redirect_to disaster_requests_path(disaster_id: @suggested_edit.resource.disaster_id)
     end
+  end
+
+  def review_suggested_edit_reviews
+    @reviews = SuggestedEdit.all
+  end
+
+  private
+
+  def check_admin
+    require_any :developer, :admin
+  end
+
+  def check_triage
+    require_any :triage, :medical, :developer, :admin
   end
 end

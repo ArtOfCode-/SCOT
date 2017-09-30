@@ -98,6 +98,11 @@ Rails.application.routes.draw do
       root to: 'queues#suggested_edit', as: :suggested_edit_queue
       post 'complete', to: 'queues#suggested_edit_complete', as: :suggested_edit_complete
     end
+    scope 'meta' do
+      get 'suggested_edit', to: 'queues#review_suggested_edit_reviews', as: :review_suggested_edit_reviews
+      get 'spam', to: 'queues#review_spam_reviews', as: :review_spam_reviews
+      get 'dedupe', to: 'queues#review_dedupe_reviews', as: :review_dedupe_reviews
+    end
   end
 
   scope '/api' do
