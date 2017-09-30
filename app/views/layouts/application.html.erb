@@ -22,47 +22,49 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item"><%= link_to 'home', root_path, class: 'nav-link' %></li>
+          <% if user_signed_in? && current_user.has_any_role?(:developer, :admin, :medical) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
             <div class="dropdown-menu">
-              <% if user_signed_in? %>
-                <% if current_user.has_any_role? :developer, :admin %>
-                  <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
-                <% end %>
-                <% if current_user.has_any_role? :developer, :medical %>
-                  <div class="dropdown-divider"></div>
-                  <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
-                <% end %>
+              <% if current_user.has_any_role? :developer, :admin %>
+                <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
+              <% end %>
+              <% if (current_user.has_role?(:admin) && current_user.has_role?(:medical)) || current_user.has_role?(:developer) %>
+              <div class="dropdown-divider"></div>
+              <% end %>
+              <% if current_user.has_any_role? :developer, :medical %>
+                <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
               <% end %>
             </div>
           </li>
+          <% end %>
+          <% if user_signed_in? && current_user.has_any_role?(:developer, :triage, :admin, :medical) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">queues</a>
             <div class="dropdown-menu">
-              <% if user_signed_in? && current_user.has_any_role?(:developer, :triage, :admin) %>
-                <span class="dropdown-item">
-                  <%= link_to 'dedupe queue', dedupe_queue_path %>
-                  <% if current_user.has_any_role? :developer, :admin %>
-                    <small class="text-right"><%= link_to 'meta', review_dedupe_reviews_path %></small>
-                  <% end %>
-                </span>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-item">
-                  <%= link_to 'spam queue', spam_queue_path %>
-                  <% if current_user.has_any_role? :developer, :admin %>
-                    <small class="text-right"><%= link_to 'meta', review_spam_reviews_path %></small>
-                  <% end %>
-                </span>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-item">
-                  <%= link_to 'suggested edit queue', suggested_edit_queue_path %>
-                  <% if current_user.has_any_role? :developer, :admin %>
-                    <small class="text-right"><%= link_to 'meta', review_suggested_edit_reviews_path %></small>
-                  <% end %>
-                </span>
-              <% end %>
+              <span class="dropdown-item">
+                <%= link_to 'dedupe queue', dedupe_queue_path %>
+                <% if current_user.has_any_role? :developer, :admin %>
+                  <small class="text-right"><%= link_to 'meta', review_dedupe_reviews_path %></small>
+                <% end %>
+              </span>
+              <div class="dropdown-divider"></div>
+              <span class="dropdown-item">
+                <%= link_to 'spam queue', spam_queue_path %>
+                <% if current_user.has_any_role? :developer, :admin %>
+                  <small class="text-right"><%= link_to 'meta', review_spam_reviews_path %></small>
+                <% end %>
+              </span>
+              <div class="dropdown-divider"></div>
+              <span class="dropdown-item">
+                <%= link_to 'suggested edit queue', suggested_edit_queue_path %>
+                <% if current_user.has_any_role? :developer, :admin %>
+                  <small class="text-right"><%= link_to 'meta', review_suggested_edit_reviews_path %></small>
+                <% end %>
+              </span>
             </div>
           </li>
+          <% end %>
         </ul>
 
         <ul class="navbar-right navbar-nav">
