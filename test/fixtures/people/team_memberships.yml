@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  people/volunteer: one
+  people/team: one
+  role: MyString
+
+two:
+  people/volunteer: two
+  people/team: two
+  role: MyString
