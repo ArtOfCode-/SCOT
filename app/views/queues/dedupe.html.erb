@@ -90,7 +90,7 @@
       <td><%= submit_tag "Skip", name: "skip" %></td>
       <td><%= submit_tag "No Duplicates", name: "not" %></td>
       <% @suggested_dupes.each do |dupe| %>
-      <td><button type="submit" name="dupe_of" value="<%= dupe.id %>">Duplicate of <%= dupe.id %></button></td>
+      <td><button type="submit" name="dupe_of" value="<%= dupe.id %>">This is a duplicate</button></td>
       <% end %>
     </tr>
   </tbody>
