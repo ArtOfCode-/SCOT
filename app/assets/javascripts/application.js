@@ -20,4 +20,8 @@ $(document).on('turbolinks:load', function() {
   $('.slide-header').on('click', function() {
     $(this).siblings('.slide-body').slideToggle(250);
   });
+
+  $('.select2').select2({
+    theme: 'bootstrap'
+  });
 });

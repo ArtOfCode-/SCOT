@@ -1,0 +1,57 @@
+<%= form_for @item, url: url do |f| %>
+  <% if @item.errors.any? %>
+    <div class="card border-danger">
+      <div class="card-body">
+        <p>There were some errors while trying to save your item:</p>
+        <ul>
+          <% @item.errors.full_messages.each do |m| %>
+            <li><%= m %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :content do %>
+      Content <small class="text-muted">The English version of the post you're working on.</small>
+    <% end %><br/>
+    <%= f.text_area :content, rows: 7, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :source do %>
+      Source <small class="text-muted">Optional. If you know the source of your information, enter it here.</small>
+    <% end %><br/>
+    <%= f.text_field :source, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :originated_at do %>
+      Date <small class="text-muted">Optional. If you know the date your information is from, enter it here.</small>
+    <% end %><br/>
+    <%= f.datetime_select :originated_at, { prompt: '' }, class: 'form-control-sm originated-at' %>
+    <a href="#" class="select-today ml-4" data-for=".originated-at">Select today's date</a>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :broadcast_municipality_id do %>
+      Municipality <small class="text-muted">Optional. If your info relates to a specific municipality, select it here.</small>
+    <% end %><br/>
+    <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name'),
+                 { include_blank: true }, class: 'form-control select2' %>
+  </div><br/>
+
+  <a href="#" class="translation-reveal mb-4" data-open="false">+ Add translation</a>
+
+  <div class="field translation-field">
+    <%= f.label :translation do %>
+      Translation <small class="text-muted">Optional. Enter the Spanish translation of your post here.</small>
+    <% end %><br/>
+    <%= f.text_area :translation, rows: 7, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Submit', class: 'btn btn-success' %>
+  </div>
+<% end %>
