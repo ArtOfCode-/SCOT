@@ -1,0 +1,22 @@
+<h1>Reviewing Suggested Edit Reviews</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID/Record Link</th>
+      <th>Outcome</th>
+      <th>Reviewer</th>
+      <th>Review Completed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reviews.each do |rev| %>
+    <tr>
+      <td><%= link_to "##{rev.resource.disaster.id}-#{rev.resource.id}", disaster_request_path(num: rev.resource.id, disaster_id: rev.resource.disaster.id) %></td>
+      <td><%= rev.result %></td>
+      <td><%= rev.reviewed_by.username %></td>
+      <td><%= rev.updated_at %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

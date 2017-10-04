@@ -1,3 +1,6 @@
+<%= form_tag :dedupe_complete do %>
+  <%= hidden_field_tag :rescue_request_id, @original.id %>
+  <%= hidden_field_tag :suggested_duplicates, @suggested_dupes.map(&:id) %>
 <table class="table table-sm details-table">
   <thead>
     <tr>
@@ -83,16 +86,13 @@
       <td><%= dupe.extra_details %></td>
       <% end %>
     </tr>
-    <%= form_tag :dedupe_complete do %>
-      <%= hidden_field_tag :rescue_request_id, @original.id %>
-      <%= hidden_field_tag :suggested_duplicates, @suggested_dupes.map(&:id) %>
     <tr>
       <td><%= submit_tag "Skip", name: "skip" %></td>
       <td><%= submit_tag "No Duplicates", name: "not" %></td>
       <% @suggested_dupes.each do |dupe| %>
-      <td><%= submit_tag "Duplicate", name: "dupe_of", value: dupe.id %></td>
+      <td><button type="submit" name="dupe_of" value="<%= dupe.id %>">This is a duplicate</button></td>
       <% end %>
     </tr>
-    <% end %>
   </tbody>
 </table>
+<% end %>
