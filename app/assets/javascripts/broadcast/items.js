@@ -30,4 +30,14 @@ $(document).ready(function () {
     dateSelect.eq(3).val(date.getHours());
     dateSelect.eq(4).val(date.getMinutes().toString().padStart(2, '0'));
   });
+
+  $('li, li *').on('mouseenter', function () {
+    if ($(this).data('id')) {
+      $(this).append($('<a class="section-edit-link" href="/broadcast/items/' + $(this).data('id') + '/edit">Edit section</a>'));
+    }
+  }).on('mouseleave', function () {
+    if ($(this).data('id')) {
+      $(this).children('a.section-edit-link').remove();
+    }
+  });
 });

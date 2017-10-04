@@ -125,6 +125,8 @@ Rails.application.routes.draw do
       get 'new', to: 'broadcast/items#new', as: :new_broadcast_item
       post 'new', to: 'broadcast/items#create', as: :create_broadcast_item
       get 'need-translation', to: 'broadcast/items#need_translation', as: :translatable_broadcast_items
+      get ':id/edit', to: 'broadcast/items#edit', as: :edit_broadcast_item
+      patch ':id/edit', to: 'broadcast/items#update', as: :update_broadcast_item
       get ':id/added', to: 'broadcast/items#added', as: :added_broadcast_item
       get ':id/translate', to: 'broadcast/items#add_translation', as: :translate_broadcast_item
       post ':id/translate', to: 'broadcast/items#submit_translation', as: :submit_broadcast_translation

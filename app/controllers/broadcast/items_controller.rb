@@ -21,6 +21,16 @@ class Broadcast::ItemsController < ApplicationController
     end
   end
 
+  def edit; end
+
+  def update
+    if @item.update item_params
+      redirect_to added_broadcast_item_path(@item)
+    else
+      render :edit
+    end
+  end
+
   def added; end
 
   def need_translation
@@ -57,7 +67,7 @@ class Broadcast::ItemsController < ApplicationController
     @document << '<h3 id="general_interest">General Interest</h3>'
     @document << '<ul>'
     general_items.each do |i|
-      @document << "<li><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
+      @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
     end
     @document << '</ul>'
 
@@ -68,7 +78,7 @@ class Broadcast::ItemsController < ApplicationController
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_eng'>#{name}</h4>"
       @document << '<ul>'
       municipality.first(params[:max_muni]).each do |i|
-        @document << "<li><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
+        @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
       end
       @document << '</ul>'
     end
@@ -80,7 +90,7 @@ class Broadcast::ItemsController < ApplicationController
     @document << '<h3 id="noticias_de_interés_general">Noticias de Interés General</h3>'
     @document << '<ul>'
     general_items.each do |i|
-      @document << "<li><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
+      @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
     end
     @document << '</ul>'
 
@@ -91,7 +101,7 @@ class Broadcast::ItemsController < ApplicationController
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_spa'>#{name}</h4>"
       @document << '<ul>'
       municipality.first(params[:max_muni]).each do |i|
-        @document << "<li><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
+        @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
       end
       @document << '</ul>'
     end
