@@ -54,6 +54,7 @@
               <% end %>
             </div>
           </li>
+          <% end %>
           <% if user_signed_in? && current_user.has_any_role?(:developer, :triage, :admin, :medical) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">queues</a>
