@@ -37,6 +37,10 @@
                   <%= link_to 'dedupe queue', dedupe_queue_path, class: 'dropdown-item' %>
                   <div class="dropdown-divider"></div>
                 <% end %>
+                <% if has_any_role? :developer, :admin, :broadcast, :miner %>
+                  <%= link_to 'broadcasts', broadcast_items_path, class: 'dropdown-item' %>
+                  <div class="dropdown-divider"></div>
+                <% end %>
                 <% if current_user.has_any_role? :developer, :admin %>
                   <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
                 <% end %>
