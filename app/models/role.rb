@@ -12,6 +12,6 @@ class Role < ApplicationRecord
   scopify
 
   def self.global_defaults
-    %i[developer admin triage rescue medical broadcast]
+    %i[developer admin triage rescue medical broadcast miner]
   end
 end
