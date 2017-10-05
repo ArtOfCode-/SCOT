@@ -35,7 +35,8 @@ class Broadcast::ItemsController < ApplicationController
   def added; end
 
   def need_translation
-    @items = Broadcast::Item.where(translation: nil).order(originated_at: :desc).paginate(page: params[:page], per_page: 100)
+    @items = Broadcast::Item.where("'translation IS NULL OR translation = ''").order(originated_at: :desc)
+                            .paginate(page: params[:page], per_page: 100)
   end
 
   def add_translation; end
