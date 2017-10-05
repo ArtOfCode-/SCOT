@@ -19,6 +19,6 @@
     </div>
   </div>
   <div class="document float-right ml-2 w-75">
-    <%= raw(sanitize(@document.join(''), tags: %w[h1 h2 h3 h4 ul li strong br hr], attributes: %w[id class data-id])) %>
+    <%= raw(sanitize(@document.join(''), tags: %w[h1 h2 h3 h4 ul li strong br hr span], attributes: %w[id class data-id])) %>
   </div>
 </div>
