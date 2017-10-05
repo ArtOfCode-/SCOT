@@ -1,6 +1,6 @@
 class Broadcast::ItemsController < ApplicationController
   before_action :check_access
-  before_action :set_item, except: [:index, :new, :create, :added, :setup_generation, :generate_script, :need_translation]
+  before_action :set_item, except: [:index, :new, :create, :setup_generation, :generate_script, :need_translation]
 
   def index
     @items = conditional_filter Broadcast::Item.all, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
@@ -15,6 +15,7 @@ class Broadcast::ItemsController < ApplicationController
   def create
     @item = Broadcast::Item.new item_params
     if @item.save
+      flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else
       render :new
