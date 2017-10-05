@@ -43,7 +43,7 @@ class Broadcast::ItemsController < ApplicationController
 
   def submit_translation
     if @item.update translation: params[:translation]
-      redirect_to added_broadcast_item_path(@item, t: 0)
+      redirect_to added_broadcast_item_path(@item, t: 0, tn: 1)
     else
       render :add_translation
     end
