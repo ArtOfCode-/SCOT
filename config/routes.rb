@@ -130,6 +130,7 @@ Rails.application.routes.draw do
       get ':id/added', to: 'broadcast/items#added', as: :added_broadcast_item
       get ':id/translate', to: 'broadcast/items#add_translation', as: :translate_broadcast_item
       post ':id/translate', to: 'broadcast/items#submit_translation', as: :submit_broadcast_translation
+      post ':id/deprecate', to: 'broadcast/items#deprecate_item', as: :deprecate_broadcast_item
     end
 
     get 'setup', to: 'broadcast/items#setup_generation', as: :broadcast_script_setup

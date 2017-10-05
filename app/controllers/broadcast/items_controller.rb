@@ -3,8 +3,8 @@ class Broadcast::ItemsController < ApplicationController
   before_action :set_item, except: [:index, :new, :create, :setup_generation, :generate_script, :need_translation]
 
   def index
-    @items = conditional_filter Broadcast::Item.all, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
-                                                     source: params[:source]
+    @items = conditional_filter Broadcast::Item.active, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
+                                                        source: params[:source]
     @items = @items.includes(:municipality).order(originated_at: :desc).paginate page: params[:page], per_page: 100
   end
 
@@ -35,7 +35,7 @@ class Broadcast::ItemsController < ApplicationController
   def added; end
 
   def need_translation
-    @items = Broadcast::Item.where("'translation IS NULL OR translation = ''").order(originated_at: :desc)
+    @items = Broadcast::Item.where("translation IS NULL OR translation = ''").order(originated_at: :desc)
                             .paginate(page: params[:page], per_page: 100)
   end
 
@@ -57,9 +57,9 @@ class Broadcast::ItemsController < ApplicationController
     params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
     params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
-    general_items = Broadcast::Item.where('originated_at > ?', params[:min_origin]).where(municipality: nil).limit(params[:max_general])
+    general_items = Broadcast::Item.active.where('originated_at > ?', params[:min_origin]).where(municipality: nil).limit(params[:max_general])
                                    .order(originated_at: :desc)
-    municipal_items = Broadcast::Item.includes(:municipality).where('originated_at > ?', params[:min_origin]).where.not(municipality: nil)
+    municipal_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).where.not(municipality: nil)
                                      .order(originated_at: :desc)
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
 
@@ -69,7 +69,7 @@ class Broadcast::ItemsController < ApplicationController
     @document << '<h3 id="general_interest">General Interest</h3>'
     @document << '<ul>'
     general_items.each do |i|
-      @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
+      @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
     end
     @document << '</ul>'
 
@@ -80,7 +80,7 @@ class Broadcast::ItemsController < ApplicationController
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_eng'>#{name}</h4>"
       @document << '<ul>'
       municipality.first(params[:max_muni]).each do |i|
-        @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
+        @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}</li>"
       end
       @document << '</ul>'
     end
@@ -92,7 +92,7 @@ class Broadcast::ItemsController < ApplicationController
     @document << '<h3 id="noticias_de_interés_general">Noticias de Interés General</h3>'
     @document << '<ul>'
     general_items.each do |i|
-      @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
+      @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
     end
     @document << '</ul>'
 
@@ -103,10 +103,16 @@ class Broadcast::ItemsController < ApplicationController
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_spa'>#{name}</h4>"
       @document << '<ul>'
       municipality.first(params[:max_muni]).each do |i|
-        @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%m %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
+        @document << "<li data-id='#{i.id}'><strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}</li>"
       end
       @document << '</ul>'
     end
+  end
+
+  def deprecate_item
+    @item.update(deprecated: true)
+    flash[:success] = 'Marked item as deprecated.'
+    redirect_to broadcast_items_path
   end
 
   private
