@@ -3,7 +3,9 @@ class DisastersController < ApplicationController
   before_action :require_admin, except: [:index]
 
   def index
-    @disasters = Disaster.active.paginate(page: params[:page], per_page: 25)
+    # TEMPORARY LINE
+    redirect_to :broadcast_items
+    #@disasters = Disaster.active.paginate(page: params[:page], per_page: 25)
   end
 
   def new
