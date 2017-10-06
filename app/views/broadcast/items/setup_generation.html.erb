@@ -1,0 +1,44 @@
+<h1>Generate Broadcast Script</h1>
+<p>First, set the parameters you want to generate the script with. These will generally assume currently-sensible defaults, but if you want to
+  change them this is your chance.</p>
+
+<%= form_tag broadcast_script_path, method: :get do %>
+  <div class="field">
+    <%= label_tag :name do %>
+      Name<br/>
+      <small class="text-muted">What do you want to call this broadcast? Owen's Magical Script of Wonder, perhaps?</small>
+    <% end %><br/>
+    <%= text_field_tag :name, nil, class: 'form-control', placeholder: 'CRHQ 10 AM Broadcast 2017-10-04' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag :min_origin do %>
+      Oldest Data<br/>
+      <small class="text-muted">What's the earliest date an item can originate from to be included in the script?
+        Defaults to 1 Jan 1970, i.e. everything.</small>
+    <% end %><br/>
+    <%= date_field_tag :min_origin, nil, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag :max_general do %>
+      Max General Updates<br/>
+      <small class="text-muted">How many General Interest announcements to include at maximum. Defaults to 9999, i.e.
+        all of them.</small>
+    <% end %><br/>
+    <%= number_field_tag :max_general, nil, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag :max_muni do %>
+      Max Municipality Updates<br/>
+      <small class="text-muted">How many municipality-specific updates to include for each municipality. Defaults
+        to 9999, i.e. lots.</small>
+    <% end %><br/>
+    <%= number_field_tag :max_muni, nil, class: 'form-control' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= submit_tag 'Generate', class: 'btn btn-success' %>
+  </div>
+<% end %>

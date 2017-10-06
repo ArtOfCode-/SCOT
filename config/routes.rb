@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root to: 'disasters#index', as: :root
+  root to: 'broadcast/items#index', as: :root
 
   scope '/admin' do
     scope '/roles' do
@@ -117,5 +117,23 @@ Rails.application.routes.draw do
       post 'new', to: 'user_authorizations#create', as: :create_authorization
       delete ':id', to: 'user_authorizations#destroy', as: :destroy_authorization
     end
+  end
+
+  scope '/broadcast' do
+    scope 'items' do
+      root to: 'broadcast/items#index', as: :broadcast_items
+      get 'new', to: 'broadcast/items#new', as: :new_broadcast_item
+      post 'new', to: 'broadcast/items#create', as: :create_broadcast_item
+      get 'need-translation', to: 'broadcast/items#need_translation', as: :translatable_broadcast_items
+      get ':id/edit', to: 'broadcast/items#edit', as: :edit_broadcast_item
+      patch ':id/edit', to: 'broadcast/items#update', as: :update_broadcast_item
+      get ':id/added', to: 'broadcast/items#added', as: :added_broadcast_item
+      get ':id/translate', to: 'broadcast/items#add_translation', as: :translate_broadcast_item
+      post ':id/translate', to: 'broadcast/items#submit_translation', as: :submit_broadcast_translation
+      post ':id/deprecate', to: 'broadcast/items#deprecate_item', as: :deprecate_broadcast_item
+    end
+
+    get 'setup', to: 'broadcast/items#setup_generation', as: :broadcast_script_setup
+    get 'generate', to: 'broadcast/items#generate_script', as: :broadcast_script
   end
 end

@@ -5,10 +5,13 @@
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' %>
+    <%= stylesheet_link_tag    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css' %>
+    <%= stylesheet_link_tag    'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css' %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'https://code.jquery.com/jquery-3.2.1.min.js' %>
     <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js' %>
     <%= javascript_include_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js' %>
+    <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
@@ -26,14 +29,28 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
             <div class="dropdown-menu">
-              <% if current_user.has_any_role? :developer, :admin %>
-                <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
-              <% end %>
-              <% if (current_user.has_role?(:admin) && current_user.has_role?(:medical)) || current_user.has_role?(:developer) %>
-              <div class="dropdown-divider"></div>
-              <% end %>
-              <% if current_user.has_any_role? :developer, :medical %>
-                <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
+              <% if user_signed_in? %>
+                <% if has_any_role? :developer, :admin %>
+                  <%= link_to 'manage roles', admin_roles_path, class: 'dropdown-item' %>
+                  <div class="dropdown-divider"></div>
+                <% end %>
+                <% if current_user.has_any_role? :developer, :triage, :queue %>
+                  <%= link_to 'dedupe queue', dedupe_queue_path, class: 'dropdown-item' %>
+                  <div class="dropdown-divider"></div>
+                <% end %>
+                <% if has_any_role? :developer, :admin, :broadcast, :miner %>
+                  <%= link_to 'broadcasts', broadcast_items_path, class: 'dropdown-item' %>
+                  <div class="dropdown-divider"></div>
+                <% end %>
+                <% if current_user.has_any_role? :developer, :admin %>
+                  <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
+                <% end %>
+                <% if (current_user.has_role?(:admin) && current_user.has_role?(:medical)) || current_user.has_role?(:developer) %>
+                  <div class="dropdown-divider"></div>
+                <% end %>
+                <% if current_user.has_any_role? :developer, :medical %>
+                  <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
+                <% end %>
               <% end %>
             </div>
           </li>

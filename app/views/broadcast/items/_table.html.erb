@@ -1,0 +1,28 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th class="text-muted">ID</th>
+    <th>Content</th>
+    <th>Origin Date</th>
+    <th>Municipality</th>
+    <th>Source</th>
+    <th>Translated?</th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @items.each do |i| %>
+      <tr>
+        <td class="text-muted"><%= i.id %></td>
+        <td><%= i.content.first(100).length == 100 ? i.content.first(100) + '...' : i.content.first(100) %></td>
+        <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
+        <td><%= i.municipality&.name %></td>
+        <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
+        <td><%= i.translation.present? ? 'Yes' : 'No' %></td>
+        <td><%= link_to 'Add translation', translate_broadcast_item_path(i) %></td>
+        <td><%= link_to 'Deprecate (remove)', deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

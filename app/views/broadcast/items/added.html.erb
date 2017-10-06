@@ -1,0 +1,16 @@
+<div class="col-md-4 mx-auto">
+  <div class="card border-success">
+    <div class="card-body">
+      <h3 class="mx-auto text-success text-center">Success!</h3>
+      <div class="mx-auto text-center">
+        <% unless params[:t].present? %>
+          <%= link_to 'Edit', edit_broadcast_item_path(@item), class: 'btn btn-outline-secondary mx-3' %>
+        <% end %>
+        <%= link_to '+ Add another item', new_broadcast_item_path, class: 'btn btn-success mx-3' %>
+        <% if params[:tn].present? %>
+          <br/><%= link_to 'Back to translations list', translatable_broadcast_items_path %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

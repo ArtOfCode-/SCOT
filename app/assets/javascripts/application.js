@@ -11,13 +11,28 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require turbolinks
 //= require_tree .
 
-$(document).on('turbolinks:load', function() {
+$(document).ready(function() {
   $('.slide-body').hide();
 
   $('.slide-header').on('click', function() {
     $(this).siblings('.slide-body').slideToggle(250);
+  });
+
+  $('.select2').select2({
+    theme: 'bootstrap'
+  });
+
+  new Pikaday({
+    field: $('.datepicker')[0],
+    showTime: true,
+    showSeconds: false,
+    use24hour: true,
+    defaultDate: new Date(),
+    setDefaultDate: true,
+    toString: function (date, format) {
+      return date.toISOString();
+    }
   });
 });

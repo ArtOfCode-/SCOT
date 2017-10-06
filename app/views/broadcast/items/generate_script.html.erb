@@ -1,0 +1,24 @@
+<div class="row clearfix">
+  <div class="contents float-left mr-2 w-20">
+    <div class="card border-primary">
+      <div class="card-body">
+        <h4>Contents</h4>
+        <ul>
+          <li><a href="#english_broadcast">English Broadcast</a></li>
+          <ul>
+            <li><a href="#general_interest">General Interest</a></li>
+            <li><a href="#municipalities">Municipalities</a></li>
+          </ul>
+          <li><a href="#spanish_broadcast">Spanish Broadcast</a></li>
+          <ul>
+            <li><a href="#noticias_de_interés_general">Noticias de Interés General</a></li>
+            <li><a href="#municipios">Municipios</a></li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="document float-right ml-2 w-75">
+    <%= raw(sanitize(@document.join(''), tags: %w[h1 h2 h3 h4 ul li strong br hr span], attributes: %w[id class data-id])) %>
+  </div>
+</div>

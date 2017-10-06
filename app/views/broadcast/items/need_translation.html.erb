@@ -1,0 +1,10 @@
+<h1>Items Needing Translation</h1>
+<p>The following is a list of all items that still need translating. Focus on more recent entries, as those are more important.</p>
+
+<%= render 'broadcast/items/table' %>
+
+<div class="text-center">
+  <%= will_paginate @items, renderer: BootstrapPagination::Rails %>
+</div>
+
+<%= link_to '+ Add item', new_broadcast_item_path %>

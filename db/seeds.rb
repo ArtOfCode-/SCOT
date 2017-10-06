@@ -4,9 +4,9 @@
 
 Rails.application.eager_load!
 
-Dir.glob(Rails.root.join('db/seeds/*.yml')).each do |f|
-  basename = File.basename f, '.yml'
-  type = basename.singularize.classify.constantize
+Dir.glob(Rails.root.join('db/seeds/**/*.yml')).each do |f|
+  basename = Pathname.new(f).relative_path_from(Pathname.new(Rails.root.join('db/seeds'))).to_s
+  type = basename.gsub('.yml', '').singularize.classify.constantize
   data = YAML.load_file f
   type.create data
 end
