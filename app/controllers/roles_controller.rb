@@ -7,7 +7,7 @@ class RolesController < ApplicationController
                User.where("username LIKE '%#{params[:filter]}%'")
              else
                User.all
-             end.paginate page: params[:page], per_page: 50
+             end.order(id: :desc).paginate page: params[:page], per_page: 50
     @role_names = (Role.all.map { |x| x.name.to_sym } + Role.global_defaults).uniq
   end
 
