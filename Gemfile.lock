@@ -80,6 +80,7 @@ GEM
     config (1.4.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
+    database_cleaner (1.6.1)
     deep_merge (1.1.1)
     devise (4.3.0)
       bcrypt (~> 3.0)
@@ -253,6 +254,7 @@ DEPENDENCIES
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
   config (~> 1.4.0)
+  database_cleaner
   devise (~> 4.3.0)
   factory_girl_rails (~> 4.0)
   flamegraph
