@@ -62,6 +62,7 @@ class Broadcast::ItemsController < ApplicationController
     municipal_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).where.not(municipality: nil)
                                      .order(originated_at: :desc)
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
+                                     .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
 
     @document << "<h1>#{params[:name]}</h1>"
     @document << '<h2 id="english_broadcast">English Broadcast</h2>'
