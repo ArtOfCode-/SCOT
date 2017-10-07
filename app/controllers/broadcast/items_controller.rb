@@ -83,7 +83,7 @@ class Broadcast::ItemsController < ApplicationController
       name = municipality[0].municipality.name
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_eng'>#{name}</h4>"
       @document << '<ul>'
-      municipality.first(params[:max_muni]).each do |i|
+      municipality.first(params[:max_muni].to_i).each do |i|
         @document << "<li data-id='#{i.id}'>"
         @document << "<span class='text-muted'>(ID #{i.id})</span>"
         @document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}"
@@ -112,7 +112,7 @@ class Broadcast::ItemsController < ApplicationController
       name = municipality[0].municipality.name
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_spa'>#{name}</h4>"
       @document << '<ul>'
-      municipality.first(params[:max_muni]).each do |i|
+      municipality.first(params[:max_muni].to_i).each do |i|
         @document << "<li data-id='#{i.id}'>"
         @document << "<span class='text-muted'>(ID #{i.id})</span>"
         @document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}"
