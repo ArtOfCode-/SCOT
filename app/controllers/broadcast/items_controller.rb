@@ -13,7 +13,7 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def create
-    @item = Broadcast::Item.new item_params.merge(created_by: current_user)
+    @item = Broadcast::Item.new item_params.merge(user: current_user)
     if @item.save
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
