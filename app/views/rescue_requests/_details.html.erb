@@ -1,0 +1,14 @@
+<h2>Details</h2>
+<p>We now need details of the situation you're in, to allow us to correctly prioritize and respond to your request.</p>
+
+<%= label_tag :people_count, "Number of people needing assistance" %><br/>
+<%= text_field_tag :people_count, '', class: 'form-control' %><br/>
+
+<%= label_tag :medical_conditions, "Medical conditions:" %><br/>
+<span class="field-description">If anyone in this group has any medical conditions, please provide details here.
+  The more details, the better - what is it, what treatment/medication does it require, how much medication do you
+  have available, etc. Please <strong>also include injuries or wounds here</strong>.</span><br/>
+<%= text_area_tag :medical_conditions, '', rows: 10, cols: 100, class: 'form-control' %><br/>
+
+<%= label_tag :extra_details, "Extra details:" %><br/>
+<%= text_area_tag :extra_details, '', rows: 7, cols: 100, class: 'form-control' %><br/>

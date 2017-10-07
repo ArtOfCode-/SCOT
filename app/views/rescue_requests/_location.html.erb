@@ -1,3 +1,37 @@
+<article id="stage1">
+  <h2>Location</h2>
+  <p>We need a location to be able to respond to your request.</p>
+  <p>Either <a href="#" id="use-my-location">use your current location</a>, input and select an address below, or click on the map.</p>
+  <p><input id="autocomplete" size="50" placeholder="Enter your address" type="text" class="form-control"></p>
+  <div id="map"></div>
+</article>
+
+<article id="stage2">
+  <h2>Address</h2>
+  <p>Based on the location you just selected, we found this address. Make sure this is correct, and then hit Continue.</p>
+
+  <%= hidden_field_tag :request_id %>
+  
+  <%= label_tag :street_address, 'Street Address:' %><br/>
+  <%= text_field_tag :street_address, '', class: 'form-control', id: 'street_address' %><br/>
+
+  <%= label_tag :apt_no, 'Apartment Number:' %><br/>
+  <%= text_field_tag :apt_no, '', class: 'form-control', id: 'apt-no' %><br/>
+
+  <%= label_tag :city, 'City:' %><br/>
+  <%= text_field_tag :city, '', class: 'form-control', id: 'city' %><br/>
+
+  <%= label_tag :zip_code, 'Zip/Postal Code:' %><br/>
+  <%= text_field_tag :zip_code, '', class: 'form-control', id: 'zip_code' %><br/>
+
+  <%= label_tag :state, 'State:' %><br/>
+  <%= text_field_tag :state, '', class: 'form-control', id: 'state' %><br/>
+
+  <%= label_tag :country, 'Country:' %><br/>
+  <%= text_field_tag :country, '', class: 'form-control', id: 'country' %><br/>
+</article>
+
+<script>
 function moveToSecondStage(lat, long) {
   $.post(location.pathname, {"lat": lat, "long": long}, function(data) {
     $('input[name=request_id]').val(data['id']);
@@ -30,14 +64,9 @@ function firstStep() {
   $('article#stage1').show();
 }
 
-function longFields() {
-  $('article:not(#stage3)').hide();
-  $('article#stage3').show();
-}
-
 var requestAccessKey = null;
 
-window.onload = function() {
+$(document).ready(function() {
   $('article:not(#stage1)').hide();
 
   $('.js-form').submit(function() {
@@ -80,7 +109,7 @@ window.onload = function() {
       navigator.geolocation.getCurrentPosition(geoSuccess);
     });
   }
-};
+});
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -105,11 +134,6 @@ function initMap() {
     moveToSecondStage(lat, long);
   });
 }
+</script>
 
-$(document).ready(function() {
-  $("#disaster").on('change', function() {
-    if ($(this).val()) {
-      location.href = location.protocol + '//' + location.host + '/disasters/' + $(this).val() + '/requests/new';
-    }
-  });
-});
+<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Settings.maps_api_key}&libraries=places&callback=initMap", 'data-turbolinks-eval': 'false' %>

@@ -1,0 +1,20 @@
+<h2>Contact</h2>
+<p>We now need your contact information to contact you if we need to.</p>
+
+<%= hidden_field_tag :request_id %>
+<%= hidden_field_tag :com_redir, true %>
+
+<%= label_tag :name, "Your name:" %><br/>
+<%= text_field_tag :name, '', class: 'form-control' %><br/>
+
+<%= label_tag :twitter, "Twitter handle:" %><br/>
+<%= text_field_tag :twitter, '', class: 'form-control' %><br/>
+
+<%= label_tag :phone, 'Phone number:' %><br/>
+<%= phone_field_tag :phone, '', class: 'form-control' %><br/>
+
+<%= label_tag :email, 'Email address:' %><br/>
+<%= email_field_tag :email, '', class: 'form-control' %><br/>
+
+<%= label_tag :media, "Related Tweet:" %>
+<%= text_field_tag :media, '', class: 'form-control' %><br/>

@@ -1,78 +1,9 @@
 <h1>Rescue Request for <%= @disaster.name %></h1>
-<article id="stage1">
-  <h2>Location</h2>
-  <p>We need a location to be able to respond to your request.</p>
-  <p>Either <a href="#" id="use-my-location">use your current location</a>, input and select an address below, or click on the map.</p>
-  <p><input id="autocomplete" size="50" placeholder="Enter your address" type="text" class="form-control"></p>
-  <div id="map"></div>
-</article>
+<%= form_tag update_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', method: :post do %>
 
-<article id="stage2">
-  <h2>Address</h2>
-  <p>Based on the location you just selected, we found this address. Make sure this is correct, and then hit Continue.</p>
+  <%= render partial: "rescue_requests/location" %>
+  <%= render partial: "rescue_requests/contact_info" %>
+  <%= render partial: "rescue_requests/details" %>
 
-  <%= form_tag update_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', remote: true, method: :post, onsubmit: 'longFields();' do %>
-    <%= hidden_field_tag :request_id %>
-    
-    <%= label_tag :street_address, 'Street Address:' %><br/>
-    <%= text_field_tag :street_address, '', class: 'form-control', id: 'street_address' %><br/>
-
-    <%= label_tag :apt_no, 'Apartment Number:' %><br/>
-    <%= text_field_tag :apt_no, '', class: 'form-control', id: 'apt-no' %><br/>
-
-    <%= label_tag :city, 'City:' %><br/>
-    <%= text_field_tag :city, '', class: 'form-control', id: 'city' %><br/>
-
-    <%= label_tag :zip_code, 'Zip/Postal Code:' %><br/>
-    <%= text_field_tag :zip_code, '', class: 'form-control', id: 'zip_code' %><br/>
-
-    <%= label_tag :state, 'State:' %><br/>
-    <%= text_field_tag :state, '', class: 'form-control', id: 'state' %><br/>
-
-    <%= label_tag :country, 'Country:' %><br/>
-    <%= text_field_tag :country, '', class: 'form-control', id: 'country' %><br/>
-
-    <%= submit_tag 'Continue', class: 'btn btn-outline-primary' %>
-  <% end %>
-</article>
-
-<article id="stage3">
-  <h2>Details &amp; Contact</h2>
-  <p>We now need details of the situation you're in, to allow us to correctly prioritize and respond to your request.</p>
-
-  <%= form_tag update_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', remote: true, method: :post do %>
-    <%= hidden_field_tag :request_id %>
-    <%= hidden_field_tag :com_redir, true %>
-
-    <%= label_tag :name, "Your name:" %><br/>
-    <%= text_field_tag :name, '', class: 'form-control' %><br/>
-
-    <%= label_tag :people_count, "Number of people needing assistance" %><br/>
-    <%= text_field_tag :people_count, '', class: 'form-control' %><br/>
-
-    <%= label_tag :twitter, "Twitter handle:" %><br/>
-    <%= text_field_tag :twitter, '', class: 'form-control' %><br/>
-
-    <%= label_tag :phone, 'Phone number:' %><br/>
-    <%= phone_field_tag :phone, '', class: 'form-control' %><br/>
-
-    <%= label_tag :email, 'Email address:' %><br/>
-    <%= email_field_tag :email, '', class: 'form-control' %><br/>
-
-    <%= label_tag :medical_conditions, "Medical conditions:" %><br/>
-    <span class="field-description">If anyone in this group has any medical conditions, please provide details here.
-      The more details, the better - what is it, what treatment/medication does it require, how much medication do you
-      have available, etc. Please <strong>also include injuries or wounds here</strong>.</span><br/>
-    <%= text_area_tag :medical_conditions, '', rows: 10, cols: 100, class: 'form-control' %><br/>
-
-    <%= label_tag :media, "Related Tweet:" %>
-    <%= text_field_tag :media, '', class: 'form-control' %><br/>
-
-    <%= label_tag :extra_details, "Extra details:" %><br/>
-    <%= text_area_tag :extra_details, '', rows: 7, cols: 100, class: 'form-control' %><br/>
-
-    <%= submit_tag "Finish", class: 'btn btn-outline-success' %>
-  <% end %>
-</article>
-
-<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Settings.maps_api_key}&libraries=places&callback=initMap", 'data-turbolinks-eval': 'false' %>
+  <%= submit_tag "Finish", class: 'btn btn-outline-success' %>
+<% end %>
