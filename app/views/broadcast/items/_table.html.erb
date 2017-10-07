@@ -6,7 +6,6 @@
     <th>Origin Date</th>
     <th>Municipality</th>
     <th>Source</th>
-    <th>Translated?</th>
     <th></th>
     <th></th>
   </tr>
@@ -19,10 +18,12 @@
         <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
         <td><%= i.municipality&.name %></td>
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
-        <td><%= i.translation.present? ? 'Yes' : 'No' %></td>
-        <td><%= link_to 'Add translation', translate_broadcast_item_path(i) %></td>
-        <td><%= link_to 'Deprecate (remove)', deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' %></td>
+        <td><%= link_to raw("#{'<i class="fa fa-star" aria-hidden="true"></i>' unless i.translation.present?} Add translation"), translate_broadcast_item_path(i) %></td>
+        <td><%= link_to raw('<i class="fa fa-times fa-2x" style="color:darkred;" aria-hidden="true"></i>
+'), deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' %></td>
       </tr>
   <% end %>
   </tbody>
 </table>
+
+<script src="https://use.fontawesome.com/4cf802a098.js"></script>
