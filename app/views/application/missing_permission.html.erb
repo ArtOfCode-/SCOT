@@ -1,8 +1,14 @@
-<div class="col-md-4 mx-auto">
+<div class="col-md-6 mx-auto">
   <div class="card border-danger">
     <div class="card-body text-danger">
-      <h3 class="card-title">Hold up!</h3>
+      <% if current_user.nil? %>
+      <h3><strong>You aren't logged in!</strong></h3>
+      <p>You <strong>must be logged in</strong> in addition to having the <%= @role_name %> privilege to access this page.</p>
+      <%= link_to "Click here to log in!", new_user_session_path  %>
+      <% else %>
+      <h3 class="card-title">Wait a sec!</h3>
       <p>You're missing the required privilege to access this page - you need the <%= @role_name %> privilege.</p>
+      <% end %>
     </div>
   </div>
 </div>
