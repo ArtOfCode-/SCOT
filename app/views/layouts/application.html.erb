@@ -86,6 +86,7 @@
 
         <ul class="navbar-right navbar-nav">
           <% if current_user %>
+          <li class="nav-item"><%= link_to 'my account', edit_user_registration_path, class: 'nav-link' %></li>
           <li class="nav-item"><%= link_to 'log out', destroy_user_session_path, method: "DELETE", class: 'nav-link' %></li>
           <% else %>
           <li class="nav-item"><%= link_to 'log in', new_user_session_path, class: 'nav-link' %></li>
