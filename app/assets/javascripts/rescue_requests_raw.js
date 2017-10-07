@@ -106,7 +106,7 @@ function initMap() {
   });
 }
 
-$(document).on('turbolinks:load', function() {
+$(document).ready(function() {
   $("#disaster").on('change', function() {
     if ($(this).val()) {
       location.href = location.protocol + '//' + location.host + '/disasters/' + $(this).val() + '/requests/new';
