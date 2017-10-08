@@ -6,6 +6,8 @@ class RescueRequest < ApplicationRecord
   belongs_to :assignee, class_name: 'User', optional: true
   has_many :case_notes
   has_many :contact_attempts
+  has_many :dedupe_reviews
+  has_many :spam_reviews
   has_many :suggested_edits, as: :resource
   has_many :medical_conditions_rescue_requests
   has_many :medical_conditions, through: :medical_conditions_rescue_requests
