@@ -18,8 +18,8 @@
         <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
         <td><%= i.municipality&.name %></td>
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
-        <td><%= link_to raw("#{'<i class="fa fa-star" aria-hidden="true"></i>' unless i.translation.present?} Add translation"), translate_broadcast_item_path(i) %></td>
-        <td><%= link_to raw('<i class="fa fa-times fa-2x" style="color:darkred;" aria-hidden="true"></i>
+        <td><%= link_to raw("#{'<i class="fa fa-star"></i>' unless i.translation.present?} Add translation"), translate_broadcast_item_path(i) %></td>
+        <td><%= link_to raw('<i class="fa fa-times fa-2x" style="color:darkred;"></i>
 '), deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' %></td>
       </tr>
   <% end %>
