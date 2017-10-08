@@ -114,34 +114,10 @@
   </tbody>
 </table>
 
-<div id="tweet"></div><br>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Leaving the White House for the Great State of North Carolina. Big progress being made on many fronts!</p>&mdash; Donald J. Trump (@realDonaldTrump) <a href="<%= @request.media.to_s %>?ref_src=twsrc%5Etfw">October 7, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script>
-window.twttr = (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
-  if (d.getElementById(id)) return t;
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://platform.twitter.com/widgets.js";
-  fjs.parentNode.insertBefore(js, fjs);
-
-  t._e = [];
-  t.ready = function(f) {
-    t._e.push(f);
-  };
-
-  return t;
-}(document, "script", "twitter-wjs"));
-
-var previous_onload = window.onload;
-window.onload = function(){
-  previous_onload();
-  twttr.widgets.createTweet(
-  '<%= @request.media.to_s.split("/").last %>',
-  document.getElementById('tweet'))
-};
-</script>
+<br>
 
 <h3>
   Timeline
