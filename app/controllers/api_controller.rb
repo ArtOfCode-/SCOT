@@ -2,7 +2,7 @@ require 'csv'
 
 class ApiController < ApplicationController
   def geojson
-    render json: Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
+    json = Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
       {
         type: 'feature',
         geometry: {
@@ -16,6 +16,7 @@ class ApiController < ApplicationController
         }
       }
     end
+    render json: json
   end
 
   def csv
