@@ -1,7 +1,7 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
   before_action :set_request, except: [:index, :new, :create, :disaster_index]
-  before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe]
+  before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe, :update]
   before_action :check_access, only: [:show, :edit, :update, :assignee, :apply_assignee]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
   before_action :check_rescue, only: [:mark_safe]

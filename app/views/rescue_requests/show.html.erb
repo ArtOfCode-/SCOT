@@ -165,4 +165,5 @@ window.onload = function(){
 
 <% if has_any_role? :developer, :admin %>
   <%= link_to 'Admin: access logs', resource_access_logs_path(resource_type: @request.class.to_s, resource_id: @request.id), class: 'text-danger' %>
+  <%= link_to 'Admin: manage authorizations', request_authorizations_path(disaster_id: @disaster.id, num: @request.id), class: 'text-danger' %>
 <% end %>
