@@ -24,7 +24,16 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item"><%= link_to 'home', root_path, class: 'nav-link' %></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">home</a>
+            <div class="dropdown-menu">
+              <%= link_to 'disasters', disasters_path, class: 'dropdown-item' %>
+              <% if user_signed_in? && current_user.has_any_role?(:broadcast, :miner, :admin, :developer) %>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'broadcast', broadcast_items_path, class: 'dropdown-item' %>
+              <% end %>
+            </div>
+          </li>
           <% if user_signed_in? && current_user.has_any_role?(:developer, :admin, :medical) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
