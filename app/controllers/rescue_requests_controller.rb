@@ -18,7 +18,7 @@ class RescueRequestsController < ApplicationController
 
   def disaster_index
     status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
-    status_query = status_ids.map { |s| "request_status_id = #{s}" }.join(' OR ')
+    status_query = status_ids.map { |s| "request_status_id = #{s.to_i}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
     @counts = { closed: @closed.count, active: @active.count }
@@ -53,8 +53,10 @@ class RescueRequestsController < ApplicationController
     cn = RescueRequest.column_names - PROHIBITED_FIELDS - %w[chart_code]
     cn.push 'chart_code' if current_user.present? && current_user.has_any_role?(:medical, :developer)
 
+    medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash.map { |key| MedicalCondition.find(key.to_s.split("_").last.to_i) }
+
     # Yes, there is a reason I did this in such a convoluted way.
-    if @request.update(params.permit(params.keys).to_h.select { |k, _| cn.include? k })
+    if @request.update({medical_conditions: medical_conditions}.merge(params.permit(params.keys).to_h.select { |k, _| cn.include? k }))
       if params[:redirect]
         redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
       else

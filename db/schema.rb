@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171007155339) do
+ActiveRecord::Schema.define(version: 20171007232041) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -89,6 +89,19 @@ ActiveRecord::Schema.define(version: 20171007155339) do
     t.boolean "active"
   end
 
+  create_table "medical_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.integer "severity"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "medical_conditions_rescue_requests", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "medical_condition_id", null: false
+    t.bigint "rescue_request_id", null: false
+  end
+
   create_table "medical_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.text "description"
@@ -124,7 +137,7 @@ ActiveRecord::Schema.define(version: 20171007155339) do
     t.string "phone"
     t.string "email"
     t.integer "people_count"
-    t.text "medical_conditions"
+    t.text "medical_details"
     t.text "extra_details"
     t.string "key"
     t.datetime "created_at", null: false
