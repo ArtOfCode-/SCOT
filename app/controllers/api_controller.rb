@@ -2,21 +2,21 @@ require 'csv'
 
 class ApiController < ApplicationController
   def geojson
-    json = Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
+    features = Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
       {
-        type: 'feature',
+        type: 'Feature',
         geometry: {
           type: 'point',
-          coordinates: [request.lat, request.long]
+          coordinates: [remove_empty(request.lat), remove_empty(request.long)]
         },
         properties: {
-          name: request.name,
-          city: request.city,
-          status: request.request_status.name
+          name: remove_empty(request.name),
+          city: remove_empty(request.city),
+          status: remove_empty(request.request_status.name)
         }
       }
     end
-    render json: json
+    render json: {type: "FeatureCollection", features: features}
   end
 
   def csv
@@ -29,5 +29,11 @@ class ApiController < ApplicationController
       end
     end
     send_data output, type: 'text/csv', filename: 'export.csv', disposition: 'attachment'
+  end
+
+  private
+
+  def remove_empty(text)
+    text.to_s.empty? ? nil : text
   end
 end
