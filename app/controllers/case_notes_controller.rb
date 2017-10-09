@@ -46,7 +46,7 @@ class CaseNotesController < ApplicationController
   private
 
   def verify_access
-    require_any :developer, :admin, :triage, :rescue
+    require_any :developer, :admin, :triage, :rescue, :medical
   end
 
   def check_owner

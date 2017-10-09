@@ -24,16 +24,35 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+          <% if Disaster.count.to_i < 1 %>
+          <li class="nav-item"><%= link_to 'disasters', disasters_path, class: 'nav-link' %></li>
+          <% else %>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">home</a>
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">disasters</a>
             <div class="dropdown-menu">
-              <%= link_to 'disasters', disasters_path, class: 'dropdown-item' %>
-              <% if user_signed_in? && current_user.has_any_role?(:broadcast, :miner, :admin, :developer) %>
+              <%= link_to 'home', disasters_path, class: 'dropdown-item' %>
               <div class="dropdown-divider"></div>
-              <%= link_to 'broadcast', broadcast_items_path, class: 'dropdown-item' %>
+              <% Disaster.all.each.with_index do |disaster, i| %>
+              <%= link_to disaster.name, disaster_requests_path(disaster_id: disaster.id), class: 'dropdown-item' %>
+              <% unless i == Disaster.count-1 %>
+              <div class="dropdown-divider"></div>
+              <% end %>
               <% end %>
             </div>
           </li>
+          <% end %>
+
+          <% if user_signed_in? && current_user.has_any_role?(:broadcast, :miner, :admin, :developer) %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">broadcast</a>
+            <div class="dropdown-menu">
+              <%= link_to 'home', broadcast_items_path, class: 'dropdown-item' %>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'script generator', broadcast_script_setup_path, class: 'dropdown-item' %>
+            </div>
+          </li>
+          <% end %>
+
           <% if user_signed_in? && current_user.has_any_role?(:developer, :admin, :medical) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
@@ -43,16 +62,8 @@
                   <%= link_to 'manage roles', admin_roles_path, class: 'dropdown-item' %>
                   <div class="dropdown-divider"></div>
                 <% end %>
-                <% if current_user.has_any_role? :developer, :triage, :queue %>
-                  <%= link_to 'dedupe queue', dedupe_queue_path, class: 'dropdown-item' %>
-                  <div class="dropdown-divider"></div>
-                <% end %>
-                <% if has_any_role? :developer, :admin, :broadcast, :miner %>
-                  <%= link_to 'broadcasts', broadcast_items_path, class: 'dropdown-item' %>
-                  <div class="dropdown-divider"></div>
-                <% end %>
                 <% if current_user.has_any_role? :developer, :admin %>
-                  <%= link_to 'manage statuses', request_status_index_path, class: 'dropdown-item' %>
+                  <%= link_to 'manage request statuses', request_status_index_path, class: 'dropdown-item' %>
                 <% end %>
                 <% if (current_user.has_role?(:admin) && current_user.has_role?(:medical)) || current_user.has_role?(:developer) %>
                   <div class="dropdown-divider"></div>
@@ -64,30 +75,29 @@
             </div>
           </li>
           <% end %>
+
           <% if user_signed_in? && current_user.has_any_role?(:developer, :triage, :admin, :medical) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">queues</a>
             <div class="dropdown-menu">
-              <span class="dropdown-item">
-                <%= link_to 'dedupe queue', dedupe_queue_path %>
-                <% if current_user.has_any_role? :developer, :admin %>
-                  <small class="text-right"><%= link_to 'meta', review_dedupe_reviews_path %></small>
-                <% end %>
-              </span>
+              <%= link_to 'dedupe queue', dedupe_queue_path, class: 'dropdown-item' %>
               <div class="dropdown-divider"></div>
-              <span class="dropdown-item">
-                <%= link_to 'spam queue', spam_queue_path %>
-                <% if current_user.has_any_role? :developer, :admin %>
-                  <small class="text-right"><%= link_to 'meta', review_spam_reviews_path %></small>
-                <% end %>
-              </span>
+              <%= link_to 'spam queue', spam_queue_path, class: 'dropdown-item' %>
               <div class="dropdown-divider"></div>
-              <span class="dropdown-item">
-                <%= link_to 'suggested edit queue', suggested_edit_queue_path %>
-                <% if current_user.has_any_role? :developer, :admin %>
-                  <small class="text-right"><%= link_to 'meta', review_suggested_edit_reviews_path %></small>
-                <% end %>
-              </span>
+              <%= link_to 'suggested edit queue', suggested_edit_queue_path, class: 'dropdown-item' %>
+            </div>
+          </li>
+          <% end %>
+
+          <% if user_signed_in? && current_user.has_any_role?(:developer, :admin) %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">meta review</a>
+            <div class="dropdown-menu">
+              <%= link_to 'meta dedupe', review_dedupe_reviews_path, class: 'dropdown-item' %>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'meta spam', review_spam_reviews_path, class: 'dropdown-item' %>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'meta suggested edit', review_suggested_edit_reviews_path, class: 'dropdown-item' %>
             </div>
           </li>
           <% end %>
