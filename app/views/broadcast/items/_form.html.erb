@@ -30,15 +30,9 @@
     <%= f.label :originated_at do %>
       Date <small class="text-muted">Optional. If you know the date your information is from, enter it here.</small>
     <% end %><br/>
-    <%= f.text_field :originated_at, value: (@item.originated_at || DateTime.now).strftime('%Y-%m-%d %T UTC'), class: 'form-control' %>
+    <%= f.text_field :originated_at, value: (@item.originated_at || DateTime.now).iso8601, class: 'form-control' %>
    </div><br/>
- 
-  <script>
-  var picker = new Pikaday({
-    field: document.getElementById('broadcast_item_originated_at'),
-    defaultDate: '<%= (@item.originated_at || DateTime.now).strftime('%Y-%m-%d %T UTC') %>'
-  });
-  </script>
+
   <div class="field">
     <%= f.label :broadcast_municipality_id do %>
       Municipality / Region <small class="text-muted">Optional. If your info relates to a specific municipality, select it here.</small>
