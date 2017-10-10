@@ -18,8 +18,10 @@ class Role < ApplicationRecord
   def self.can_grant?(user, role)
     if [:admin, :medical].include? role
       user.has_role? :developer
-    else
+    elsif user.has_role? :admin
       role != :developer
+    elsif user.has_role :channel_lead
+      user.roles.where(name: :channel_lead).map { |r| r.resource.grantable_roles.map(&:name) }.flatten.include? role.to_s
     end
   end
 end

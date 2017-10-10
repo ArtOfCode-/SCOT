@@ -40,3 +40,22 @@
 </table>
 
 <%= will_paginate @users, renderer: BootstrapPagination::Rails %>
+
+<h3>Channel Leads</h3>
+<p>Channel leads can't be added using the options above, because you also need to specify which channel they lead.</p>
+<%= form_tag admin_lead_role_path do %>
+  <div class="field">
+    <%= label_tag :user_id, 'User' %><br/>
+    <%= select_tag :user_id, options_from_collection_for_select(User.all, 'id', 'username'), include_blank: true, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag :channel_id, 'Channel' %><br/>
+    <%= select_tag :channel_id, options_from_collection_for_select(Channel.all, 'id', 'name'), include_blank: true, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="actions">
+    <button type="submit" name="mode" value="add" class="btn btn-success">Add</button>
+    <button type="submit" name="mode" value="remove" class="btn btn-danger">Remove</button>
+  </div>
+<% end %>

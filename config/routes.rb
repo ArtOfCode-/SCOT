@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       root to: 'roles#index', as: :admin_roles
       post 'add', to: 'roles#add_role', as: :admin_add_role
       post 'remove', to: 'roles#remove_role', as: :admin_remove_role
+      post 'lead', to: 'roles#add_lead', as: :admin_lead_role
     end
 
     scope 'accesses' do
