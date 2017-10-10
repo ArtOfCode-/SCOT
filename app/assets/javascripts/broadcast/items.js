@@ -11,4 +11,21 @@ $(document).ready(function () {
       $(this).children('a.section-del-link').remove();
     }
   });
+
+  $('.field-grid .field > textarea').on('focus', function () {
+    if ($(this).hasClass('left')) {
+      $(this).parents('.field-grid').css({
+        'grid-template-columns': '2fr 1fr'
+      });
+    }
+    else {
+      $(this).parents('.field-grid').css({
+        'grid-template-columns': '1fr 2fr'
+      });
+    }
+  }).on('blur', function () {
+    $(this).parents('.field-grid').css({
+      'grid-template-columns': '1fr 1fr'
+    });
+  });
 });

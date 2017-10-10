@@ -26,7 +26,7 @@ $(document).ready(function() {
 
   date = $('.datepicker').val();
 
-  if (date == null) {
+  if (date === null) {
     date = new Date();
   }
 
@@ -39,6 +39,9 @@ $(document).ready(function() {
     setDefaultDate: true,
     toString: function (date, format) {
       return date.toISOString();
+    },
+    onOpen: function () {
+      $('.pika-time .pika-select').addClass('form-control');
     }
   });
 });

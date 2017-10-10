@@ -11,3 +11,9 @@ tr *:nth-child(5) {
     max-width: 10em;
     overflow:hidden;
 }
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+}

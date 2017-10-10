@@ -12,11 +12,19 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :content do %>
-      Content <small class="text-muted">Required. The English version of the post you're working on.</small>
-    <% end %><br/>
-    <%= f.text_area :content, rows: 7, cols: 100, class: 'form-control' %>
+  <div class="field-grid">
+    <div class="field">
+      <%= f.label :content do %>
+          Content <small class="text-muted">Required. The English version of the post you're working on.</small>
+      <% end %><br/>
+      <%= f.text_area :content, rows: 12, class: 'form-control left' %>
+    </div>
+    <div class="field">
+      <%= f.label :translation do %>
+          Translation <small class="text-muted">Optional. Enter the Spanish translation of your post here.</small>
+      <% end %><br/>
+      <%= f.text_area :translation, rows: 12, class: 'form-control right' %>
+    </div>
   </div><br/>
 
   <div class="field">
@@ -39,13 +47,6 @@
     <% end %><br/>
     <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name', selected: @item.municipality.nil? ? nil : @item.municipality.id),
                  { include_blank: true }, class: 'form-control select2' %>
-  </div><br/>
-
-  <div class="field translation-field">
-    <%= f.label :translation do %>
-      Translation <small class="text-muted">Optional. Enter the Spanish translation of your post here.</small>
-    <% end %><br/>
-    <%= f.text_area :translation, rows: 7, cols: 100, class: 'form-control' %>
   </div><br/>
 
   <div class="actions">
