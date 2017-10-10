@@ -14,4 +14,12 @@ class Role < ApplicationRecord
   def self.global_defaults
     %i[developer admin triage rescue medical broadcast miner]
   end
+
+  def self.can_grant?(user, role)
+    if [:admin, :medical].include? role
+      user.has_role? :developer
+    else
+      role != :developer
+    end
+  end
 end
