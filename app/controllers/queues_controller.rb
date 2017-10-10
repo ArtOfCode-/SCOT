@@ -3,16 +3,18 @@ class QueuesController < ApplicationController
   before_action :check_triage
 
   def dedupe
-    @original = (RescueRequest.left_joins(:dedupe_reviews).where(rescue_requests: { dupe_of: nil }) -
-                 RescueRequest.left_joins(:dedupe_reviews).where(dedupe_reviews: { user: current_user, outcome: 'skip' })).first
+    @original = RescueRequest.left_joins(:dedupe_reviews).where(rescue_requests: { dupe_of: nil })
+                             .where('dedupe_reviews.user_id IS NULL OR dedupe_reviews.user_id != ?', current_user.id)
+                             .where("dedupe_reviews.outcome IS NULL OR dedupe_reviews.outcome != 'skip'").first
     if @original.nil?
       flash[:info] = 'There are no more records to deduplicate!'
       redirect_to :disasters
     else
       @suggested_duplicates = []
       while @suggested_duplicates.empty?
-        @original = (RescueRequest.left_joins(:dedupe_reviews).where(rescue_requests: { dupe_of: nil }) -
-                     RescueRequest.left_joins(:dedupe_reviews).where(dedupe_reviews: { user: current_user, outcome: 'skip' })).first
+        @original = RescueRequest.left_joins(:dedupe_reviews).where(rescue_requests: { dupe_of: nil })
+                                 .where('dedupe_reviews.user_id IS NULL OR dedupe_reviews.user_id != ?', current_user.id)
+                                 .where("dedupe_reviews.outcome IS NULL OR dedupe_reviews.outcome != 'skip'").first
         break if @original.nil?
         @disaster = @original.disaster
         possible_duplicate_columns = %w[twitter phone email medical_conditions extra_details street_address]
