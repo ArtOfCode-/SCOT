@@ -109,6 +109,45 @@ ActiveRecord::Schema.define(version: 20171007232041) do
     t.string "updated_at"
   end
 
+  create_table "people_roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "people_roles_people_volunteers", primary_key: ["people_role_id", "people_volunteer_id"], force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "people_role_id", null: false
+    t.integer "people_volunteer_id", null: false
+  end
+
+  create_table "people_team_memberships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "people_volunteer_id"
+    t.bigint "people_team_id"
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["people_team_id"], name: "index_people_team_memberships_on_people_team_id"
+    t.index ["people_volunteer_id"], name: "index_people_team_memberships_on_people_volunteer_id"
+  end
+
+  create_table "people_teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "people_volunteers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.date "join_date"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "request_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.text "description"
@@ -234,6 +273,16 @@ ActiveRecord::Schema.define(version: 20171007232041) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  create_table "volunteers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.date "join_date"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "access_logs", "users"
   add_foreign_key "broadcast_items", "broadcast_municipalities"
   add_foreign_key "broadcast_items", "users"
@@ -243,6 +292,8 @@ ActiveRecord::Schema.define(version: 20171007232041) do
   add_foreign_key "contact_attempts", "users"
   add_foreign_key "dedupe_reviews", "rescue_requests"
   add_foreign_key "dedupe_reviews", "users"
+  add_foreign_key "people_team_memberships", "people_teams"
+  add_foreign_key "people_team_memberships", "people_volunteers"
   add_foreign_key "request_priorities", "rescue_requests"
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "medical_statuses"

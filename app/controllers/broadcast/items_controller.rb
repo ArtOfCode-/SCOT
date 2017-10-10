@@ -125,7 +125,7 @@ class Broadcast::ItemsController < ApplicationController
   def deprecate_item
     @item.update(deprecated: true)
     flash[:success] = 'Marked item as deprecated.'
-    redirect_to broadcast_items_path
+    redirect_back fallback_location: broadcast_items_path
   end
 
   private

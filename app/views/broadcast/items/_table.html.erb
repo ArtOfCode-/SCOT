@@ -18,12 +18,20 @@
         <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
         <td><%= i.municipality&.name %></td>
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
-        <td><%= link_to raw("#{'<i class="fa fa-star"></i>' unless i.translation.present?} Add translation"), translate_broadcast_item_path(i) %></td>
-        <td><%= link_to raw('<i class="fa fa-times fa-2x" style="color:darkred;"></i>
-'), deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' %></td>
+        <td>
+          <%= link_to translate_broadcast_item_path(i) do %>
+            <% unless i.translation.present? %>
+              <i class="fa fa-star"></i>
+            <% end %>
+            Add translation
+          <% end %>
+        </td>
+        <td>
+          <%= link_to deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' do %>
+            <i class="fa fa-times text-danger"></i>
+          <% end %>
+        </td>
       </tr>
   <% end %>
   </tbody>
 </table>
-
-<script src="https://use.fontawesome.com/4cf802a098.js"></script>
