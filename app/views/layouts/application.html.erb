@@ -4,6 +4,7 @@
     <title>CrowdRescue</title>
     <%= csrf_meta_tags %>
 
+    <%= favicon_link_tag 'crowdlabs.ico' %>
     <%= stylesheet_link_tag    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' %>
     <%= stylesheet_link_tag    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css' %>
     <%= stylesheet_link_tag    'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css' %>
@@ -17,7 +18,10 @@
 
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">CrowdRescue</a>
+      <a class="navbar-brand" href="#">
+        <img src="<%= asset_path 'crowdlabs.png' %>" height="32" width="32" alt="CrowdLabs logo" />
+        CrowdRescue
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
