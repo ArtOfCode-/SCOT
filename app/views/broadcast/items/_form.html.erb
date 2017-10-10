@@ -37,7 +37,7 @@
     <%= f.label :broadcast_municipality_id do %>
       Municipality / Region <small class="text-muted">Optional. If your info relates to a specific municipality, select it here.</small>
     <% end %><br/>
-    <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name', selected: @item.municipality.id),
+    <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name', selected: @item.municipality.nil? ? nil : @item.municipality.id),
                  { include_blank: true }, class: 'form-control select2' %>
   </div><br/>
 
