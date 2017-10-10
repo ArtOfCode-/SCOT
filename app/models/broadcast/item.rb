@@ -5,8 +5,6 @@ class Broadcast::Item < ApplicationRecord
   scope :active, -> { where(deprecated: false) }
 
   after_create do
-    unless originated_at.present?
-      update(originated_at: created_at)
-    end
+    update(originated_at: created_at) unless originated_at.present?
   end
 end

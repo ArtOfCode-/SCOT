@@ -16,7 +16,7 @@ class ApiController < ApplicationController
         }
       }
     end
-    render json: {type: "FeatureCollection", features: features}
+    render json: { type: 'FeatureCollection', features: features }
   end
 
   def csv
