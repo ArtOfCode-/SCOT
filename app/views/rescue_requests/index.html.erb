@@ -12,3 +12,13 @@
 
 <h3>What event are you affected by?</h3>
 <%= select_tag :disaster, options_for_select(@disasters.map { |d| [d.name, d.id] }), class: 'form-control', include_blank: true %>
+
+<script>
+$(document).ready(function() {
+  $("#disaster").on('change', function() {
+    if ($(this).val()) {
+      location.href = location.protocol + '//' + location.host + '/disasters/' + $(this).val() + '/requests/new';
+    }
+  });
+});
+</script>

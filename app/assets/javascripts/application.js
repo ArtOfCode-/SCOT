@@ -24,12 +24,18 @@ $(document).ready(function() {
     theme: 'bootstrap'
   });
 
+  date = $('.datepicker').val();
+
+  if (date == null) {
+    date = new Date();
+  }
+
   new Pikaday({
     field: $('.datepicker')[0],
     showTime: true,
     showSeconds: false,
     use24hour: true,
-    defaultDate: new Date(),
+    defaultDate: date,
     setDefaultDate: true,
     toString: function (date, format) {
       return date.toISOString();

@@ -105,7 +105,7 @@
     </tr>
     <tr>
       <td>Medical conditions</td>
-      <td><%= @request.medical_conditions %></td>
+      <td><%= @request.medical_details %></td>
     </tr>
     <tr>
       <td>Extra details</td>
@@ -114,34 +114,7 @@
   </tbody>
 </table>
 
-<div id="tweet"></div><br>
-
-<script>
-window.twttr = (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
-  if (d.getElementById(id)) return t;
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://platform.twitter.com/widgets.js";
-  fjs.parentNode.insertBefore(js, fjs);
-
-  t._e = [];
-  t.ready = function(f) {
-    t._e.push(f);
-  };
-
-  return t;
-}(document, "script", "twitter-wjs"));
-
-var previous_onload = window.onload;
-window.onload = function(){
-  previous_onload();
-  twttr.widgets.createTweet(
-  '<%= @request.media.to_s.split("/").last %>',
-  document.getElementById('tweet'))
-};
-</script>
+<br>
 
 <h3>
   Timeline
@@ -165,4 +138,5 @@ window.onload = function(){
 
 <% if has_any_role? :developer, :admin %>
   <%= link_to 'Admin: access logs', resource_access_logs_path(resource_type: @request.class.to_s, resource_id: @request.id), class: 'text-danger' %>
+  <%= link_to 'Admin: manage authorizations', request_authorizations_path(disaster_id: @disaster.id, num: @request.id), class: 'text-danger' %>
 <% end %>

@@ -30,14 +30,14 @@
     <%= f.label :originated_at do %>
       Date <small class="text-muted">Optional. If you know the date your information is from, enter it here.</small>
     <% end %><br/>
-    <%= f.text_field :originated_at, class: 'form-control datepicker' %>
-  </div><br/>
+    <%= f.text_field :originated_at, value: (@item.originated_at || DateTime.now).iso8601, class: 'form-control datepicker' %>
+   </div><br/>
 
   <div class="field">
     <%= f.label :broadcast_municipality_id do %>
       Municipality / Region <small class="text-muted">Optional. If your info relates to a specific municipality, select it here.</small>
     <% end %><br/>
-    <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name'),
+    <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name', selected: @item.municipality.nil? ? nil : @item.municipality.id),
                  { include_blank: true }, class: 'form-control select2' %>
   </div><br/>
 

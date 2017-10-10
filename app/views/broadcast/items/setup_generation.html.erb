@@ -17,7 +17,7 @@
       <small class="text-muted">What's the earliest date an item can originate from to be included in the script?
         Defaults to 1 Jan 1970, i.e. everything.</small>
     <% end %><br/>
-    <%= date_field_tag :min_origin, nil, class: 'form-control' %>
+    <%= text_field_tag :min_origin, nil, value: nil, class: 'form-control datepicker' %>
   </div><br/>
 
   <div class="field">

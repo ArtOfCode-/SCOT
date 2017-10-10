@@ -3,17 +3,26 @@ class QueuesController < ApplicationController
   before_action :check_triage
 
   def dedupe
-    @original = RescueRequest.find_by(dupe_of: nil)
+    @original = (RescueRequest.left_joins(:dedupe_reviews).where(rescue_requests: { dupe_of: nil }) - RescueRequest.left_joins(:dedupe_reviews).where(dedupe_reviews: { user: current_user, outcome: 'skip' })).first
     if @original.nil?
       flash[:info] = 'There are no more records to deduplicate!'
       redirect_to :disasters
     else
-      @disaster = @original.disaster
-      possible_duplicate_columns = %w[twitter phone email medical conditions extra_details street_address]
-      filtered_request = @original.attributes.select { |col, _val| possible_duplicate_columns.include? col }
-      conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote("%#{val}%")}" unless val.to_s.empty? }
-                                   .reject { |i| i.to_s.empty? }.join(' OR ')
-      @suggested_dupes = RescueRequest.where(conditions).where.not(id: @original.id)
+      @suggested_duplicates = []
+      while @suggested_duplicates.length == 0
+        @original = (RescueRequest.left_joins(:dedupe_reviews).where(rescue_requests: { dupe_of: nil }) - RescueRequest.left_joins(:dedupe_reviews).where(dedupe_reviews: { user: current_user, outcome: 'skip' })).first
+        break if @original.nil?
+        @disaster = @original.disaster
+        possible_duplicate_columns = %w[twitter phone email medical_conditions extra_details street_address]
+        filtered_request = @original.attributes.select { |col, _val| possible_duplicate_columns.include? col }
+        conditions = filtered_request.map { |col, val| " #{col} LIKE #{ActiveRecord::Base.connection.quote("%#{val}%")}" unless val.to_s.empty? }.reject { |i| i.to_s.empty? }.join(' OR ')
+        @suggested_duplicates = conditions.empty? ? [] : RescueRequest.where(conditions).where.not(id: @original.id)
+        @original.update(dupe_of: 0) if @suggested_duplicates.length == 0
+      end
+      if @original.nil?
+        flash[:info] = 'There are no more records to deduplicate!'
+        redirect_to :disasters
+      end
     end
   end
 

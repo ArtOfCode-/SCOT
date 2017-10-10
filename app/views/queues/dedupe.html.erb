@@ -1,6 +1,6 @@
 <%= form_tag :dedupe_complete do %>
   <%= hidden_field_tag :rescue_request_id, @original.id %>
-  <%= hidden_field_tag :suggested_duplicates, @suggested_dupes.map(&:id) %>
+  <%= hidden_field_tag :suggested_duplicates, @suggested_duplicates.map(&:id) %>
 <table class="table table-sm details-table">
   <thead>
     <tr>
@@ -13,7 +13,7 @@
     <tr>
       <td>Position (rought lat/long)</td>
       <td><%= @original.lat %>, <%= @original.long %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.lat %>, <%= dupe.long %></td>
       <% end %>
     </tr>
@@ -23,7 +23,7 @@
         <%= @original.apt_no.present? ? "Apt. #{@original.apt_no}, ": '' %><%= @original.street_address %>,
         <%= @original.city %> <%= @original.zip_code %>
       </td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td>
         <%= dupe.apt_no.present? ? "Apt. #{@original.apt_no}, ": '' %><%= dupe.street_address %>,
         <%= dupe.city %> <%= dupe.zip_code %>
@@ -33,63 +33,63 @@
     <tr>
       <td>Reported by</td>
       <td><%= @original.name %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.name %></td>
       <% end %>
     </tr>
     <tr>
       <td>Tel. no</td>
       <td><%= @original.phone %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.phone %></td>
       <% end %>
     </tr>
     <tr>
       <td>Email address</td>
       <td><%= @original.email %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.email %></td>
       <% end %>
     </tr>
     <tr>
       <td>Twitter</td>
       <td><%= @original.twitter %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.twitter %></td>
       <% end %>
     </tr>
     <tr>
       <td>Original Post</td>
       <td><%= @original.media %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.media %></td>
       <% end %>
     </tr>
     <tr>
       <td>People needing assistance</td>
       <td><%= @original.people_count %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.people_count %></td>
       <% end %>
     </tr>
     <tr>
       <td>Medical conditions</td>
-      <td><%= @original.medical_conditions %></td>
-      <% @suggested_dupes.each do |dupe| %>
-      <td><%= dupe.medical_conditions %></td>
+      <td><%= @original.medical_details %></td>
+      <% @suggested_duplicates.each do |dupe| %>
+      <td><%= dupe.medical_details %></td>
       <% end %>
     </tr>
     <tr>
       <td>Extra details</td>
       <td><%= @original.extra_details %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><%= dupe.extra_details %></td>
       <% end %>
     </tr>
     <tr>
       <td><%= submit_tag "Skip", name: "skip" %></td>
       <td><%= submit_tag "No Duplicates", name: "not" %></td>
-      <% @suggested_dupes.each do |dupe| %>
+      <% @suggested_duplicates.each do |dupe| %>
       <td><button type="submit" name="dupe_of" value="<%= dupe.id %>">This is a duplicate</button></td>
       <% end %>
     </tr>

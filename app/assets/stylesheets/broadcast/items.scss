@@ -10,3 +10,8 @@
 .section-edit-link {
   margin-left: 2rem;
 }
+
+tr *:nth-child(5) {
+    max-width: 10em;
+    overflow:hidden;
+}

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root to: 'broadcast/items#index', as: :root
+  root to: 'disasters#index', as: :root
 
   scope '/admin' do
     scope '/roles' do

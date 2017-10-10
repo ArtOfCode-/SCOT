@@ -13,7 +13,7 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def create
-    @item = Broadcast::Item.new item_params
+    @item = Broadcast::Item.new item_params.merge(user: current_user)
     if @item.save
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
@@ -62,6 +62,7 @@ class Broadcast::ItemsController < ApplicationController
     municipal_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).where.not(municipality: nil)
                                      .order(originated_at: :desc)
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
+                                     .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
 
     @document << "<h1>#{params[:name]}</h1>"
     @document << '<h2 id="english_broadcast">English Broadcast</h2>'
@@ -82,7 +83,7 @@ class Broadcast::ItemsController < ApplicationController
       name = municipality[0].municipality.name
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_eng'>#{name}</h4>"
       @document << '<ul>'
-      municipality.first(params[:max_muni]).each do |i|
+      municipality.first(params[:max_muni].to_i).each do |i|
         @document << "<li data-id='#{i.id}'>"
         @document << "<span class='text-muted'>(ID #{i.id})</span>"
         @document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}"
@@ -111,7 +112,7 @@ class Broadcast::ItemsController < ApplicationController
       name = municipality[0].municipality.name
       @document << "<h4 id='#{name.downcase.tr(' ', '_')}_spa'>#{name}</h4>"
       @document << '<ul>'
-      municipality.first(params[:max_muni]).each do |i|
+      municipality.first(params[:max_muni].to_i).each do |i|
         @document << "<li data-id='#{i.id}'>"
         @document << "<span class='text-muted'>(ID #{i.id})</span>"
         @document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}"
