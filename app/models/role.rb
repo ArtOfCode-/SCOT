@@ -12,7 +12,7 @@ class Role < ApplicationRecord
   scopify
 
   def self.global_defaults
-    %i[developer admin triage rescue medical broadcast miner]
+    %i[developer admin triage rescue medical broadcast miner translator]
   end
 
   def self.can_grant?(user, role)

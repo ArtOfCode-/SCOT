@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011173643) do
+ActiveRecord::Schema.define(version: 20171011183555) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -278,6 +278,7 @@ ActiveRecord::Schema.define(version: 20171011173643) do
     t.datetime "updated_at", null: false
     t.integer "status_id"
     t.integer "priority_id"
+    t.text "final"
   end
 
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

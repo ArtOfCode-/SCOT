@@ -137,4 +137,16 @@ Rails.application.routes.draw do
     get 'setup', to: 'broadcast/items#setup_generation', as: :broadcast_script_setup
     get 'generate', to: 'broadcast/items#generate_script', as: :broadcast_script
   end
+
+  scope '/translations' do
+    root to: 'translations#index', as: :translations
+    get 'mine', to: 'translations#my_requests', as: :my_translation_requests
+    get 'new', to: 'translations#new', as: :new_translation
+    post 'new', to: 'translations#create', as: :create_translation
+    get ':id/edit', to: 'translations#edit', as: :edit_translation
+    patch ':id/edit', to: 'translations#update', as: :update_translation
+    post ':id/status', to: 'translations#update_status', as: :update_translation_status
+    get ':id/translate', to: 'translations#translate', as: :translate_translation
+    post ':id/translate', to: 'translations#submit_translation', as: :complete_translation
+  end
 end
