@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyText
+  source_lang_id: 1
+  target_lang_id: 1
+  deliver_to: MyString
+  due: 2017-10-11 18:34:50
+  requester_id: 1
+  assignee_id: 1
+
+two:
+  content: MyText
+  source_lang_id: 1
+  target_lang_id: 1
+  deliver_to: MyString
+  due: 2017-10-11 18:34:50
+  requester_id: 1
+  assignee_id: 1

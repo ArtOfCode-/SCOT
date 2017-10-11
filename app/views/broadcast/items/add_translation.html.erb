@@ -10,8 +10,8 @@
 <br/>
 <%= form_tag submit_broadcast_translation_path(@item), method: :post do %>
   <div class="field">
-    <%= label_tag :translation %><br/>
-    <%= text_area_tag :translation, @item.translation, rows: 7, cols: 100, class: 'form-control' %>
+    <%= label_tag :translations %><br/>
+    <%= text_area_tag :translations, @item.translation, rows: 7, cols: 100, class: 'form-control' %>
   </div><br/>
 
   <div class="actions">

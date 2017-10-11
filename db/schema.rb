@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20171010200422) do
     t.text "content"
     t.datetime "originated_at"
     t.bigint "broadcast_municipality_id"
-    t.text "translation"
+    t.text "translations"
     t.text "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

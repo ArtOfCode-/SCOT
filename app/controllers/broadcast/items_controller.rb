@@ -35,14 +35,14 @@ class Broadcast::ItemsController < ApplicationController
   def added; end
 
   def need_translation
-    @items = Broadcast::Item.active.where("translation IS NULL OR translation = ''").order(originated_at: :desc)
+    @items = Broadcast::Item.active.where("translations IS NULL OR translations = ''").order(originated_at: :desc)
                             .paginate(page: params[:page], per_page: 100)
   end
 
   def add_translation; end
 
   def submit_translation
-    if @item.update translation: params[:translation]
+    if @item.update translations: params[:translations]
       redirect_to added_broadcast_item_path(@item, t: 0, tn: 1)
     else
       render :add_translation
@@ -135,7 +135,7 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:broadcast_item).permit(:content, :originated_at, :broadcast_municipality_id, :translation, :source)
+    params.require(:broadcast_item).permit(:content, :originated_at, :broadcast_municipality_id, :translations, :source)
   end
 
   def set_item
