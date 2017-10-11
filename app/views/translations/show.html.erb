@@ -1,0 +1,30 @@
+<h1>Translation Request #<%= @translation.id %> <small class="text-muted">Priority: <%= @translation.priority.name %></small></h1>
+<p><strong><%= @translation.requester.username %></strong> requests the translation of the following item, from
+  <%= @translation.source_lang.name %> to <%= @translation.target_lang.name %>:</p>
+<div class="card border-secondary mb-2">
+  <div class="card-header border-secondary">
+    <strong>Content</strong>
+  </div>
+  <div class="card-body">
+    <% if uri? @translation.content %>
+      <%= link_to @translation.content, @translation.content %>
+    <% else %>
+      <%= raw(sanitize(@translation.content).gsub "\n", '<br/>') %>
+    <% end %>
+  </div>
+</div>
+
+<p>The finished translation is needed by <strong><%= @translation.deliver_to %></strong>
+  by <%= @translation.due&.strftime("%H:%M UTC %d %b %Y") %>.</p>
+
+<p>
+  <strong>Status:</strong> <%= @translation.status.name %><br/>
+  <strong>Assigned to:</strong> <%= @translation.assignee&.username || 'Unassigned' %><br/>
+  <%= link_to 'Edit', edit_translation_path(@translation) %> |
+  <%= link_to 'Accept', update_translation_status_path(@translation, status_id: Translations::Status['Accepted'].id),
+              class: 'text-success', method: :post %> |
+  <%= link_to 'Accept & Translate', update_translation_status_path(@translation, status_id: Translations::Status['Assigned'].id, translate: 1),
+              class: 'text-success', method: :post %> |
+  <%= link_to 'Reject', update_translation_status_path(@translation, status_id: Translations::Status['Rejected'].id),
+              class: 'text-danger', method: :post %>
+</p>

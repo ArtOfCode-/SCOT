@@ -1,0 +1,34 @@
+<h1>My Translation Requests</h1>
+<p>This is a list of translation requests that you have submitted. You can use this to track the status of your requests.</p>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th class="text-muted">ID</th>
+    <th>Language</th>
+    <th>Content</th>
+    <th>Assigned to</th>
+    <th>Status</th>
+    <th>Priority</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @translations.each do |t| %>
+      <tr>
+        <td class="text-muted"><%= t.id %></td>
+        <td><%= t.source_lang.name %> &rarr; <%= t.target_lang.name %></td>
+        <td><%= uri?(t.content) ? link_to(URI.parse(t.content).host, t.content) :
+                    (t.content.length > 100 ? t.content.first(100) + '...' : t.content) %></td>
+        <td><%= t.assignee&.username || 'Unassigned' %></td>
+        <td title="<%= t.status.description %>"><%= t.status.name %></td>
+        <td title="<%= t.priority.description %>"><%= t.priority.name %></td>
+        <td>
+          <% if t.status.name == 'Completed' %>
+            <%= link_to 'View Translation', final_translation_path(t) %>
+          <% end %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

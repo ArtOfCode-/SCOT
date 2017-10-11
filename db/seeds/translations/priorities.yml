@@ -1,0 +1,12 @@
+- name: Breaking
+  description: Request refers to breaking news; needs ASAP translation.
+  index: 0
+- name: Urgent
+  description: Request requires a quick turnaround.
+  index: 1
+- name: Semi-Urgent
+  description: Request is time-sensitive but not required immediately.
+  index: 2
+- name: As & When
+  description: Request is not time-sensitive and can be completed when there is spare capacity.
+  index: 3

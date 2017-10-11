@@ -106,6 +106,19 @@
             </div>
           </li>
           <% end %>
+
+          <% if user_signed_in? %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">translations</a>
+              <div class="dropdown-menu">
+                <%= link_to 'new request', new_translation_path, class: 'dropdown-item' %>
+                <% if current_user.has_role? :translator %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to 'open requests', translations_path, class: 'dropdown-item' %>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
         </ul>
 
         <ul class="navbar-right navbar-nav">
