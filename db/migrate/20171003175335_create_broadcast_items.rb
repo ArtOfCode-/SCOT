@@ -4,7 +4,7 @@ class CreateBroadcastItems < ActiveRecord::Migration[5.1]
       t.text :content
       t.datetime :originated_at
       t.references :broadcast_municipality, foreign_key: true
-      t.text :translations
+      t.text :translation
       t.text :source
 
       t.timestamps
