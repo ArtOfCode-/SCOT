@@ -19,6 +19,8 @@ gem 'config', '~> 1.4.0'
 gem 'devise', '~> 4.3.0'
 gem 'rolify', '~> 5.1.0'
 
+gem 'httparty', '~> 0.15.5'
+
 gem 'will_paginate', github: 'Undo1/will_paginate'
 gem 'will_paginate-bootstrap', github: 'Charcoal-SE/will_paginate-bootstrap'
 

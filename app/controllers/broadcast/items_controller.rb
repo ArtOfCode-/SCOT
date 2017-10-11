@@ -32,7 +32,14 @@ class Broadcast::ItemsController < ApplicationController
     end
   end
 
-  def added; end
+  def added
+    @panda = Rails.cache.fetch :panda, expires_in: 5.minutes do
+      panda_req = HTTParty.get("https://api.giphy.com/v1/gifs/random?key=#{Settings.giphy_api_key}&tag=panda")
+      if panda_req.code == 200
+        JSON.parse(panda_req.body)['data']['image_url']
+      end
+    end
+  end
 
   def need_translation
     @items = Broadcast::Item.active.where("translation IS NULL OR translation = ''").order(originated_at: :desc)
