@@ -4,7 +4,7 @@ class TranslationsController < ApplicationController
   before_action :check_access, except: [:my_requests, :new, :create]
 
   def index
-    @translations = Translation.where.not(status: [Translation::Status['Completed'], Translation::Status['Rejected']])
+    @translations = Translation.where.not(status: [Translations::Status['Completed'], Translations::Status['Rejected']])
   end
 
   def my_requests
@@ -16,7 +16,7 @@ class TranslationsController < ApplicationController
   end
 
   def create
-    @translation = Translation.create translation_params.merge(requester: current_user, status: Translation::Status['Pending Assessment'])
+    @translation = Translation.create translation_params.merge(requester: current_user, status: Translations::Status['Pending Assessment'])
     if @translation.save
       flash[:success] = 'Added your translation request to the queue.'
       redirect_to my_translation_requests_path
@@ -25,6 +25,8 @@ class TranslationsController < ApplicationController
       render :new
     end
   end
+
+  def show; end
 
   def edit; end
 
@@ -39,12 +41,14 @@ class TranslationsController < ApplicationController
   end
 
   def update_status
-    @status = Translation::Status.find params[:status_id]
-    @translation.update status: @status
-    flash[:success] = "Status changed to #{@status.name}."
+    @status = Translations::Status.find params[:status_id]
     if params[:translate].present?
+      @translation.update status: @status, assignee: current_user
+      flash[:success] = "Status changed to #{@status.name}."
       redirect_to translate_translation_path(@translation)
     else
+      @translation.update status: @status
+      flash[:success] = "Status changed to #{@status.name}."
       redirect_back fallback_location: translations_path
     end
   end
@@ -64,7 +68,7 @@ class TranslationsController < ApplicationController
   private
 
   def check_access
-    unless current_user.present? && current_user == @translation.requester
+    unless current_user.present? && @translation.present? && current_user == @translation.requester
       require_any :developer, :admin, :translator
     end
   end

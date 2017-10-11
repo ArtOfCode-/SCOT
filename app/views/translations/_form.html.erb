@@ -1,0 +1,50 @@
+<%= form_for @translation, url: url do |f| %>
+  <div class="field">
+    <%= f.label :content do %>
+      Content <small class="text-muted">What needs translating? Either paste the text here, or a link to the item that needs translation.</small>
+    <% end %><br/>
+    <%= f.text_area :content, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :source_lang_id do %>
+      Source Language <small class="text-muted">What language is the original text in?</small>
+    <% end %><br/>
+    <%= f.select :source_lang_id, options_from_collection_for_select(Translations::Language.all, 'id', 'name', selected: @translation.source_lang_id),
+                 { include_blank: true }, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :target_lang_id do %>
+      Target Language <small class="text-muted">What language do you need this translated into?</small>
+    <% end %><br/>
+    <%= f.select :target_lang_id, options_from_collection_for_select(Translations::Language.all, 'id', 'name', selected: @translation.target_lang_id),
+                 { include_blank: true }, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :deliver_to do %>
+      Deliver To <small class="text-muted">To who, or to what channel, should the translation be delivered?</small>
+    <% end %>
+    <%= f.text_field :deliver_to, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :priority_id do %>
+      Priority <small class="text-muted">How urgent is this request?</small>
+    <% end %><br/>
+    <%= f.select :priority_id, options_from_collection_for_select(Translations::Priority.all, 'id', 'name', selected: @translation.priority_id),
+                 { include_blank: true }, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :due do %>
+      Due Date <small class="text-muted">When is the finished translation needed by?</small>
+    <% end %><br/>
+    <%= f.text_field :due, value: @translation.due&.iso8601, class: 'form-control datepicker' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Submit Request', name: nil, class: 'btn btn-success' %>
+  </div>
+<% end %>

@@ -1,0 +1,31 @@
+<h1>Open Translation Requests</h1>
+<p>There are <%= @translations.count %> translation requests awaiting attention.</p>
+<p>To accept, reject, or translate a request, click the Actions link in its row.</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-muted">ID</th>
+      <th>Language</th>
+      <th>Content</th>
+      <th>Assigned to</th>
+      <th>Status</th>
+      <th>Priority</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @translations.each do |t| %>
+      <tr>
+        <td class="text-muted"><%= t.id %></td>
+        <td><%= t.source_lang.name %> &rarr; <%= t.target_lang.name %></td>
+        <td><%= uri?(t.content) ? link_to(URI.parse(t.content).host, t.content) :
+                (t.content.length > 100 ? t.content.first(100) + '...' : t.content) %></td>
+        <td><%= t.assignee&.username || 'Unassigned' %></td>
+        <td title="<%= t.status.description %>"><%= t.status.name %></td>
+        <td title="<%= t.priority.description %>"><%= t.priority.name %></td>
+        <td><%= link_to 'Actions', translation_path(t) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

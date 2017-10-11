@@ -143,6 +143,7 @@ Rails.application.routes.draw do
     get 'mine', to: 'translations#my_requests', as: :my_translation_requests
     get 'new', to: 'translations#new', as: :new_translation
     post 'new', to: 'translations#create', as: :create_translation
+    get ':id', to: 'translations#show', as: :translation
     get ':id/edit', to: 'translations#edit', as: :edit_translation
     patch ':id/edit', to: 'translations#update', as: :update_translation
     post ':id/status', to: 'translations#update_status', as: :update_translation_status
