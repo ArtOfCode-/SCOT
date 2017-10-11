@@ -20,7 +20,7 @@ class Role < ApplicationRecord
       user.has_role? :developer
     elsif user.has_role? :admin
       role != :developer
-    elsif user.has_role :channel_lead
+    elsif user.has_role? :channel_lead, :any
       user.roles.where(name: :channel_lead).map { |r| r.resource.grantable_roles.map(&:name) }.flatten.include? role.to_s
     end
   end

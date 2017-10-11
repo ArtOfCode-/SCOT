@@ -13,8 +13,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def require_any(*args)
-    unless current_user&.has_any_role?(*args)
+  def require_any(*args, **opts)
+    roles = args + opts.map { |k, v| { name: k, resource: v } }
+    unless current_user&.has_any_role?(*roles)
       @role_name = args.map { |r| r.to_s.humanize.titleize }.to_sentence(two_words_connector: ' or ', last_word_connector: ', or ')
       render :missing_permission, status: 403
     end
