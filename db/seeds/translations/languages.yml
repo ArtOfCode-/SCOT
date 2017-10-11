@@ -1,0 +1,4 @@
+- name: English
+  code: en-US
+- name: Spanish (Puerto Rico)
+  code: es-PR

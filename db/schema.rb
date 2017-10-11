@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171010200422) do
+ActiveRecord::Schema.define(version: 20171011173643) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20171010200422) do
     t.text "content"
     t.datetime "originated_at"
     t.bigint "broadcast_municipality_id"
-    t.text "translations"
+    t.text "translation"
     t.text "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -242,6 +242,42 @@ ActiveRecord::Schema.define(version: 20171010200422) do
     t.datetime "reviewed_at"
     t.index ["resource_type", "resource_id"], name: "index_suggested_edits_on_resource_type_and_resource_id"
     t.index ["user_id"], name: "index_suggested_edits_on_user_id"
+  end
+
+  create_table "translation_languages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "translation_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "index"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "translation_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "translations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.text "content"
+    t.integer "source_lang_id"
+    t.integer "target_lang_id"
+    t.string "deliver_to"
+    t.datetime "due"
+    t.integer "requester_id"
+    t.integer "assignee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "status_id"
+    t.integer "priority_id"
   end
 
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

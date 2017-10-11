@@ -1,0 +1,10 @@
+- name: Pending Assessment
+  description: Request is awaiting assessment by the translation team.
+- name: Accepted
+  description: Translation team has acknowledged this request and it is waiting for a translator.
+- name: Assigned
+  description: There is a translator working on this request.
+- name: Completed
+  description: The translation for this request has been completed.
+- name: Rejected
+  description: Translation team has rejected this request.
