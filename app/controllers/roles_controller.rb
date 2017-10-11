@@ -52,7 +52,7 @@ class RolesController < ApplicationController
   private
 
   def check_access
-    require_any :developer, :admin, :channel_lead
+    require_any :developer, :admin, channel_lead: :any
   end
 
   def check_admin
