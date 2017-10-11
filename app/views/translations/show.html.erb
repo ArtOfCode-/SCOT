@@ -14,7 +14,8 @@
   </div>
 </div>
 
-<p>The finished translation is needed by <strong><%= @translation.deliver_to %></strong> by <%= @translation.due&.strftime("%H:%M %d %b %Y") %>.</p>
+<p>The finished translation is needed by <strong><%= @translation.deliver_to %></strong>
+  by <%= @translation.due&.strftime("%H:%M UTC %d %b %Y") %>.</p>
 
 <p>
   <strong>Status:</strong> <%= @translation.status.name %><br/>

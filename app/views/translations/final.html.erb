@@ -1,0 +1,25 @@
+<h1>Translation for Request #<%= @translation.id %></h1>
+<div class="card border-secondary mb-2">
+  <div class="card-header border-secondary">
+    <strong><%= @translation.source_lang.name %></strong>
+  </div>
+  <div class="card-body">
+    <% if uri? @translation.content %>
+      <%= link_to @translation.content, @translation.content %>
+    <% else %>
+      <%= raw(sanitize(@translation.content).gsub "\n", '<br/>') %>
+    <% end %>
+  </div>
+</div>
+<div class="card border-secondary mb-2">
+  <div class="card-header border-secondary">
+    <strong><%= @translation.target_lang.name %></strong>
+  </div>
+  <div class="card-body">
+    <% if uri? @translation.final %>
+      <%= link_to @translation.final, @translation.final %>
+    <% else %>
+      <%= raw(sanitize(@translation.final).gsub "\n", '<br/>') %>
+    <% end %>
+  </div>
+</div>

@@ -10,6 +10,7 @@
     <th>Assigned to</th>
     <th>Status</th>
     <th>Priority</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -22,6 +23,11 @@
         <td><%= t.assignee&.username || 'Unassigned' %></td>
         <td title="<%= t.status.description %>"><%= t.status.name %></td>
         <td title="<%= t.priority.description %>"><%= t.priority.name %></td>
+        <td>
+          <% if t.status.name == 'Completed' %>
+            <%= link_to 'View Translation', final_translation_path(t) %>
+          <% end %>
+        </td>
       </tr>
   <% end %>
   </tbody>

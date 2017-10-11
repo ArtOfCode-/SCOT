@@ -1,14 +1,15 @@
 class TranslationsController < ApplicationController
-  before_action :authenticate_user!, only: [:my_requests, :new, :create]
+  before_action :authenticate_user!, only: [:my_requests, :new, :create, :final]
   before_action :set_translation, except: [:my_requests, :new, :create, :index]
-  before_action :check_access, except: [:my_requests, :new, :create]
+  before_action :check_access, except: [:my_requests, :new, :create, :final]
 
   def index
-    @translations = Translation.where.not(status: [Translations::Status['Completed'], Translations::Status['Rejected']])
+    @translations = Translation.includes(:source_lang, :target_lang, :status, :priority)
+                               .where.not(status: [Translations::Status['Completed'], Translations::Status['Rejected']])
   end
 
   def my_requests
-    @translations = Translation.where(requester: current_user)
+    @translations = Translation.includes(:source_lang, :target_lang, :status, :priority).where(requester: current_user)
   end
 
   def new
@@ -33,7 +34,11 @@ class TranslationsController < ApplicationController
   def update
     if @translation.update translation_params
       flash[:success] = 'Updated translation request.'
-      redirect_back fallback_location: my_translation_requests_path
+      if current_user.has_role? :translator
+        redirect_to translations_path
+      else
+        redirect_to my_translation_requests_path
+      end
     else
       flash[:danger] = 'Failed to update translation request.'
       render :edit
@@ -56,7 +61,7 @@ class TranslationsController < ApplicationController
   def translate; end
 
   def complete_translation
-    if @translation.update final: params[:final]
+    if @translation.update final: params[:final], status: Translations::Status['Completed']
       flash[:success] = 'Submitted completed translation.'
       redirect_to translations_path
     else
@@ -64,6 +69,8 @@ class TranslationsController < ApplicationController
       render :translate
     end
   end
+
+  def final; end
 
   private
 
