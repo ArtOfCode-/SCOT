@@ -143,6 +143,7 @@ Rails.application.routes.draw do
   scope '/translations' do
     root to: 'translations#index', as: :translations
     get 'mine', to: 'translations#my_requests', as: :my_translation_requests
+    get 'mine/assigned', to: 'translations#my_assigns', as: :my_assigned_translations
     get 'new', to: 'translations#new', as: :new_translation
     post 'new', to: 'translations#create', as: :create_translation
     get ':id', to: 'translations#show', as: :translation

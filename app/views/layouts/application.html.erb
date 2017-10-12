@@ -121,6 +121,8 @@
                 <% if current_user.has_any_role? :translator, :admin, :developer %>
                   <div class="dropdown-divider"></div>
                   <%= link_to 'open requests', translations_path, class: 'dropdown-item' %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to 'assigned to me', my_assigned_translations_path, class: 'dropdown-item' %>
                 <% end %>
               </div>
             </li>

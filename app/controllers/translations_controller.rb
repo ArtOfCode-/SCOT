@@ -1,11 +1,12 @@
 class TranslationsController < ApplicationController
   before_action :authenticate_user!, only: [:my_requests, :new, :create, :final]
-  before_action :set_translation, except: [:my_requests, :new, :create, :index]
+  before_action :set_translation, except: [:my_requests, :new, :create, :index, :my_assigns]
   before_action :check_access, except: [:my_requests, :new, :create, :final]
 
   def index
     @translations = Translation.includes(:source_lang, :target_lang, :status, :priority)
                                .where.not(status: [Translations::Status['Completed'], Translations::Status['Rejected']])
+                               .order(created_at: :desc)
   end
 
   def my_requests
@@ -75,6 +76,10 @@ class TranslationsController < ApplicationController
   end
 
   def final; end
+
+  def my_assigns
+    @translations = Translation.where(assignee: current_user).order(id: :desc)
+  end
 
   private
 
