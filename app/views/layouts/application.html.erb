@@ -112,6 +112,8 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">translations</a>
               <div class="dropdown-menu">
                 <%= link_to 'new request', new_translation_path, class: 'dropdown-item' %>
+                <div class="dropdown-divider"></div>
+                <%= link_to 'my requests', my_translation_requests_path, class: 'dropdown-item' %>
                 <% if current_user.has_any_role? :translator, :admin, :developer %>
                   <div class="dropdown-divider"></div>
                   <%= link_to 'open requests', translations_path, class: 'dropdown-item' %>
