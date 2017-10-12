@@ -1,6 +1,6 @@
 class Broadcast::ItemsController < ApplicationController
-  before_action :check_access
-  before_action :set_item, except: [:index, :new, :create, :setup_generation, :generate_script, :need_translation]
+  before_action :check_access, except: [:scripts, :view_script]
+  before_action :set_item, except: [:index, :new, :create, :setup_generation, :generate_script, :need_translation, :scripts, :view_script]
 
   def index
     @items = conditional_filter Broadcast::Item.active, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
@@ -66,6 +66,15 @@ class Broadcast::ItemsController < ApplicationController
     @item.update(deprecated: true)
     flash[:success] = 'Marked item as deprecated.'
     redirect_back fallback_location: broadcast_items_path
+  end
+
+  def scripts
+    @files = Dir[Rails.root.join('data', '*.html')].map { |f| File.basename f, '.html' }
+  end
+
+  def view_script
+    @document = File.read(Rails.root.join('data', "#{params[:file].tr('/', '')}.html")).split("\n")
+    render :generate_script
   end
 
   private

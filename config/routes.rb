@@ -136,6 +136,8 @@ Rails.application.routes.draw do
 
     get 'setup', to: 'broadcast/items#setup_generation', as: :broadcast_script_setup
     get 'generate', to: 'broadcast/items#generate_script', as: :broadcast_script
+    get 'scripts', to: 'broadcast/items#scripts', as: :broadcast_scripts
+    get 'scripts/:file', to: 'broadcast/items#view_script', as: :view_broadcast_script
   end
 
   scope '/translations' do

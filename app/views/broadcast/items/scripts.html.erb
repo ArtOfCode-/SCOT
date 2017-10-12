@@ -1,0 +1,13 @@
+<h1>Broadcast Scripts</h1>
+<p>This is a list of broadcast scripts that were automatically generated at the time of each scheduled broadcast.</p>
+
+<table class="table table-striped">
+  <tbody>
+    <% @files.each do |f| %>
+      <tr>
+        <td><%= f %></td>
+        <td><%= link_to 'View', view_broadcast_script_path(file: "#{f}.html") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
