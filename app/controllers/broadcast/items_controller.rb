@@ -15,6 +15,22 @@ class Broadcast::ItemsController < ApplicationController
   def create
     @item = Broadcast::Item.new item_params.merge(user: current_user)
     if @item.save
+      if @item.translation.empty?
+        urlopts = Rails.configuration.action_mailer.default_url_options
+        url = Rails.application.routes.url_helpers.translate_broadcast_item_url(@item, host: urlopts[:host], port: urlopts[:port])
+        now = DateTime.now.utc
+        if now.hour>= 0 && now.hour < 14
+          now = now.change(hour: 14)
+        elsif now.hour >= 14
+          now = (now + 1.day).change(hour: 0)
+        end
+        from = Translations::Language['en-US']
+        to = Translations::Language['es-PR']
+        priority = Translations::Priority['Semi-Urgent']
+        request = Translation.create(content: url, source_lang: from, target_lang: to, deliver_to: 'SCOT',
+                                     due: now, requester: current_user, priority: priority)
+        @item.update(request: request)
+      end
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else
@@ -50,6 +66,10 @@ class Broadcast::ItemsController < ApplicationController
 
   def submit_translation
     if @item.update translation: params[:translation]
+      if @item.request.present?
+        status = Translations::Status['Completed']
+        @item.request.update(status: status, assignee: current_user)
+      end
       redirect_to added_broadcast_item_path(@item, t: 0, tn: 1)
     else
       render :add_translation

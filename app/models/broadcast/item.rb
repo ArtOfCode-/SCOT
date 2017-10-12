@@ -1,6 +1,7 @@
 class Broadcast::Item < ApplicationRecord
   belongs_to :municipality, class_name: 'Broadcast::Municipality', optional: true, foreign_key: 'broadcast_municipality_id'
   belongs_to :user, optional: true
+  belongs_to :request, optional: true, class_name: 'Translation' # Translation request. .translation was already taken.
 
   scope :active, -> { where(deprecated: false) }
 

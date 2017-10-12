@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011183555) do
+ActiveRecord::Schema.define(version: 20171012115101) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20171011183555) do
     t.datetime "updated_at", null: false
     t.boolean "deprecated", default: false
     t.bigint "user_id"
+    t.integer "request_id"
     t.index ["broadcast_municipality_id"], name: "index_broadcast_items_on_broadcast_municipality_id"
     t.index ["user_id"], name: "index_broadcast_items_on_user_id"
   end
