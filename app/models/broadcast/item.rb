@@ -29,7 +29,7 @@ class Broadcast::Item < ApplicationRecord
     document << '<ul>'
     general_items.each do |i|
       document << "<li data-id='#{i.id}'>"
-      document << "<span class='text-muted'>(ID #{i.id})</span>"
+      document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
       document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}"
       document << '</li>'
     end
@@ -43,7 +43,7 @@ class Broadcast::Item < ApplicationRecord
       document << '<ul>'
       municipality.first(params[:max_muni].to_i).each do |i|
         document << "<li data-id='#{i.id}'>"
-        document << "<span class='text-muted'>(ID #{i.id})</span>"
+        document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
         document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}"
         document << '</li>'
       end
@@ -58,7 +58,7 @@ class Broadcast::Item < ApplicationRecord
     document << '<ul>'
     general_items.each do |i|
       document << "<li data-id='#{i.id}'>"
-      document << "<span class='text-muted'>(ID #{i.id})</span>"
+      document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
       document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}"
       document << '</li>'
     end
@@ -72,7 +72,7 @@ class Broadcast::Item < ApplicationRecord
       document << '<ul>'
       municipality.first(params[:max_muni].to_i).each do |i|
         document << "<li data-id='#{i.id}'>"
-        document << "<span class='text-muted'>(ID #{i.id})</span>"
+        document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
         document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}"
         document << '</li>'
       end
