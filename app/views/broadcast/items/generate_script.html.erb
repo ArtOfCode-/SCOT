@@ -27,7 +27,7 @@
       <% contents[:general][:items].each do |item| %>
       <li data-id="<%= item[:id] %>">
         <span class='text-muted'>(ID <%= item[:id] %>)</span>
-        <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= item[:body].gsub("\n", '<br/>') %>
+        <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= raw(sanitize(item[:body]).gsub("\n", '<br/>')) %>
         <% if user_signed_in? %>
         <a class="section-edit-link mx-2" href="/broadcast/items/<%= item[:id] %>/edit"><i class="fa fa-pencil"></i></a>
         <a class="section-del-link mx-1" href="/broadcast/items/<%= item[:id] %>/deprecate" data-method="post"><i class="fa fa-times text-danger"></i></a>
@@ -42,7 +42,7 @@
         <% municipality[:items].each do |item| %>
         <li data-id="<%= item[:id] %>">
           <span class='text-muted'>(ID <%= item[:id] %>)</span>
-          <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= item[:body].gsub("\n", '<br/>') %>
+          <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= raw(sanitize(item[:body]).gsub("\n", '<br/>')) %>
           <% if user_signed_in? %>
           <a class="section-edit-link mx-2" href="/broadcast/items/<%= item[:id] %>/edit"><i class="fa fa-pencil"></i></a>
           <a class="section-del-link mx-1" href="/broadcast/items/<%= item[:id] %>/deprecate" data-method="post"><i class="fa fa-times text-danger"></i></a>
