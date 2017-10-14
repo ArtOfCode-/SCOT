@@ -89,11 +89,11 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def scripts
-    @files = Dir[Rails.root.join('data', '*.yaml')].map { |f| File.basename f, '.yaml' }
+    @files = Dir[Rails.root.join('data', '*.yml')].map { |f| File.basename f, '.yml' }
   end
 
   def view_script
-    @broadcasts = YAML.load_file(Rails.root.join('data', "#{params[:file].tr('/', '')}.yaml"))
+    @broadcasts = YAML.load_file(Rails.root.join('data', "#{params[:file].tr('/', '')}.yml"))
     render :generate_script
   end
 

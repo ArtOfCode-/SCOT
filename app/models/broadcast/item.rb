@@ -44,7 +44,7 @@ class Broadcast::Item < ApplicationRecord
     unless Dir.exist? Rails.root.join('data')
       Dir.mkdir(Rails.root.join('data'))
     end
-    File.write(Rails.root.join('data', "#{name}.yaml"), script.to_yaml)
+    File.write(Rails.root.join('data', "#{name}.yml"), script.to_yaml)
   end
 
   private
