@@ -1,7 +1,9 @@
 <h1>Translate Request #<%= @translation.id %></h1>
+
+<% unless @translation.content.nil? %>
 <div class="card border-secondary mb-2">
   <div class="card-header border-secondary">
-    <strong>Content</strong>
+    <strong><%= @translation.source_lang.name %></strong>
   </div>
   <div class="card-body">
     <% if uri? @translation.content %>
@@ -11,6 +13,22 @@
     <% end %>
   </div>
 </div>
+<% end %>
+
+<% unless @translation.final.nil? %>
+<div class="card border-secondary mb-2">
+  <div class="card-header border-secondary">
+    <strong><%= @translation.target_lang.name %></strong>
+  </div>
+  <div class="card-body">
+    <% if uri? @translation.final %>
+        <%= link_to @translation.final, @translation.final %>
+    <% else %>
+        <%= raw(sanitize(@translation.final).gsub "\n", '<br/>') %>
+    <% end %>
+  </div>
+</div>
+<% end %>
 
 <%= form_tag complete_translation_path(@translation) do %>
   <div class="field">

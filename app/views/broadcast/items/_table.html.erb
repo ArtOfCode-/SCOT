@@ -14,13 +14,17 @@
   <% @items.each do |i| %>
       <tr>
         <td class="text-muted"><%= i.id %></td>
-        <td><%= i.content.first(100).length == 100 ? i.content.first(100) + '...' : i.content.first(100) %></td>
+        <% if translation = i.translations.where(source_lang: @language).first.try(:content) || i.translations.where(target_lang: @language).first.try(:final) %>
+        <td><%= translation.first(100).length == 100 ? translation.first(100) + '...' : translation.first(100) %></td>
+        <% else %>
+        <td></td>
+        <% end %>
         <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
         <td><%= i.municipality&.name %></td>
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
         <td>
-          <%= link_to translate_broadcast_item_path(i) do %>
-            <% unless i.translation.present? %>
+          <%= link_to translation_path(i.translations.first.id) do %>
+            <% unless translation.present? %>
               <i class="fa fa-star"></i>
             <% end %>
             Add translation

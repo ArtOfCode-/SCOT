@@ -1,7 +1,7 @@
 class Broadcast::Item < ApplicationRecord
   belongs_to :municipality, class_name: 'Broadcast::Municipality', optional: true, foreign_key: 'broadcast_municipality_id'
   belongs_to :user, optional: true
-  belongs_to :request, optional: true, class_name: 'Translation' # Translation request. .translation was already taken.
+  has_many :translations, class_name: 'Translation', foreign_key: 'broadcast_item_id'
 
   scope :active, -> { where(deprecated: false) }
 
@@ -24,12 +24,12 @@ class Broadcast::Item < ApplicationRecord
 
     {
       english: {
-        general: general("english", general_items),
-        municipalities: municipalities("english", municipal_items, params)
+        general: general(Translations::Language['en-US'], general_items),
+        municipalities: municipalities(Translations::Language['en-US'], municipal_items, params)
       },
       spanish: {
-        general: general("spanish", general_items),
-        municipalities: municipalities("spanish", municipal_items, params)
+        general: general(Translations::Language['es-PR'], general_items),
+        municipalities: municipalities(Translations::Language['es-PR'], municipal_items, params)
       }
     }
   end
@@ -51,9 +51,9 @@ class Broadcast::Item < ApplicationRecord
 
   def self.general(language, items, document = [])
     header = case language
-    when "english"
+    when Translations::Language['en-US']
       "General Interest"
-    when "spanish"
+    when Translations::Language['es-PR']
       "Noticias de Interés General"
     else
       "Could not generate header"
@@ -62,10 +62,11 @@ class Broadcast::Item < ApplicationRecord
     {
       header: header,
       items: items.map do |i|
+        translation = i.translations.first
         {
           id: i.id,
           originated_at: i.originated_at,
-          body: language == "english" ? i.content : i.translation
+          body: translation.source_lang == language ? translation.content : translation.final
         }
       end
     }
@@ -73,9 +74,9 @@ class Broadcast::Item < ApplicationRecord
 
   def self.municipalities(language, items, params, document = [])
     header = case language
-    when "english"
+    when Translations::Language['en-US']
       "Municipalities"
-    when "spanish"
+    when Translations::Language['es-PR']
       "Municipios"
     else
       "Could not generate header"
@@ -87,10 +88,11 @@ class Broadcast::Item < ApplicationRecord
         {
           name: municipality[0].municipality.name,
           items: municipality.first(params[:max_muni].to_i).map do |i|
+            translation = i.translations.first
             {
               id: i.id,
               originated_at: i.originated_at,
-              body: language == "english" ? i.content : i.translation
+              body: translation.source_lang == language ? translation.content : translation.final
             }
           end
         }

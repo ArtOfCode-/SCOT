@@ -2,6 +2,7 @@ class SuggestedEdit < ApplicationRecord
   belongs_to :resource, polymorphic: true
   belongs_to :user
   belongs_to :reviewed_by, class_name: 'User', optional: true
+  belongs_to :broadcast_item, optional: true
 
   serialize :new_values
   serialize :old_values

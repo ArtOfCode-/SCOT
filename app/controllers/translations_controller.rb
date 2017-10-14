@@ -51,11 +51,7 @@ class TranslationsController < ApplicationController
     if params[:translate].present?
       @translation.update status: @status, assignee: current_user
       flash[:success] = "Status changed to #{@status.name}."
-      if @translation.broadcast_items.any?
-        redirect_to translate_broadcast_item_path(@translation.broadcast_items.first)
-      else
-        redirect_to translate_translation_path(@translation)
-      end
+      redirect_to translate_translation_path(@translation)
     else
       @translation.update status: @status
       flash[:success] = "Status changed to #{@status.name}."

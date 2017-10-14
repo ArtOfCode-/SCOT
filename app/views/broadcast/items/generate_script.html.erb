@@ -27,7 +27,7 @@
       <% contents[:general][:items].each do |item| %>
       <li data-id="<%= item[:id] %>">
         <span class='text-muted'>(ID <%= item[:id] %>)</span>
-        <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= item[:body].gsub("\n", '<br/>') %>
+        <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= item[:body].to_s.gsub("\n", '<br/>') %>
       </li>
       <% end %>
     </ul>
@@ -38,7 +38,7 @@
         <% municipality[:items].each do |item| %>
         <li data-id="<%= item[:id] %>">
           <span class='text-muted'>(ID <%= item[:id] %>)</span>
-          <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= item[:body].gsub("\n", '<br/>') %>
+          <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= item[:body].to_s.gsub("\n", '<br/>') %>
         </li>
         <% end %>
       </ul>

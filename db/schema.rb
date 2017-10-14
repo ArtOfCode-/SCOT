@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171012115101) do
+ActiveRecord::Schema.define(version: 20171014022002) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -25,16 +25,13 @@ ActiveRecord::Schema.define(version: 20171012115101) do
   end
 
   create_table "broadcast_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.text "content"
     t.datetime "originated_at"
     t.bigint "broadcast_municipality_id"
-    t.text "translation"
-    t.text "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deprecated", default: false
     t.bigint "user_id"
-    t.integer "request_id"
+    t.text "source"
     t.index ["broadcast_municipality_id"], name: "index_broadcast_items_on_broadcast_municipality_id"
     t.index ["user_id"], name: "index_broadcast_items_on_user_id"
   end
@@ -280,6 +277,8 @@ ActiveRecord::Schema.define(version: 20171012115101) do
     t.integer "status_id"
     t.integer "priority_id"
     t.text "final"
+    t.bigint "broadcast_item_id"
+    t.index ["broadcast_item_id"], name: "index_translations_on_broadcast_item_id"
   end
 
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

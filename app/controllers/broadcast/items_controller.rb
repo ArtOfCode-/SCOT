@@ -3,6 +3,7 @@ class Broadcast::ItemsController < ApplicationController
   before_action :set_item, except: [:index, :new, :create, :setup_generation, :generate_script, :need_translation, :scripts, :view_script]
 
   def index
+    @language = Translations::Language[params[:lang] || 'en-US']
     @items = conditional_filter Broadcast::Item.active, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
                                                         source: params[:source], id: params[:id]
     @items = @items.includes(:municipality).order(originated_at: :desc).paginate page: params[:page], per_page: 100
@@ -15,22 +16,29 @@ class Broadcast::ItemsController < ApplicationController
   def create
     @item = Broadcast::Item.new item_params.merge(user: current_user)
     if @item.save
-      if @item.translation.empty?
-        urlopts = Rails.configuration.action_mailer.default_url_options
-        url = Rails.application.routes.url_helpers.translate_broadcast_item_url(@item, host: urlopts[:host], port: urlopts[:port])
-        now = DateTime.now.utc
-        if now.hour>= 0 && now.hour < 14
-          now = now.change(hour: 14)
-        elsif now.hour >= 14
-          now = (now + 1.day).change(hour: 0)
-        end
+      now = DateTime.now.utc
+      if now.hour>= 0 && now.hour < 14
+        now = now.change(hour: 14)
+      elsif now.hour >= 14
+        now = (now + 1.day).change(hour: 0)
+      end
+      if params[:translation].empty?
         from = Translations::Language['en-US']
         to = Translations::Language['es-PR']
-        priority = Translations::Priority['Semi-Urgent']
-        request = Translation.create(content: url, source_lang: from, target_lang: to, deliver_to: 'SCOT',
-                                     due: now, requester: current_user, priority: priority)
-        @item.update(request: request)
+        content = params[:content]
+      elsif params[:content].empty?
+        from = Translations::Language['es-PR']
+        to = Translations::Language['en-US']
+        content = params[:translation]
+      else
+        from = Translations::Language['en-US']
+        to = Translations::Language['es-PR']
+        content = params[:content]
+        final = params[:translation]
+        status = Translations::Status['Completed']
       end
+      @item.translations.create(content: content, source_lang: from, target_lang: to, deliver_to: 'SCOT',
+                                   due: now, requester: current_user, priority: Translations::Priority['Semi-Urgent'], final: final, status: status)
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else
@@ -57,24 +65,24 @@ class Broadcast::ItemsController < ApplicationController
     end
   end
 
-  def need_translation
-    @items = Broadcast::Item.active.where("translation IS NULL OR translation = ''").order(originated_at: :desc)
-                            .paginate(page: params[:page], per_page: 100)
-  end
+  # def need_translation
+  #   @items = Broadcast::Item.active.where("translation IS NULL OR translation = ''").order(originated_at: :desc)
+  #                           .paginate(page: params[:page], per_page: 100)
+  # end
 
-  def add_translation; end
+  # def add_translation; end
 
-  def submit_translation
-    if @item.update translation: params[:translation]
-      if @item.request.present?
-        status = Translations::Status['Completed']
-        @item.request.update(status: status, assignee: current_user)
-      end
-      redirect_to added_broadcast_item_path(@item, t: 0, tn: 1)
-    else
-      render :add_translation
-    end
-  end
+  # def submit_translation
+  #   if @item.update translation: params[:translation]
+  #     if @item.request.present?
+  #       status = Translations::Status['Completed']
+  #       @item.request.update(status: status, assignee: current_user)
+  #     end
+  #     redirect_to added_broadcast_item_path(@item, t: 0, tn: 1)
+  #   else
+  #     render :add_translation
+  #   end
+  # end
 
   def setup_generation; end
 
@@ -113,7 +121,7 @@ class Broadcast::ItemsController < ApplicationController
 
   def conditional_filter(col, **filters)
     cols = Broadcast::Item.columns.map { |c| [c.name.to_sym, c] }.to_h
-    types = filters.keys.map { |k| [k, cols[k].sql_type_metadata.type] }.to_h
+    types = filters.keys.reject { |k| filters[k].nil? }.map { |k| [k, cols[k].sql_type_metadata.type] }.to_h
     filters.each do |k, v|
       next unless v.present?
       col = if [:string, :text].include? types[k]
