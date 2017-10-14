@@ -15,7 +15,7 @@ class Broadcast::ItemsController < ApplicationController
 
   def create
     @item = Broadcast::Item.new item_params.merge(user: current_user)
-    if @item.save
+    if (!params[:content].nil? || !params[:translation].nil?) && @item.save
       now = DateTime.now.utc
       if now.hour>= 0 && now.hour < 14
         now = now.change(hour: 14)
@@ -42,6 +42,7 @@ class Broadcast::ItemsController < ApplicationController
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else
+      flash[:danger] = 'Failed to save broadcast item. This could be because you left both english or spanish blank, or a different issue.'
       render :new
     end
   end
