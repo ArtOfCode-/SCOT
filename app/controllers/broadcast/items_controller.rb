@@ -79,7 +79,7 @@ class Broadcast::ItemsController < ApplicationController
   def setup_generation; end
 
   def generate_script
-    @document = Broadcast::Item.generate_script(params.dup.permit(:name, :max_general, :max_muni, :min_origin).to_h)
+    @broadcasts = Broadcast::Item.generate_script(params.dup.permit(:name, :max_general, :max_muni, :min_origin).to_h)
   end
 
   def deprecate_item
@@ -89,11 +89,11 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def scripts
-    @files = Dir[Rails.root.join('data', '*.html')].map { |f| File.basename f, '.html' }
+    @files = Dir[Rails.root.join('data', '*.yaml')].map { |f| File.basename f, '.yaml' }
   end
 
   def view_script
-    @document = File.read(Rails.root.join('data', "#{params[:file].tr('/', '')}.html")).split("\n")
+    @broadcasts = YAML.load_file(Rails.root.join('data', "#{params[:file].tr('/', '')}.yaml"))
     render :generate_script
   end
 
