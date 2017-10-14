@@ -24,7 +24,7 @@
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
         <td>
           <%= link_to translation_path(i.translations.first.id) do %>
-            <% unless translation.present? %>
+            <% unless i.translations.first.content.present? && i.translations.first.final.present? %>
               <i class="fa fa-star"></i>
             <% end %>
             Add translation

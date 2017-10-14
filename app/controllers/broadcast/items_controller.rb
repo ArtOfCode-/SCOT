@@ -65,25 +65,6 @@ class Broadcast::ItemsController < ApplicationController
     end
   end
 
-  # def need_translation
-  #   @items = Broadcast::Item.active.where("translation IS NULL OR translation = ''").order(originated_at: :desc)
-  #                           .paginate(page: params[:page], per_page: 100)
-  # end
-
-  # def add_translation; end
-
-  # def submit_translation
-  #   if @item.update translation: params[:translation]
-  #     if @item.request.present?
-  #       status = Translations::Status['Completed']
-  #       @item.request.update(status: status, assignee: current_user)
-  #     end
-  #     redirect_to added_broadcast_item_path(@item, t: 0, tn: 1)
-  #   else
-  #     render :add_translation
-  #   end
-  # end
-
   def setup_generation; end
 
   def generate_script
