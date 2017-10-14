@@ -22,63 +22,16 @@ class Broadcast::Item < ApplicationRecord
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
                           .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
 
-    document << "<h1>#{params[:name]}</h1>"
-    document << '<h2 id="english_broadcast">English Broadcast</h2>'
-
-    document << '<h3 id="general_interest">General Interest</h3>'
-    document << '<ul>'
-    general_items.each do |i|
-      document << "<li data-id='#{i.id}'>"
-      document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
-      document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}"
-      document << '</li>'
-    end
-    document << '</ul>'
-
-    document << '<h3 id="municipalities">Municipalities</h3>'
-    municipal_items.each do |_id, municipality|
-      next if municipality.empty?
-      name = municipality[0].municipality.name
-      document << "<h4 id='#{name.downcase.tr(' ', '_')}_eng'>#{name}</h4>"
-      document << '<ul>'
-      municipality.first(params[:max_muni].to_i).each do |i|
-        document << "<li data-id='#{i.id}'>"
-        document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
-        document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.content.gsub("\n", '<br/>')}"
-        document << '</li>'
-      end
-      document << '</ul>'
-    end
-
-    document << '<hr/>'
-
-    document << '<h2 id="spanish_broadcast">Spanish Broadcast</h2>'
-
-    document << '<h3 id="noticias_de_interés_general">Noticias de Interés General</h3>'
-    document << '<ul>'
-    general_items.each do |i|
-      document << "<li data-id='#{i.id}'>"
-      document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
-      document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}"
-      document << '</li>'
-    end
-    document << '</ul>'
-
-    document << '<h3 id="municipios">Municipios</h3>'
-    municipal_items.each do |_id, municipality|
-      next if municipality.empty?
-      name = municipality[0].municipality.name
-      document << "<h4 id='#{name.downcase.tr(' ', '_')}_spa'>#{name}</h4>"
-      document << '<ul>'
-      municipality.first(params[:max_muni].to_i).each do |i|
-        document << "<li data-id='#{i.id}'>"
-        document << "<span class='text-muted'>(ID #{i.id})</span>&nbsp;"
-        document << "<strong>#{i.originated_at.strftime('%e %b')}</strong>: #{i.translation.gsub("\n", '<br/>')}"
-        document << '</li>'
-      end
-      document << '</ul>'
-    end
-    document
+    {
+      english: {
+        general: general("english", general_items),
+        municipalities: municipalities("english", municipal_items, params)
+      },
+      spanish: {
+        general: general("spanish", general_items),
+        municipalities: municipalities("spanish", municipal_items, params)
+      }
+    }
   end
 
   def self.save_script
@@ -86,11 +39,62 @@ class Broadcast::Item < ApplicationRecord
     datestamp = Date.today.strftime('%Y-%m-%d')
     name = "CRHQ Broadcast #{datestamp} #{timestamp}"
     params = { min_origin: 4.days.ago.iso8601, name: name }
-    script = generate_script(params).join("\n")
+    script = generate_script(params)
 
     unless Dir.exist? Rails.root.join('data')
       Dir.mkdir(Rails.root.join('data'))
     end
-    File.write(Rails.root.join('data', "#{name}.html"), script)
+    File.write(Rails.root.join('data', "#{name}.yml"), script.to_yaml)
+  end
+
+  private
+
+  def self.general(language, items, document = [])
+    header = case language
+    when "english"
+      "General Interest"
+    when "spanish"
+      "Noticias de Interés General"
+    else
+      "Could not generate header"
+    end
+
+    {
+      header: header,
+      items: items.map do |i|
+        {
+          id: i.id,
+          originated_at: i.originated_at,
+          body: language == "english" ? i.content : i.translation
+        }
+      end
+    }
+  end
+
+  def self.municipalities(language, items, params, document = [])
+    header = case language
+    when "english"
+      "Municipalities"
+    when "spanish"
+      "Municipios"
+    else
+      "Could not generate header"
+    end
+
+    {
+      header: header,
+      municipalities: items.map do |_id, municipality|
+        {
+          name: municipality[0].municipality.name,
+          items: municipality.first(params[:max_muni].to_i).map do |i|
+            {
+              id: i.id,
+              originated_at: i.originated_at,
+              body: language == "english" ? i.content : i.translation
+            }
+          end
+        }
+      end
+    }
   end
 end

@@ -1,16 +1,17 @@
 $(document).ready(function () {
   $('li, li *').on('mouseenter', function () {
     if ($(this).data('id')) {
-      $(this).append($('<a class="section-edit-link mx-2" href="/broadcast/items/' + $(this).data('id') + '/edit"><i class="fa fa-pencil"></i></a>'));
-      $(this).append($('<a class="section-del-link mx-1" href="/broadcast/items/' + $(this).data('id') + '/deprecate" data-method="post">'
-                     + '<i class="fa fa-times text-danger"></i></a>'));
+      $(this).children('a.section-edit-link').show();
+      $(this).children('a.section-del-link').show();
     }
   }).on('mouseleave', function () {
     if ($(this).data('id')) {
-      $(this).children('a.section-edit-link').remove();
-      $(this).children('a.section-del-link').remove();
+      $(this).children('a.section-edit-link').hide();
+      $(this).children('a.section-del-link').hide();
     }
   });
+
+  $('li a.section-edit-link, li a.section-del-link').hide();
 
   $('.field-grid .field > textarea').on('focus', function () {
     if ($(this).hasClass('left')) {
