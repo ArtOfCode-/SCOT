@@ -1,2 +1,58 @@
 <h1>New Broadcast Item</h1>
-<%= render 'broadcast/items/form', url: create_broadcast_item_path %>
+
+<%= form_for @item, url: create_broadcast_item_path do |f| %>
+  <% if @item.errors.any? %>
+    <div class="card border-danger">
+      <div class="card-body">
+        <p>There were some errors while trying to save your item:</p>
+        <ul>
+          <% @item.errors.full_messages.each do |m| %>
+            <li><%= m %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="field-grid">
+    <div class="field">
+      <%= label_tag :content do %>
+          English <small class="text-muted">Optional. The English version of the post you're working on.</small>
+      <% end %><br/>
+      <%= text_area_tag :content, nil, rows: 12, class: 'form-control left' %>
+    </div>
+    <div class="field">
+      <%= label_tag :translation do %>
+          Spanish <small class="text-muted">Optional. Enter the Spanish translation of your post here.</small>
+      <% end %><br/>
+      <%= text_area_tag :translation, nil, rows: 12, class: 'form-control right' %>
+    </div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :source do %>
+      Source <small class="text-muted">Required. If you know the source of your information, enter it here.</small>
+    <% end %><br/>
+    <%= f.text_field :source, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :originated_at do %>
+      Date <small class="text-muted">Optional. If you know the date your information is from, enter it here.</small>
+    <% end %><br/>
+    <%= f.text_field :originated_at, value: (@item.originated_at || DateTime.now).iso8601, class: 'form-control datepicker' %>
+   </div><br/>
+
+  <div class="field">
+    <%= f.label :broadcast_municipality_id do %>
+      Municipality / Region <small class="text-muted">Optional. If your info relates to a specific municipality, select it here.</small>
+    <% end %><br/>
+    <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name',
+                                                                                selected: @item.broadcast_municipality_id),
+                 { include_blank: true }, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Submit', class: 'btn btn-success' %>
+  </div>
+<% end %>

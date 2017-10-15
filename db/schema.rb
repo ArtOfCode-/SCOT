@@ -25,16 +25,13 @@ ActiveRecord::Schema.define(version: 20171015154238) do
   end
 
   create_table "broadcast_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.text "content"
     t.datetime "originated_at"
     t.bigint "broadcast_municipality_id"
-    t.text "translation"
     t.text "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deprecated", default: false
     t.bigint "user_id"
-    t.integer "request_id"
     t.boolean "top"
     t.boolean "bottom"
     t.index ["broadcast_municipality_id"], name: "index_broadcast_items_on_broadcast_municipality_id"
@@ -243,6 +240,8 @@ ActiveRecord::Schema.define(version: 20171015154238) do
     t.integer "status_id"
     t.integer "priority_id"
     t.text "final"
+    t.bigint "broadcast_item_id"
+    t.index ["broadcast_item_id"], name: "index_translations_on_broadcast_item_id"
   end
 
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

@@ -1,10 +1,22 @@
 <%= form_for @translation, url: url do |f| %>
+  <% if @translation.source_lang.nil? || @translation.target_lang.nil? %>
   <div class="field">
     <%= f.label :content do %>
       Content <small class="text-muted">What needs translating? Either paste the text here, or a link to the item that needs translation.</small>
     <% end %><br/>
     <%= f.text_area :content, rows: 5, cols: 100, class: 'form-control' %>
   </div><br/>
+  <% else %>
+  <div class="field">
+    <%= f.label :content, "Source Language: #{@translation.source_lang.name}" %><br/>
+    <%= f.text_area :content, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :final, "Target Language: #{@translation.target_lang.name}" %>
+    <%= f.text_area :final, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+  <% end %>
 
   <div class="field">
     <%= f.label :source_lang_id do %>

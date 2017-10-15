@@ -3,7 +3,7 @@
 
 <%= link_to '+ Add item', new_broadcast_item_path %>
 <%= link_to 'Generate Script', broadcast_script_setup_path, class: 'btn btn-primary mx-2' %>
-<%= link_to 'Items Needing Translations', translatable_broadcast_items_path, class: 'float-right' %>
+<%= link_to 'Items Needing Translations', translations_path, class: 'float-right' %>
 <br>
 <br>
 <%= form_tag broadcast_items_path, method: :get, class: 'my-2 form-inline clear-both' do %>
