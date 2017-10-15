@@ -6,7 +6,7 @@ class Broadcast::ItemsController < ApplicationController
     @language = Translations::Language[params[:lang] || 'en-US']
     @items = conditional_filter Broadcast::Item.active, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
                                                         source: params[:source], id: params[:id]
-    @items = @items.includes(:municipality).order(originated_at: :desc).paginate page: params[:page], per_page: 100
+    @items = @items.includes(:municipality).includes(:translations).order(originated_at: :desc).paginate page: params[:page], per_page: 100
   end
 
   def new
@@ -42,7 +42,7 @@ class Broadcast::ItemsController < ApplicationController
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else
-      flash[:danger] = 'Failed to save broadcast item. This could be because you left both english or spanish blank, or a different issue.'
+      flash[:danger] = 'Failed to save broadcast item. This could be because you left both english and spanish blank, or a different issue.'
       render :new
     end
   end
