@@ -17,7 +17,7 @@ class Broadcast::ItemsController < ApplicationController
     @item = Broadcast::Item.new item_params.merge(user: current_user)
     if (!params[:content].nil? || !params[:translation].nil?) && @item.save
       now = DateTime.now.utc
-      if now.hour>= 0 && now.hour < 14
+      if now.hour >= 0 && now.hour < 14
         now = now.change(hour: 14)
       elsif now.hour >= 14
         now = (now + 1.day).change(hour: 0)
@@ -38,7 +38,7 @@ class Broadcast::ItemsController < ApplicationController
         status = Translations::Status['Completed']
       end
       @item.translations.create(content: content, source_lang: from, target_lang: to, deliver_to: 'SCOT',
-                                   due: now, requester: current_user, priority: Translations::Priority['Semi-Urgent'], final: final, status: status)
+                                due: now, requester: current_user, priority: Translations::Priority['Semi-Urgent'], final: final, status: status)
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else
@@ -60,9 +60,7 @@ class Broadcast::ItemsController < ApplicationController
   def added
     @panda = Rails.cache.fetch :panda, expires_in: 5.minutes do
       panda_req = HTTParty.get("https://api.giphy.com/v1/gifs/random?key=#{Settings.giphy_api_key}&tag=panda")
-      if panda_req.code == 200
-        JSON.parse(panda_req.body)['data']['image_url']
-      end
+      JSON.parse(panda_req.body)['data']['image_url'] if panda_req.code == 200
     end
   end
 
