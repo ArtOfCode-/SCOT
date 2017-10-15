@@ -15,21 +15,29 @@ class Broadcast::Item < ApplicationRecord
     params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
     params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
-    general_items = Broadcast::Item.active.where('originated_at > ?', params[:min_origin]).where(municipality: nil).limit(params[:max_general])
-                                   .order(originated_at: :desc)
-    municipal_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).where.not(municipality: nil)
-                                     .order(originated_at: :desc)
+    all_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).order(originated_at: :desc)
+
+    top_items = all_items.where(top: true)
+    bottom_items = all_items.where(bottom: true)
+
+    general_items = all_items.where(municipality: nil).limit(params[:max_general]) - top_items - bottom_items
+
+    municipal_items = all_items.where.not(municipality: nil) - top_items - bottom_items
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
                                      .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
 
     {
       english: {
+        top: top('english', top_items),
         general: general('english', general_items),
-        municipalities: municipalities('english', municipal_items, params)
+        municipalities: municipalities('english', municipal_items, params),
+        bottom: bottom('english', bottom_items)
       },
       spanish: {
+        top: top('spanish', top_items),
         general: general('spanish', general_items),
-        municipalities: municipalities('spanish', municipal_items, params)
+        municipalities: municipalities('spanish', municipal_items, params),
+        bottom: bottom('spanish', bottom_items)
       }
     }
   end
@@ -53,6 +61,50 @@ class Broadcast::Item < ApplicationRecord
                'General Interest'
              when 'spanish'
                'Noticias de Interés General'
+             else
+               'Could not generate header'
+    end
+
+    {
+      header: header,
+      items: items.map do |i|
+        {
+          id: i.id,
+          originated_at: i.originated_at,
+          body: language == 'english' ? i.content : i.translation
+        }
+      end
+    }
+  end
+
+  def self.top(language, items, _document = [])
+    header = case language
+             when 'english'
+               'Opening Announcements'
+             when 'spanish'
+               'Declaraciones Iniciales'
+             else
+               'Could not generate header'
+    end
+
+    {
+      header: header,
+      items: items.map do |i|
+        {
+          id: i.id,
+          originated_at: i.originated_at,
+          body: language == 'english' ? i.content : i.translation
+        }
+      end
+    }
+  end
+
+  def self.bottom(language, items, _document = [])
+    header = case language
+             when 'english'
+               'Closing Announcements'
+             when 'spanish'
+               'Declaraciones Concluyentes'
              else
                'Could not generate header'
     end

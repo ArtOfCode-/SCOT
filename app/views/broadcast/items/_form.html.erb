@@ -50,6 +50,13 @@
                  { include_blank: true }, class: 'form-control select2' %>
   </div><br/>
 
+  <div class="field">
+    <%= f.check_box :top %>
+    <%= f.label :top %><br>
+    <%= f.check_box :bottom %>
+    <%= f.label :bottom %>
+  </div>
+
   <div class="actions">
     <%= f.submit 'Submit', class: 'btn btn-success' %>
   </div>

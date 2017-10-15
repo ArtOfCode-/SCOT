@@ -107,7 +107,7 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:broadcast_item).permit(:content, :originated_at, :broadcast_municipality_id, :translation, :source)
+    params.require(:broadcast_item).permit(:content, :originated_at, :broadcast_municipality_id, :translation, :source, :top, :bottom)
   end
 
   def set_item
