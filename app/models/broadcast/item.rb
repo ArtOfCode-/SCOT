@@ -15,14 +15,14 @@ class Broadcast::Item < ApplicationRecord
     params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
     params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
-    all_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).order(originated_at: :desc)
+    all_items = Broadcast::Item.active.includes(:municipality).order(originated_at: :desc)
 
     top_items = all_items.where(top: true)
     bottom_items = all_items.where(bottom: true)
 
-    general_items = all_items.where(municipality: nil).limit(params[:max_general]) - top_items - bottom_items
+    general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil).limit(params[:max_general]) - top_items - bottom_items
 
-    municipal_items = all_items.where.not(municipality: nil) - top_items - bottom_items
+    municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil) - top_items - bottom_items
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
                                      .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
 
@@ -80,9 +80,9 @@ class Broadcast::Item < ApplicationRecord
   def self.top(language, items, _document = [])
     header = case language
              when 'english'
-               'Opening Announcements'
+               'Opening'
              when 'spanish'
-               'Declaraciones Iniciales'
+               'Saludo'
              else
                'Could not generate header'
     end
@@ -102,9 +102,9 @@ class Broadcast::Item < ApplicationRecord
   def self.bottom(language, items, _document = [])
     header = case language
              when 'english'
-               'Closing Announcements'
+               'Closing'
              when 'spanish'
-               'Declaraciones Concluyentes'
+               'Despedida'
              else
                'Could not generate header'
     end
