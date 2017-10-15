@@ -16,20 +16,20 @@ class Broadcast::Item < ApplicationRecord
     params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
     general_items = Broadcast::Item.active.where('originated_at > ?', params[:min_origin]).where(municipality: nil).limit(params[:max_general])
-                        .order(originated_at: :desc)
+                                   .order(originated_at: :desc)
     municipal_items = Broadcast::Item.active.includes(:municipality).where('originated_at > ?', params[:min_origin]).where.not(municipality: nil)
-                          .order(originated_at: :desc)
+                                     .order(originated_at: :desc)
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
-                          .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
+                                     .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
 
     {
       english: {
-        general: general("english", general_items),
-        municipalities: municipalities("english", municipal_items, params)
+        general: general('english', general_items),
+        municipalities: municipalities('english', municipal_items, params)
       },
       spanish: {
-        general: general("spanish", general_items),
-        municipalities: municipalities("spanish", municipal_items, params)
+        general: general('spanish', general_items),
+        municipalities: municipalities('spanish', municipal_items, params)
       }
     }
   end
@@ -41,22 +41,20 @@ class Broadcast::Item < ApplicationRecord
     params = { min_origin: 4.days.ago.iso8601, name: name }
     script = generate_script(params)
 
-    unless Dir.exist? Rails.root.join('data')
-      Dir.mkdir(Rails.root.join('data'))
-    end
+    Dir.mkdir(Rails.root.join('data')) unless Dir.exist? Rails.root.join('data')
     File.write(Rails.root.join('data', "#{name}.yml"), script.to_yaml)
   end
 
   private
 
-  def self.general(language, items, document = [])
+  def self.general(language, items, _document = [])
     header = case language
-    when "english"
-      "General Interest"
-    when "spanish"
-      "Noticias de Interés General"
-    else
-      "Could not generate header"
+             when 'english'
+               'General Interest'
+             when 'spanish'
+               'Noticias de Interés General'
+             else
+               'Could not generate header'
     end
 
     {
@@ -65,20 +63,20 @@ class Broadcast::Item < ApplicationRecord
         {
           id: i.id,
           originated_at: i.originated_at,
-          body: language == "english" ? i.content : i.translation
+          body: language == 'english' ? i.content : i.translation
         }
       end
     }
   end
 
-  def self.municipalities(language, items, params, document = [])
+  def self.municipalities(language, items, params, _document = [])
     header = case language
-    when "english"
-      "Municipalities"
-    when "spanish"
-      "Municipios"
-    else
-      "Could not generate header"
+             when 'english'
+               'Municipalities'
+             when 'spanish'
+               'Municipios'
+             else
+               'Could not generate header'
     end
 
     {
@@ -90,7 +88,7 @@ class Broadcast::Item < ApplicationRecord
             {
               id: i.id,
               originated_at: i.originated_at,
-              body: language == "english" ? i.content : i.translation
+              body: language == 'english' ? i.content : i.translation
             }
           end
         }
