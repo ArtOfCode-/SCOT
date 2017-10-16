@@ -15,7 +15,7 @@ class Broadcast::Item < ApplicationRecord
     params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
     params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
-    all_items = Broadcast::Item.active.includes(:municipality).order(originated_at: :desc)
+    all_items = Broadcast::Item.active.includes(:municipality).includes(:translations).order(originated_at: :desc)
 
     top_items = all_items.where(top: true)
     bottom_items = all_items.where(bottom: true)
