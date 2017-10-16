@@ -22,6 +22,7 @@
     <% @broadcasts.each do |name, contents| %>
     <h2 id="<%= name %>_broadcast"><%= name.capitalize %> Broadcast</h2>
 
+    <% if contents[:top] %>
     <h3 id="<%= contents[:top][:header].parameterize.underscore %>"><%= contents[:top][:header] %></h3>
     <ul>
       <% contents[:top][:items].each do |item| %>
@@ -35,6 +36,7 @@
       </li>
       <% end %>
     </ul>
+    <% end %>
 
     <h3 id="<%= contents[:general][:header].parameterize.underscore %>"><%= contents[:general][:header] %></h3>
     <ul>
@@ -67,6 +69,7 @@
     </ul>
     <% end %>
 
+    <% if contents[:bottom] %>
     <h3 id="<%= contents[:bottom][:header].parameterize.underscore %>"><%= contents[:bottom][:header] %></h3>
     <ul>
       <% contents[:bottom][:items].each do |item| %>
@@ -80,6 +83,7 @@
       </li>
       <% end %>
     </ul>
+    <% end %>
 
     <hr>
     <% end %>
