@@ -6,7 +6,8 @@ class Broadcast::ItemsController < ApplicationController
     @language = Translations::Language[params[:lang] || 'en-US']
     @items = conditional_filter Broadcast::Item.active, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
                                                         source: params[:source], id: params[:id]
-    @items = @items.includes(:municipality).includes(:translations).order(originated_at: :desc).paginate page: params[:page], per_page: 100
+    @items = @items.includes(:municipality).includes(translations: [:source_lang, :target_lang])
+                   .order(originated_at: :desc).paginate page: params[:page], per_page: 100
   end
 
   def new
