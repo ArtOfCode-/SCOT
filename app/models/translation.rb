@@ -8,16 +8,19 @@ class Translation < ApplicationRecord
   belongs_to :broadcast_item, class_name: 'Broadcast::Item', foreign_key: 'translation_request_id', optional: true
 
   after_create do
+    changes = {}
     unless status.present?
-      update status: Translations::Status['Pending Assessment']
+      changes[:status] = Translations::Status['Pending Assessment']
     end
 
     unless content.present?
-      update content: ''
+      changes[:content] = ''
     end
 
     unless final.present?
-      update final: ''
+      changes[:final] = ''
     end
+
+    update(**changes)
   end
 end

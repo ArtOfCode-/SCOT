@@ -38,8 +38,8 @@ class Broadcast::ItemsController < ApplicationController
         final = params[:translation]
         status = Translations::Status['Completed']
       end
-      @item.translations.create(content: content, source_lang: from, target_lang: to, deliver_to: 'SCOT',
-                                due: now, requester: current_user, priority: Translations::Priority['Semi-Urgent'], final: final, status: status)
+      @item.translations.create(content: content, source_lang: from, target_lang: to, deliver_to: 'SCOT', due: now,
+                                requester: current_user, priority: Translations::Priority['Next Broadcast'], final: final, status: status)
       flash[:success] = 'Entry submitted to broadcast list.'
       redirect_to added_broadcast_item_path(@item)
     else

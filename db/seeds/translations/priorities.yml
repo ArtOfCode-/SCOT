@@ -7,6 +7,9 @@
 - name: Semi-Urgent
   description: Request is time-sensitive but not required immediately.
   index: 2
+- name: Next Broadcast
+  description: Request requires translation before the next regularly scheduled broadcast.
+  index: 2
 - name: As & When
   description: Request is not time-sensitive and can be completed when there is spare capacity.
   index: 3
