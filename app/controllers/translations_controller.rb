@@ -86,7 +86,7 @@ class TranslationsController < ApplicationController
   end
 
   def translation_params
-    params.require(:translation).permit(:content, :source_lang_id, :target_lang_id, :deliver_to, :due, :priority_id)
+    params.require(:translation).permit(:content, :final, :source_lang_id, :target_lang_id, :deliver_to, :due, :priority_id)
   end
 
   def set_translation
