@@ -11,6 +11,9 @@
       <th class="text-muted">ID</th>
       <th>Username</th>
       <th>Roles</th>
+      <% if current_user.has_role? :developer %>
+      <th></th>
+      <% end %>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -20,6 +23,11 @@
         <td class="text-muted"><%= u.id %></td>
         <td><%= u.username %></td>
         <td><%= u.roles.map { |x| x.name.humanize.titleize }.to_sentence %></td>
+        <% if current_user.has_role? :developer %>
+        <td>
+          <%= link_to "impersonate", change_user_path(id: u.id) %>
+        </td>
+        <% end %>
         <td>
           <%= form_tag admin_add_role_path, class: 'form-inline' do %>
             <%= hidden_field_tag :user_id, u.id %>
