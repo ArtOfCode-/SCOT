@@ -1,4 +1,3 @@
 class MedicalCondition < ApplicationRecord
-  has_many :medical_conditions_rescue_requests
-  has_many :rescue_requests, through: :medical_conditions_rescue_requests
+  has_and_belongs_to_many :rescue_requests
 end

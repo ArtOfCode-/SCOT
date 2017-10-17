@@ -9,8 +9,7 @@ class RescueRequest < ApplicationRecord
   has_many :dedupe_reviews
   has_many :spam_reviews
   has_many :suggested_edits, as: :resource
-  has_many :medical_conditions_rescue_requests
-  has_many :medical_conditions, through: :medical_conditions_rescue_requests
+  has_and_belongs_to_many :medical_conditions
 
   after_create do
     incident_id = (disaster.rescue_requests.maximum(:incident_number) || 0) + 1
