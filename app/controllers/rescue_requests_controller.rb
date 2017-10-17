@@ -25,7 +25,7 @@ class RescueRequestsController < ApplicationController
 
     @requests = @disaster.rescue_requests
     if params[:reporter].present?
-      @requests = @requests.where("name LIKE '%#{params[:reporter]}%'")
+      @requests = @requests.where('name LIKE ?', "%#{params[:reporter]}%")
     end
     if params[:city].present?
       @requests = @requests.where("city LIKE '%#{params[:city]}%'")

@@ -5,7 +5,7 @@ class RolesController < ApplicationController
 
   def index
     @users = if params[:filter].present?
-               User.where("username LIKE '%#{params[:filter]}%'")
+               User.where('username LIKE ?', "%#{params[:filter]}%")
              else
                User.all
              end.order(id: :desc).paginate page: params[:page], per_page: 50
