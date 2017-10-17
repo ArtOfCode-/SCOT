@@ -30,8 +30,6 @@ class DevelopersController < ApplicationController
   private
 
   def check_impersonating
-    unless session[:impersonator_id].present?
-      require_developer
-    end
+    require_developer unless session[:impersonator_id].present?
   end
 end

@@ -97,7 +97,8 @@ class Broadcast::ItemsController < ApplicationController
   end
 
   def scripts
-    @files = Dir[Rails.root.join('data', '*.yml')].map { |f| [File.basename(f, '.yml'), 'yml'] } + Dir[Rails.root.join('data', '*.html')].map { |f| [File.basename(f, '.html'), 'html'] }.sort_by!(&:first).reverse
+    @files = Dir[Rails.root.join('data', '*.yml')].map { |f| [File.basename(f, '.yml'), 'yml'] } +
+             Dir[Rails.root.join('data', '*.html')].map { |f| [File.basename(f, '.html'), 'html'] }.sort_by!(&:first).reverse
   end
 
   def view_script

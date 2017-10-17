@@ -13,13 +13,9 @@ class Translation < ApplicationRecord
       changes[:status] = Translations::Status['Pending Assessment']
     end
 
-    unless content.present?
-      changes[:content] = ''
-    end
+    changes[:content] = '' unless content.present?
 
-    unless final.present?
-      changes[:final] = ''
-    end
+    changes[:final] = '' unless final.present?
 
     update(**changes)
   end

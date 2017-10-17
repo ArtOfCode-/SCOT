@@ -10,7 +10,6 @@ class Broadcast::Item < ApplicationRecord
   end
 
   def self.generate_script(params)
-    document = []
     params[:min_origin] = params[:min_origin].present? ? params[:min_origin] : '1970-01-01T00:00:00'
     params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
     params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
@@ -20,7 +19,8 @@ class Broadcast::Item < ApplicationRecord
     top_items = all_items.where(top: true)
     bottom_items = all_items.where(bottom: true)
 
-    general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil).limit(params[:max_general]) - top_items - bottom_items
+    general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil)
+                             .limit(params[:max_general]) - top_items - bottom_items
 
     municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil) - top_items - bottom_items
     municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
@@ -28,16 +28,16 @@ class Broadcast::Item < ApplicationRecord
 
     {
       english: {
-        top:            top(           Translations::Language['en-US'], top_items),
-        general:        general(       Translations::Language['en-US'], general_items),
+        top:            top(Translations::Language['en-US'], top_items),
+        general:        general(Translations::Language['en-US'], general_items),
         municipalities: municipalities(Translations::Language['en-US'], municipal_items, params),
-        bottom:         bottom(        Translations::Language['en-US'], bottom_items)
+        bottom:         bottom(Translations::Language['en-US'], bottom_items)
       },
       spanish: {
-        top:            top(           Translations::Language['es-PR'], top_items),
-        general:        general(       Translations::Language['es-PR'], general_items),
+        top:            top(Translations::Language['es-PR'], top_items),
+        general:        general(Translations::Language['es-PR'], general_items),
         municipalities: municipalities(Translations::Language['es-PR'], municipal_items, params),
-        bottom:         bottom(        Translations::Language['es-PR'], bottom_items)
+        bottom:         bottom(Translations::Language['es-PR'], bottom_items)
       }
     }
   end
@@ -53,8 +53,6 @@ class Broadcast::Item < ApplicationRecord
     File.write(Rails.root.join('data', "#{name}.yml"), script.to_yaml)
   end
 
-  private
-
   def self.general(language, items, _document = [])
     header = case language
              when Translations::Language['en-US']
@@ -63,7 +61,7 @@ class Broadcast::Item < ApplicationRecord
                'Noticias de Interés General'
              else
                'Could not generate header'
-    end
+             end
 
     {
       header: header,
@@ -86,7 +84,7 @@ class Broadcast::Item < ApplicationRecord
                'Saludo'
              else
                'Could not generate header'
-    end
+             end
 
     {
       header: header,
@@ -109,7 +107,7 @@ class Broadcast::Item < ApplicationRecord
                'Despedida'
              else
                'Could not generate header'
-    end
+             end
 
     {
       header: header,
@@ -132,7 +130,7 @@ class Broadcast::Item < ApplicationRecord
                'Municipios'
              else
                'Could not generate header'
-    end
+             end
 
     {
       header: header,
