@@ -18,7 +18,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg <%= impersonating? ? 'bg-warning navbar-light' : 'bg-dark navbar-dark' %>">
       <a class="navbar-brand" href="#">
         <img src="<%= asset_path 'crowdlabs.png' %>" height="32" width="32" alt="CrowdLabs logo" />
         CrowdRescue
@@ -131,11 +131,14 @@
 
         <ul class="navbar-right navbar-nav">
           <% if current_user %>
-          <li class="nav-item"><%= link_to 'my account', edit_user_registration_path, class: 'nav-link' %></li>
-          <li class="nav-item"><%= link_to 'log out', destroy_user_session_path, method: "DELETE", class: 'nav-link' %></li>
+            <% if impersonating? %>
+              <li class="nav-item"><%= link_to 'stop impersonating', change_user_back_path, class: 'nav-link' %></li>
+            <% end %>
+            <li class="nav-item"><%= link_to 'my account', edit_user_registration_path, class: 'nav-link' %></li>
+            <li class="nav-item"><%= link_to 'log out', destroy_user_session_path, method: :delete, class: 'nav-link' %></li>
           <% else %>
-          <li class="nav-item"><%= link_to 'log in', new_user_session_path, class: 'nav-link' %></li>
-          <li class="nav-item"><%= link_to 'sign up', new_user_registration_path, class: 'nav-link' %></li>
+            <li class="nav-item"><%= link_to 'log in', new_user_session_path, class: 'nav-link' %></li>
+            <li class="nav-item"><%= link_to 'sign up', new_user_registration_path, class: 'nav-link' %></li>
           <% end %>
           <li><%= link_to 'Help Me!', global_requests_path, class: 'btn btn-danger' %></li>
         </ul>

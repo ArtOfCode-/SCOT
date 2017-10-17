@@ -153,6 +153,8 @@ Rails.application.routes.draw do
   end
 
   scope '/dev' do
-    get 'to/:id', to: 'developers#change_users', as: :change_user
+    get 'impersonate/stop', to: 'developers#change_back', as: :change_user_back
+    post 'impersonate/stop', to: 'developers#verify_elevation', as: :stop_impersonating
+    get 'impersonate/:id', to: 'developers#change_users', as: :change_user
   end
 end
