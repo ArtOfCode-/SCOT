@@ -49,6 +49,7 @@
 
 <%= will_paginate @users, renderer: BootstrapPagination::Rails %>
 
+<% if current_user.has_any_role? :developer, :admin %>
 <h3>Channel Leads</h3>
 <p>Channel leads can't be added using the options above, because you also need to specify which channel they lead.</p>
 <%= form_tag admin_lead_role_path do %>
@@ -66,4 +67,5 @@
     <button type="submit" name="mode" value="add" class="btn btn-success">Add</button>
     <button type="submit" name="mode" value="remove" class="btn btn-danger">Remove</button>
   </div>
+<% end %>
 <% end %>
