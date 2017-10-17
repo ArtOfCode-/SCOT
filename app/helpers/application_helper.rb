@@ -10,4 +10,10 @@ module ApplicationHelper
   def impersonating?
     session[:impersonator_id].present?
   end
+
+  def navbar_classes
+    return 'bg-warning navbar-light' if impersonating?
+    return 'bg-primary navbar-dark' if Rails.env.development?
+    'bg-dark navbar-dark'
+  end
 end
