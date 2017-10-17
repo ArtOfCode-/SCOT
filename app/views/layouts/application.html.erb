@@ -62,19 +62,19 @@
           </li>
           <% end %>
 
-          <% if user_signed_in? && current_user.has_any_role?(:developer, :admin, :medical) %>
+          <% if user_signed_in? && (current_user.has_any_role?(:developer, :admin, :medical) || current_user.roles.any? { |i| i.name == "channel_lead" }) %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">tools</a>
             <div class="dropdown-menu">
               <% if user_signed_in? %>
-                <% if has_any_role? :developer, :admin %>
+                <% if current_user.has_any_role?(:developer, :admin) || current_user.roles.any? { |i| i.name == "channel_lead" } %>
                   <%= link_to 'manage roles', admin_roles_path, class: 'dropdown-item' %>
-                  <div class="dropdown-divider"></div>
                 <% end %>
                 <% if current_user.has_any_role? :developer, :admin %>
+                  <div class="dropdown-divider"></div>
                   <%= link_to 'manage request statuses', request_status_index_path, class: 'dropdown-item' %>
                 <% end %>
-                <% if (current_user.has_role?(:admin) && current_user.has_role?(:medical)) || current_user.has_role?(:developer) %>
+                <% if current_user.has_role?(:developer) || (current_user.has_role?(:admin) && current_user.has_role?(:medical)) %>
                   <div class="dropdown-divider"></div>
                 <% end %>
                 <% if current_user.has_any_role? :developer, :medical %>
