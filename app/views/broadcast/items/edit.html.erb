@@ -16,10 +16,9 @@
 
   <% translation = @item.translations.first %>
 
-  <%= link_to "Translation", translation_path(id: translation.id) %>
   <div class="card border-secondary mb-2">
     <div class="card-header border-secondary">
-      <strong><%= translation.source_lang.name %></strong>
+      <strong><%= translation.source_lang.name %></strong> &mdash; <%= link_to 'edit', edit_translation_path(translation) %>
     </div>
     <div class="card-body">
       <% if uri? translation.content %>
@@ -32,7 +31,7 @@
 
   <div class="card border-secondary mb-2">
     <div class="card-header border-secondary">
-      <strong><%= translation.target_lang.name %></strong>
+      <strong><%= translation.target_lang.name %></strong> &mdash; <%= link_to 'edit', edit_translation_path(translation) %>
     </div>
     <div class="card-body">
       <% if uri? translation.final %>
