@@ -151,4 +151,8 @@ Rails.application.routes.draw do
     get ':id/translate', to: 'translations#translate', as: :translate_translation
     post ':id/translate', to: 'translations#complete_translation', as: :complete_translation
   end
+
+  scope '/dev' do
+    get 'to/:id', to: 'developers#change_users', as: :change_user
+  end
 end
