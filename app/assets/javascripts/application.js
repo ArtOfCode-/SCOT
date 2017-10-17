@@ -24,10 +24,10 @@ $(document).ready(function() {
     theme: 'bootstrap'
   });
 
-  date = $('.datepicker').val();
+  var date = $('.datepicker').val();
 
   if (date === null) {
-    date = new Date();
+    date = new Date().toLocaleString();
   }
 
   new Pikaday({
@@ -38,7 +38,7 @@ $(document).ready(function() {
     defaultDate: date,
     setDefaultDate: true,
     toString: function (date, format) {
-      return date.toISOString();
+      return date.toLocaleString();
     },
     onOpen: function () {
       $('.pika-time .pika-select').addClass('form-control');
