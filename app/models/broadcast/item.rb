@@ -15,30 +15,34 @@ class Broadcast::Item < ApplicationRecord
       params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
       params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
-      all_items = Broadcast::Item.active.includes(:municipality).includes(:translations).order(originated_at: :desc)
+      all_items = Broadcast::Item.active.includes(:municipality).includes(translations: [:source_lang, :target_lang]).order(originated_at: :desc)
 
       top_items = all_items.where(top: true)
       bottom_items = all_items.where(bottom: true)
+      tb_ids = top_items.map(&:id) + bottom_items.map(&:id)
 
-      general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil)
-                          .limit(params[:max_general]) - top_items - bottom_items
+      general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil).where.not(id: tb_ids)
+                               .limit(params[:max_general])
 
-      municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil) - top_items - bottom_items
-      municipal_items = municipal_items.group_by(&:broadcast_municipality_id)
-                            .sort_by { |municipality_id, _r| Broadcast::Municipality.find(municipality_id).name }
+      municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil).where.not(id: tb_ids)
+      municipal_items = municipal_items.group_by(&:municipality)
+                            .sort_by { |municipality, _i| municipality.name }
+
+      en_us = Translations::Language['en-US']
+      es_pr = Translations::Language['es-PR']
 
       {
         english: {
-          top:            top(Translations::Language['en-US'], top_items),
-          general:        general(Translations::Language['en-US'], general_items),
-          municipalities: municipalities(Translations::Language['en-US'], municipal_items, params),
-          bottom:         bottom(Translations::Language['en-US'], bottom_items)
+          top:            top(en_us, top_items),
+          general:        general(en_us, general_items),
+          municipalities: municipalities(en_us, municipal_items, params),
+          bottom:         bottom(en_us, bottom_items)
         },
         spanish: {
-          top:            top(Translations::Language['es-PR'], top_items),
-          general:        general(Translations::Language['es-PR'], general_items),
-          municipalities: municipalities(Translations::Language['es-PR'], municipal_items, params),
-          bottom:         bottom(Translations::Language['es-PR'], bottom_items)
+          top:            top(es_pr, top_items),
+          general:        general(es_pr, general_items),
+          municipalities: municipalities(es_pr, municipal_items, params),
+          bottom:         bottom(es_pr, bottom_items)
         }
       }
     end
