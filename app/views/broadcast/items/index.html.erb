@@ -10,7 +10,8 @@
   <%= label_tag :id, "ID:" %>
   <%= number_field_tag :id, params[:id], class: 'form-control form-control-sm mx-2', style: 'width:4em;' %>
   <%= label_tag :municipality, "Municipality:" %>
-  <%= select_tag :municipality, options_for_select([nil]+Broadcast::Municipality.all.map { |s| [s.name, s.id] }, params[:municipality]), class: 'form-control form-control-sm mx-4' %>
+  <%= select_tag :municipality, options_for_select(Broadcast::Municipality.all.map { |s| [s.name, s.id] }, params[:municipality]),
+                 include_blank: true, class: 'form-control form-control-sm mx-4' %>
   <%= submit_tag 'Find!', class: 'btn btn-outline-primary btn-sm' %>
 <% end %>
 <%= render 'broadcast/items/table' %>

@@ -14,11 +14,8 @@
   <% @items.each do |i| %>
       <tr>
         <td class="text-muted"><%= i.id %></td>
-        <% if translation = i.translations.where(source_lang: @language).first.try(:content) || i.translations.where(target_lang: @language).first.try(:final) %>
+        <% translation = i.translations.first&.content || i.translations.first&.final || '' %>
         <td><%= translation.first(100).length == 100 ? translation.first(100) + '...' : translation.first(100) %></td>
-        <% else %>
-        <td></td>
-        <% end %>
         <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
         <td><%= i.municipality&.name %></td>
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
