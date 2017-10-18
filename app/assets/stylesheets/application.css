@@ -30,9 +30,3 @@ label {
 .slide-body {
     padding: 5px 10px;
 }
-
-/* Yes, I dislike !important hacks too. Blame MiniProfiler. */
-.profiler-results {
-    position: absolute !important;
-    top: 59px !important;
-}

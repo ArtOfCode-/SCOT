@@ -10,42 +10,40 @@ class Broadcast::Item < ApplicationRecord
   end
 
   def self.generate_script(params)
-    Rack::MiniProfiler.step('Broadcast::Item#generate_script') do
-      params[:min_origin] = params[:min_origin].present? ? params[:min_origin] : '1970-01-01T00:00:00'
-      params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
-      params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
+    params[:min_origin] = params[:min_origin].present? ? params[:min_origin] : '1970-01-01T00:00:00'
+    params[:max_general] = params[:max_general].present? ? params[:max_general] : 9999
+    params[:max_muni] = params[:max_muni].present? ? params[:max_muni] : 9999
 
-      all_items = Broadcast::Item.active.includes(:municipality).includes(translations: [:source_lang, :target_lang]).order(originated_at: :desc)
+    all_items = Broadcast::Item.active.includes(:municipality).includes(translations: [:source_lang, :target_lang]).order(originated_at: :desc)
 
-      top_items = all_items.where(top: true)
-      bottom_items = all_items.where(bottom: true)
-      tb_ids = top_items.map(&:id) + bottom_items.map(&:id)
+    top_items = all_items.where(top: true)
+    bottom_items = all_items.where(bottom: true)
+    tb_ids = top_items.map(&:id) + bottom_items.map(&:id)
 
-      general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil).where.not(id: tb_ids)
-                               .limit(params[:max_general])
+    general_items = all_items.where('originated_at > ?', params[:min_origin]).where(municipality: nil).where.not(id: tb_ids)
+                             .limit(params[:max_general])
 
-      municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil).where.not(id: tb_ids)
-      municipal_items = municipal_items.group_by(&:municipality)
-                            .sort_by { |municipality, _i| municipality.name }
+    municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil).where.not(id: tb_ids)
+    municipal_items = municipal_items.group_by(&:municipality)
+                          .sort_by { |municipality, _i| municipality.name }
 
-      en_us = Translations::Language['en-US']
-      es_pr = Translations::Language['es-PR']
+    en_us = Translations::Language['en-US']
+    es_pr = Translations::Language['es-PR']
 
-      {
-        english: {
-          top:            top(en_us, top_items),
-          general:        general(en_us, general_items),
-          municipalities: municipalities(en_us, municipal_items, params),
-          bottom:         bottom(en_us, bottom_items)
-        },
-        spanish: {
-          top:            top(es_pr, top_items),
-          general:        general(es_pr, general_items),
-          municipalities: municipalities(es_pr, municipal_items, params),
-          bottom:         bottom(es_pr, bottom_items)
-        }
+    {
+      english: {
+        top:            top(en_us, top_items),
+        general:        general(en_us, general_items),
+        municipalities: municipalities(en_us, municipal_items, params),
+        bottom:         bottom(en_us, bottom_items)
+      },
+      spanish: {
+        top:            top(es_pr, top_items),
+        general:        general(es_pr, general_items),
+        municipalities: municipalities(es_pr, municipal_items, params),
+        bottom:         bottom(es_pr, bottom_items)
       }
-    end
+    }
   end
 
   def self.save_script

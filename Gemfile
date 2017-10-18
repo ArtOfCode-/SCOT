@@ -26,11 +26,6 @@ gem 'whenever', '~> 0.9.7'
 gem 'will_paginate', github: 'Undo1/will_paginate'
 gem 'will_paginate-bootstrap', github: 'Charcoal-SE/will_paginate-bootstrap'
 
-gem 'flamegraph'
-gem 'memory_profiler'
-gem 'rack-mini-profiler', '~> 0.10.5'
-gem 'stackprof'
-
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'capybara', '~> 2.13'
