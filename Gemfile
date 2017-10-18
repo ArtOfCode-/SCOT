@@ -32,9 +32,13 @@ gem 'rack-mini-profiler', '~> 0.10.5'
 gem 'stackprof'
 
 group :development, :test do
-  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'pry-byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'pry-rails'
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
+  gem 'rspec-rails', '~> 3.6'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'database_cleaner'
 end
 
 group :development do
