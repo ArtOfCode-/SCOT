@@ -131,6 +131,10 @@ Rails.application.routes.draw do
       post ':id/deprecate', to: 'broadcast/items#deprecate_item', as: :deprecate_broadcast_item
     end
 
+    scope 'municipalities' do
+      get 'updates', to: 'broadcast/municipalities#last_updates', as: :municipality_updates
+    end
+
     get 'setup', to: 'broadcast/items#setup_generation', as: :broadcast_script_setup
     get 'generate', to: 'broadcast/items#generate_script', as: :broadcast_script
     get 'scripts', to: 'broadcast/items#scripts', as: :broadcast_scripts

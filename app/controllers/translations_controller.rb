@@ -1,7 +1,8 @@
 class TranslationsController < ApplicationController
   before_action :authenticate_user!, only: [:my_requests, :new, :create, :final]
   before_action :set_translation, except: [:my_requests, :new, :create, :index, :my_assigns]
-  before_action :check_access, except: [:my_requests, :new, :create, :final]
+  before_action :check_access, except: [:my_requests, :new, :create, :final, :edit, :update]
+  before_action :check_edit, only: [:edit, :update]
 
   def index
     @translations = Translation.includes(:source_lang, :target_lang, :status, :priority)
@@ -82,6 +83,12 @@ class TranslationsController < ApplicationController
   def check_access
     unless current_user.present? && @translation.present? && current_user == @translation.requester
       require_any :developer, :admin, :translator
+    end
+  end
+
+  def check_edit
+    unless current_user.present? && @translation.present? && current_user == @translation.requester
+      require_any :developer, :admin, :translator, :broadcast, :miner
     end
   end
 

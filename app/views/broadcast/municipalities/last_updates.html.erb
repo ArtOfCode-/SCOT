@@ -1,0 +1,23 @@
+<h1>Last Municipality Updates</h1>
+<p>This is a list of the dates each municipality was last updated on, to help prioritise information gathering for those without recent updates.</p>
+<p><a href="#" class="copy-updates-clip btn btn-success">Copy as plain text</a></p>
+<textarea class="clipboard" id="updates-clip"><%= @updates.map { |u| "#{u.name}: #{u.last_update.strftime('%Y-%m-%d')}"}.join("\n") %></textarea>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Last Updated</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @updates.each do |u| %>
+      <tr>
+        <td><%= u.name %></td>
+        <td><%= u.last_update.strftime('%Y-%m-%d') %></td>
+        <td><%= link_to 'Municipality Items', broadcast_items_path(municipality: u.id) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,11 +1,13 @@
 <h1>Broadcast Items</h1>
 <p>The following is a list of all items that have been entered for broadcast. They won't all necessarily be included in broadcast scripts.</p>
 
-<%= link_to '+ Add item', new_broadcast_item_path %>
-<%= link_to 'Generate Script', broadcast_script_setup_path, class: 'btn btn-primary mx-2' %>
-<%= link_to 'Items Needing Translations', translations_path, class: 'float-right' %>
-<br>
-<br>
+<p>
+  <%= link_to '+ Add item', new_broadcast_item_path %>
+  <%= link_to 'Generate Script', broadcast_script_setup_path, class: 'btn btn-primary mx-2' %>
+  <%= link_to 'Items Needing Translations', translations_path, class: 'float-right mx-3' %>
+  <%= link_to 'Last Updates by Municipality', municipality_updates_path, class: 'float-right mx-3' %>
+</p>
+
 <%= form_tag broadcast_items_path, method: :get, class: 'my-2 form-inline clear-both' do %>
   <%= label_tag :id, "ID:" %>
   <%= number_field_tag :id, params[:id], class: 'form-control form-control-sm mx-2', style: 'width:4em;' %>

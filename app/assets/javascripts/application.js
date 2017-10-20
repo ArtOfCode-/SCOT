@@ -13,6 +13,18 @@
 //= require rails-ujs
 //= require_tree .
 
+window.scot = {
+  copy: function (elId) {
+    var el = $(elId);
+    el.show();
+    el.select();
+    var success = document.execCommand('copy');
+    if (success) {
+      el.hide();
+    }
+  }
+};
+
 $(document).ready(function() {
   $('.slide-body').hide();
 
