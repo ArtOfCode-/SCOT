@@ -28,8 +28,11 @@
           <% end %>
         </td>
         <td>
-          <%= link_to deprecate_broadcast_item_path(i), method: :post, class: 'text-danger' do %>
+          <%= link_to deprecate_broadcast_item_path(i), method: :post, class: 'section-del-link mx-1' do %>
             <i class="fa fa-times text-danger"></i>
+          <% end %>
+          <%= link_to edit_broadcast_item_path(i), method: :get, class: 'section-edit-link mx-2' do %>
+            <i class="fa fa-pencil"></i>
           <% end %>
         </td>
       </tr>
