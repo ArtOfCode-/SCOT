@@ -14,6 +14,12 @@
     </div>
   <% end %>
 
+  <% if params[:script].present? %>
+    <% params[:script].each do |n, v| %>
+      <%= f.hidden_field "script[#{n}]", value: v %>
+    <% end %>
+  <% end %>
+
   <h2>Original Item</h2>
   <table class="table">
     <tr>

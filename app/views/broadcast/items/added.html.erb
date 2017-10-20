@@ -8,7 +8,12 @@
         <% end %>
         <%= link_to '+ Add another item', new_broadcast_item_path, class: 'btn btn-success mx-3' %>
         <% if params[:tn].present? %>
-          <br/><%= link_to 'Back to translations list', translatable_broadcast_items_path %>
+          <br/><br/><%= link_to 'Back to translations list', translatable_broadcast_items_path %>
+        <% end %>
+        <% if params[:sc].present? %>
+          <br/><br/><%= link_to 'Back to script',
+                                broadcast_script_path(**params[:sc].permit(:name, :min_origin, :max_general, :max_muni).to_h.symbolize_keys) \
+                                + '#' + params[:h].to_s %>
         <% end %>
       </div>
     </div>

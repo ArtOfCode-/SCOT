@@ -51,12 +51,14 @@ class Broadcast::ItemsController < ApplicationController
   def edit; end
 
   def update
-    a = ActiveRecord::Base.transaction do
+    success = ActiveRecord::Base.transaction do
       @item.update(item_params)
       @item.translations.first.update(params[:translation].permit(:content, :final, :source_lang_id, :target_lang_id).to_h)
     end
-    if a
-      redirect_to added_broadcast_item_path(@item)
+    if success
+      hash = @item.municipality.present? ? "#{@item.municipality&.name&.downcase&.tr(' ', '_')}_eng" : nil
+      script_params = params[:broadcast_item][:script].permit(:name, :max_general, :max_muni, :min_origin)
+      redirect_to added_broadcast_item_path(@item, h: hash, sc: script_params)
     else
       render :edit
     end

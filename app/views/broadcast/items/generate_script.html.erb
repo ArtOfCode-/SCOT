@@ -1,3 +1,4 @@
+<% script_params = params.dup.permit(:name, :max_general, :max_muni, :min_origin).to_h %>
 <div class="row clearfix">
   <div class="contents float-left mr-2 w-20">
     <div class="card border-primary">
@@ -30,7 +31,7 @@
         <span class='text-muted'>(ID <%= item[:id] %>)</span>
         <%= raw(sanitize(item[:body]).gsub("\n", '<br/>')) %>
         <% if user_signed_in? %>
-        <%= link_to edit_broadcast_item_path(id: item[:id]), method: :get, class: 'section-edit-link mx-2' do %>
+        <%= link_to edit_broadcast_item_path(id: item[:id], script: script_params), method: :get, class: 'section-edit-link mx-2' do %>
           <i class="fa fa-pencil"></i>
         <% end %>
         <%= link_to deprecate_broadcast_item_path(id: item[:id]), method: :post, class: 'section-del-link mx-1' do %>
@@ -50,7 +51,7 @@
         <span class='text-muted'>(ID <%= item[:id] %>)</span>
         <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= raw(sanitize(item[:body]).gsub("\n", '<br/>')) %>
         <% if user_signed_in? %>
-        <%= link_to edit_broadcast_item_path(id: item[:id]), method: :get, class: 'section-edit-link mx-2' do %>
+        <%= link_to edit_broadcast_item_path(id: item[:id], script: script_params), method: :get, class: 'section-edit-link mx-2' do %>
           <i class="fa fa-pencil"></i>
         <% end %>
         <%= link_to deprecate_broadcast_item_path(id: item[:id]), method: :post, class: 'section-del-link mx-1' do %>
@@ -71,7 +72,7 @@
         <span class='text-muted'>(ID <%= item[:id] %>)</span>
         <strong><%= item[:originated_at].strftime('%e %b') %></strong>: <%= raw(sanitize(item[:body]).gsub("\n", '<br/>')) %>
         <% if user_signed_in? %>
-        <%= link_to edit_broadcast_item_path(id: item[:id]), method: :get, class: 'section-edit-link mx-2' do %>
+        <%= link_to edit_broadcast_item_path(id: item[:id], script: script_params), method: :get, class: 'section-edit-link mx-2' do %>
           <i class="fa fa-pencil"></i>
         <% end %>
         <%= link_to deprecate_broadcast_item_path(id: item[:id]), method: :post, class: 'section-del-link mx-1' do %>
@@ -92,7 +93,7 @@
         <span class='text-muted'>(ID <%= item[:id] %>)</span>
         <%= raw(sanitize(item[:body]).gsub("\n", '<br/>')) %>
         <% if user_signed_in? %>
-        <%= link_to edit_broadcast_item_path(id: item[:id]), method: :get, class: 'section-edit-link mx-2' do %>
+        <%= link_to edit_broadcast_item_path(id: item[:id], script: script_params), method: :get, class: 'section-edit-link mx-2' do %>
           <i class="fa fa-pencil"></i>
         <% end %>
         <%= link_to deprecate_broadcast_item_path(id: item[:id]), method: :post, class: 'section-del-link mx-1' do %>
