@@ -58,7 +58,7 @@ class Broadcast::ItemsController < ApplicationController
     end
     if success
       hash = @item.municipality.present? ? "#{@item.municipality&.name&.downcase&.tr(' ', '_')}_eng" : nil
-      script_params = params[:broadcast_item][:script].permit(:name, :max_general, :max_muni, :min_origin)
+      script_params = params[:broadcast_item][:script]&.permit(:name, :max_general, :max_muni, :min_origin)
       redirect_to added_broadcast_item_path(@item, h: hash, sc: script_params)
     else
       render :edit
