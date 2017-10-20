@@ -14,11 +14,22 @@
     </div>
   <% end %>
 
+  <h2>Original Item</h2>
+  <table class="table">
+    <tr>
+      <td>ID: <%= @item.id %></td>
+      <td>Origin Date: <%= @item.originated_at.iso8601 %></td>
+      <td>Last Edit Date: <%= @item.updated_at.iso8601 %></td>
+      <td>Source: <%= @item.source %></td>
+      <td>Municipality: <%= @item.municipality ? @item.municipality.name : "General" %></td>
+    </tr>
+  </table>
+
   <% translation = @item.translations.first %>
 
   <div class="card border-secondary mb-2">
     <div class="card-header border-secondary">
-      <strong><%= translation.source_lang.name %></strong> &mdash; <%= link_to 'edit', edit_translation_path(translation) %>
+      <strong><%= translation.source_lang.name %></strong>
     </div>
     <div class="card-body">
       <% if uri? translation.content %>
@@ -31,7 +42,7 @@
 
   <div class="card border-secondary mb-2">
     <div class="card-header border-secondary">
-      <strong><%= translation.target_lang.name %></strong> &mdash; <%= link_to 'edit', edit_translation_path(translation) %>
+      <strong><%= translation.target_lang.name %></strong>
     </div>
     <div class="card-body">
       <% if uri? translation.final %>
@@ -41,6 +52,34 @@
       <% end %>
     </div>
   </div>
+
+  <h2>Modifications</h2>
+
+  <div class="field">
+    <%= label_tag 'translation[content]', "Source Language: #{translation.source_lang.name}" %><br/>
+    <%= text_area_tag 'translation[content]', translation.content, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag 'translation[final]', "Target Language: #{translation.target_lang.name}" %>
+    <%= text_area_tag 'translation[final]', translation.final, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag 'translation[source_lang_id]' do %>
+      Source Language <small class="text-muted">What language is the original text in?</small>
+    <% end %><br/>
+    <%= select_tag 'translation[source_lang_id]', options_from_collection_for_select(Translations::Language.all, 'id', 'name', translation.source_lang_id.to_i),
+                 include_blank: true, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag 'translation[target_lang_id]' do %>
+      Target Language <small class="text-muted">What language do you need this translated into?</small>
+    <% end %><br/>
+    <%= select_tag 'translation[target_lang_id]', options_from_collection_for_select(Translations::Language.all, 'id', 'name', selected: translation.target_lang_id),
+                 include_blank: true, class: 'form-control select2' %>
+  </div><br/>
 
   <div class="field">
     <%= f.label :source do %>

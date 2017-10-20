@@ -51,7 +51,11 @@ class Broadcast::ItemsController < ApplicationController
   def edit; end
 
   def update
-    if @item.update item_params
+    a = ActiveRecord::Base.transaction do
+      @item.update(item_params)
+      @item.translations.first.update(params[:translation].permit(:content, :final, :source_lang_id, :target_lang_id).to_h)
+    end
+    if a
       redirect_to added_broadcast_item_path(@item)
     else
       render :edit
