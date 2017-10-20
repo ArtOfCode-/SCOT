@@ -17,3 +17,9 @@ tr *:nth-child(5) {
   grid-template-columns: 1fr 1fr;
   grid-gap: 2rem;
 }
+
+@media print {
+  .municipality h4 {
+    page-break-after: avoid;
+  }
+}
