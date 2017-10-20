@@ -8,3 +8,5 @@
   description: The translation for this request has been completed.
 - name: Rejected
   description: Translation team has rejected this request.
+- name: Edited
+  description: This request is attached to a broadcast item, which has recently been edited. The translation requires review.
