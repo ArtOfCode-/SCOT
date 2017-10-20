@@ -19,6 +19,7 @@
                      class: 'form-control form-control-sm mx-4', multiple: true %>
 
       <%= submit_tag 'Apply Filters', class: 'btn btn-primary btn-sm mx-1', name: nil %>
+      <input type="reset" class="btn btn-danger" value="Cancel" />
       <%= link_to 'Reset Filters', disaster_requests_path(disaster_id: @disaster.id), class: 'btn btn-outline-warning btn-sm mx-1' %>
     <% end %>
   </div>

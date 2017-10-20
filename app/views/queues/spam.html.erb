@@ -116,6 +116,9 @@ $(document).ready(function(){
   <%= hidden_field_tag :rescue_request_id, @rescue_request.id %>
 
   <%= submit_tag "Spam", name: "outcome", value: "spam" %>
+  <input type="reset" class="btn btn-danger" value="Cancel" />
   <%= submit_tag "Not Spam", name: "outcome", value: "not" %>
+  <input type="reset" class="btn btn-danger" value="Cancel" />
   <%= submit_tag "Skip", name: "outcome", value: "skip" %>
+  <input type="reset" class="btn btn-danger" value="Cancel" />
 <% end %>

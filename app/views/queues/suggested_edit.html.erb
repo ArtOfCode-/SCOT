@@ -96,7 +96,9 @@
 <%= form_tag :suggested_edit_complete do %>
   <%= hidden_field_tag :suggested_edit_id, @suggested_edit.id %>
   <%= submit_tag "Approve Edit", name: :approve %>
+  <input type="reset" class="btn btn-danger" value="Cancel" />
   <%= submit_tag "Reject Edit", name: :reject %>
+  <input type="reset" class="btn btn-danger" value="Cancel" />
 <% end %>
 
 <h3>Case Notes</h3>

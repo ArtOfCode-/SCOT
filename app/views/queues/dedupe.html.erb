@@ -88,7 +88,9 @@
     </tr>
     <tr>
       <td><%= submit_tag "Skip", name: "skip" %></td>
+<input type="reset" class="btn btn-danger" value="Cancel" />
       <td><%= submit_tag "No Duplicates", name: "not" %></td>
+<input type="reset" class="btn btn-danger" value="Cancel" />
       <% @suggested_duplicates.each do |dupe| %>
       <td><button type="submit" name="dupe_of" value="<%= dupe.id %>">This is a duplicate</button></td>
       <% end %>

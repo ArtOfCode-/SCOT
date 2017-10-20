@@ -89,6 +89,7 @@
   <%= label_tag :status_id, 'New status:', class: 'text-success' %>
   <%= select_tag :status_id, options_for_select(@statuses.map { |s| [s.name, s.id] }), class: 'form-control form-control-sm mx-2' %>
   <%= submit_tag 'Save', class: 'btn btn-outline-success btn-sm mx-2' %>
+  <input type="reset" class="btn btn-danger" value="Cancel" />
 <% end %>
 
 <br>
@@ -100,5 +101,6 @@
     <%= label_tag :status_id, 'New status:', class: 'text-success' %>
     <%= select_tag :status_id, options_for_select(@medical_statuses.map { |s| [s.name, s.id] }), class: 'form-control form-control-sm mx-2' %>
     <%= submit_tag 'Save', class: 'btn btn-outline-success btn-sm mx-2' %>
+    <input type="reset" class="btn btn-danger" value="Cancel" />
   <% end %>
 <% end %>
