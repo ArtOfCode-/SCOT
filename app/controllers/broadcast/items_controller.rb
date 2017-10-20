@@ -54,7 +54,7 @@ class Broadcast::ItemsController < ApplicationController
     success = ActiveRecord::Base.transaction do
       @item.update(item_params)
       @item.translations.first.update(status: Translations::Status['Edited'], assignee: nil,
-                                      **params[:translation].permit(:content, :final, :source_lang_id, :target_lang_id).to_h)
+                                      **params[:translation].permit(:content, :final, :source_lang_id, :target_lang_id).to_h.symbolize_keys)
     end
     if success
       hash = @item.municipality.present? ? "#{@item.municipality&.name&.downcase&.tr(' ', '_')}_eng" : nil
