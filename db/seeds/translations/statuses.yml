@@ -10,3 +10,5 @@
   description: Translation team has rejected this request.
 - name: Edited
   description: This request is attached to a broadcast item, which has recently been edited. The translation requires review.
+- name: Pending Review
+  description: A translator has completed the translation for this request, and it is awaiting final review.

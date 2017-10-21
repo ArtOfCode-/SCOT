@@ -39,7 +39,8 @@
   </div><br/>
 
   <div class="actions">
-    <%= submit_tag 'Submit Translation', name: nil, class: 'btn btn-success' %>
+    <%= submit_tag 'Save & Send to Review', name: nil, class: 'btn btn-success' %>
+    <button type="submit" name="completed" value="yes" class="btn btn-outline-warning">Save & Mark Completed</button>
     <input type="reset" class="btn btn-danger" value="Cancel" />
   </div>
 <% end %>

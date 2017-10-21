@@ -5,8 +5,8 @@ class TranslationsController < ApplicationController
   before_action :check_edit, only: [:edit, :update]
 
   def index
-    @translations = Translation.includes(:source_lang, :target_lang, :status, :priority)
-                               .where.not(status: [Translations::Status['Completed'], Translations::Status['Rejected']])
+    @translations = Translation.includes(:source_lang, :target_lang, :priority).joins(:status)
+                               .where.not(translation_statuses: { name: ['Completed', 'Rejected']})
                                .order(created_at: :desc)
   end
 
@@ -63,11 +63,12 @@ class TranslationsController < ApplicationController
   def translate; end
 
   def complete_translation
-    if @translation.update final: params[:final], status: Translations::Status['Completed']
-      flash[:success] = 'Submitted completed translation.'
+    status = params[:completed].present? ? Translations::Status['Completed'] : Translations::Status['Pending Review']
+    if @translation.update final: params[:final], status: status
+      flash[:success] = params[:completed].present? ? 'Saved completed translation.' : 'Saved and sent for review.'
       redirect_to translations_path
     else
-      flash[:danger] = 'Failed to submit completed translation.'
+      flash[:danger] = 'Failed to save completed translation.'
       render :translate
     end
   end
