@@ -59,6 +59,15 @@
     </div>
   </div>
 
+  <div class="card border-info mb-2">
+    <div class="card-header border-info bg-info text-light">
+      <strong>Notes</strong>
+    </div>
+    <div class="card-body">
+      <%= raw(sanitize(@item.notes).to_s.gsub "\n", '<br/>') %>
+    </div>
+  </div>
+
   <h2>Modifications</h2>
 
   <div class="field">
@@ -108,6 +117,13 @@
     <%= f.select :broadcast_municipality_id, options_from_collection_for_select(Broadcast::Municipality.all, 'id', 'name',
                                                                                 selected: @item.broadcast_municipality_id),
                  { include_blank: true }, class: 'form-control select2' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :notes do %>
+      Notes <small class="text-muted">Optional. If you have comments about this item or your actions, enter them here.</small>
+    <% end %>
+    <%= f.text_area :notes, rows: 5, cols: 100, class: 'form-control' %>
   </div><br/>
 
   <div class="actions">

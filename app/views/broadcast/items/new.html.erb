@@ -52,6 +52,13 @@
                  { include_blank: true }, class: 'form-control select2' %>
   </div><br/>
 
+  <div class="field">
+    <%= f.label :notes do %>
+        Notes <small class="text-muted">Optional. If you have comments about this item or your actions, enter them here.</small>
+    <% end %>
+    <%= f.text_area :notes, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+
   <div class="actions">
     <%= f.submit 'Submit', class: 'btn btn-success' %>
     <input type="reset" class="btn btn-danger" value="Cancel" />
