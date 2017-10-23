@@ -3,7 +3,7 @@
 <%= form_tag admin_roles_path, method: :get, class: 'form-inline' do %>
   <%= text_field_tag :filter, params[:filter], class: 'form-control form-control-sm mx-2' %>
   <%= submit_tag 'Filter', class: 'btn btn-outline-primary btn-sm' %>
-  <input type="reset" class="btn btn-danger" value="Cancel" />
+  <input type="reset" class="btn btn-outline-danger btn-sm" value="Cancel" />
 <% end %>
 
 <table class="table table-striped">
@@ -34,7 +34,6 @@
             <%= hidden_field_tag :user_id, u.id %>
             <%= select_tag :role_name, options_for_select(@role_names.map { |x| [x.to_s.humanize.titleize, x] }), include_blank: true, class: 'form-control form-control-sm mx-2' %>
             <%= submit_tag 'Add', class: 'btn btn-outline-danger btn-sm' %>
-            <input type="reset" class="btn btn-danger" value="Cancel" />
           <% end %>
         </td>
         <td>
