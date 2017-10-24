@@ -4,7 +4,7 @@
 - name: Urgent
   description: Request requires a quick turnaround.
   index: 1
-- name: Semi-Urgent
+- name: Soon
   description: Request is time-sensitive but not required immediately.
   index: 2
 - name: Next Broadcast
