@@ -4,7 +4,11 @@ class Broadcast::ItemsController < ApplicationController
 
   def index
     @language = Translations::Language[params[:lang] || 'en-US']
-    @items = Broadcast::Item.active.includes(:municipality).includes(translations: [:source_lang, :target_lang])
+    @items = if params[:match].present?
+               Broadcast::Item.active.search(params[:match]).includes(:municipality, translations: [:source_lang, :target_lang])
+             else
+               Broadcast::Item.active.includes(:municipality, translations: [:source_lang, :target_lang])
+             end
     @items = conditional_filter @items, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
                                                         source: params[:source], id: params[:id]
     @items = @items.order(originated_at: :desc).paginate page: params[:page], per_page: 100

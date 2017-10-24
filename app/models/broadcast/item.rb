@@ -153,4 +153,8 @@ class Broadcast::Item < ApplicationRecord
       end
     }
   end
+
+  def self.search(term)
+    Broadcast::Item.joins(:translations).match_search(term, translations: [:content, :final])
+  end
 end

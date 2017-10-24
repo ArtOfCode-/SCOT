@@ -13,9 +13,11 @@
   <%= number_field_tag :id, params[:id], class: 'form-control form-control-sm mx-2', style: 'width:4em;' %>
   <%= label_tag :municipality, "Municipality:" %>
   <%= select_tag :municipality, options_for_select(Broadcast::Municipality.all.map { |s| [s.name, s.id] }, params[:municipality]),
-                 include_blank: true, class: 'form-control form-control-sm mx-4' %>
+                 include_blank: true, class: 'form-control form-control-sm mx-2' %>
+  <%= label_tag :match, 'Search term:' %>
+  <%= text_field_tag :match, params[:match], class: 'form-control mx-4' %>
   <%= submit_tag 'Find!', class: 'btn btn-outline-primary btn-sm' %>
-  <input type="reset" class="btn btn-outline-danger btn-sm ml-4" value="Cancel" />
+  <input type="reset" class="btn btn-outline-danger btn-sm ml-2" value="Cancel" />
 <% end %>
 <%= render 'broadcast/items/table' %>
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171020235159) do
+ActiveRecord::Schema.define(version: 20171024123827) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -282,6 +282,7 @@ ActiveRecord::Schema.define(version: 20171020235159) do
     t.text "final", limit: 16777215, collation: "utf8_general_ci"
     t.bigint "broadcast_item_id"
     t.index ["broadcast_item_id"], name: "index_translations_on_broadcast_item_id"
+    t.index ["content", "final"], name: "index_translations_on_content_and_final", type: :fulltext
   end
 
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
