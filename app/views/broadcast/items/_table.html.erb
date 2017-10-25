@@ -15,7 +15,14 @@
       <tr>
         <td class="text-muted"><%= i.id %></td>
         <% translation = i.translations.first&.content || i.translations.first&.final || '' %>
-        <td><%= translation.first(100).length == 100 ? translation.first(100) + '...' : translation.first(100) %></td>
+        <td>
+          <% if translation.length > 90 %>
+            <%= translation.first(90) %>...
+            <a href="#" class="full-text-link" data-toggle="modal" data-target="#modal-<%= i.id %>" data-id="<%= i.id %>">more</a>
+          <% else %>
+            <%= translation %>
+          <% end %>
+        </td>
         <td><%= i.originated_at.strftime("%H:%M %d %b %Y") %></td>
         <td><%= i.municipality&.name %></td>
         <td><%= uri?(i.source) ? link_to(URI.parse(i.source).host, i.source) : i.source %></td>
@@ -34,33 +41,49 @@
           <%= link_to edit_broadcast_item_path(i), method: :get, class: 'section-edit-link mx-2' do %>
             <i class="fa fa-pencil"></i>
           <% end %>
-          <a href="#" role="button" class="text-success" data-toggle="modal" data-target="#notes-<%= i.id %>">
+          <a href="#" role="button" class="text-success notes-link" data-toggle="modal" data-target="#modal-<%= i.id %>" data-id="<%= i.id %>">
             <i class="fa fa-sticky-note<%= "-o" unless i.notes.present? %>"></i>
           </a>
         </td>
       </tr>
     <% end %>
   </tbody>
-  <div class="modals">
-    <% @items.each do |i| %>
-      <div class="modal" tabindex="-1" role="dialog" id="notes-<%= i.id %>">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Notes for #<%= i.id %></h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+</table>
+<div class="modals">
+  <% @items.each do |i| %>
+    <div class="modal item-info" tabindex="-1" role="dialog" id="modal-<%= i.id %>">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Notes for #<%= i.id %></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs mb-2" id="modal-tabs-<%= i.id %>">
+              <li class="nav-item">
+                <a href="#item-content-<%= i.id %>" class="nav-link active" id="content-tab-<%= i.id %>" data-toggle="tab" role="tab">Content</a>
+              </li>
+              <li class="nav-item">
+                <a href="#item-notes-<%= i.id %>" class="nav-link" id="notes-tab-<%= i.id %>" data-toggle="tab" role="tab">Notes</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="item-content-<%= i.id %>">
+                <% content = i.translations.first&.content || i.translations.first&.final || '' %>
+                <%= raw(sanitize(content).to_s.gsub "\n", '<br/>') %>
+              </div>
+              <div class="tab-pane fade" id="item-notes-<%= i.id %>">
+                <%= raw(sanitize(i.notes).to_s.gsub "\n", '<br/>') %>
+              </div>
             </div>
-            <div class="modal-body">
-              <%= raw(sanitize(i.notes).to_s.gsub "\n", '<br/>') %>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
-    <% end %>
-  </div>
-</table>
+    </div>
+  <% end %>
+</div>

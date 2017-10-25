@@ -29,4 +29,19 @@ $(document).ready(function () {
       'grid-template-columns': '1fr 1fr'
     });
   });
+
+  $(document).on('shown.bs.modal', function (ev) {
+    var modal = $(ev.target);
+    var caller = $(ev.relatedTarget);
+
+    if (modal.hasClass('item-info')) {
+      var id = caller.data('id');
+      if (caller.hasClass('notes-link')) {
+        $("#notes-tab-" + id).tab('show');
+      }
+      else if (caller.hasClass('full-text-link')) {
+        $("#content-tab" + id).tab('show');
+      }
+    }
+  });
 });
