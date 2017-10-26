@@ -13,9 +13,16 @@ class Translation < ApplicationRecord
       changes[:status] = Translations::Status['Pending Assessment']
     end
 
-    changes[:content] = '' unless content.present?
-
-    changes[:final] = '' unless final.present?
+    changes[:content] = if content.present?
+                          content.strip.gsub(/\n{3,}/, "\n\n")
+                        else
+                          ''
+                        end
+    changes[:final] = if final.present?
+                        final.strip.gsub(/\n{3,}/, "\n\n")
+                      else
+                        ''
+                      end
 
     update(**changes)
   end

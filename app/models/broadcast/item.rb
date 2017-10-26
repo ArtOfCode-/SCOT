@@ -25,7 +25,7 @@ class Broadcast::Item < ApplicationRecord
 
     municipal_items = all_items.where('originated_at > ?', params[:min_origin]).where.not(municipality: nil).where.not(id: tb_ids)
     municipal_items = municipal_items.group_by(&:municipality)
-                          .sort_by { |municipality, _i| municipality.name }
+                                     .sort_by { |municipality, _i| municipality.name }
 
     en_us = Translations::Language['en-US']
     es_pr = Translations::Language['es-PR']

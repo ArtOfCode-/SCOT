@@ -6,7 +6,7 @@ class TranslationsController < ApplicationController
 
   def index
     @translations = Translation.includes(:source_lang, :target_lang, :priority).joins(:status)
-                               .where.not(translation_statuses: { name: ['Completed', 'Rejected']})
+                               .where.not(translation_statuses: { name: %w[Completed Rejected] })
                                .order(created_at: :desc)
   end
 
