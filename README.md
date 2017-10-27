@@ -9,10 +9,11 @@ You'll need Ruby and MySQL installed to be able to set CrowdRescue up locally.
  - Install the required gems: `bundle install`
  - Copy sample config to real config (and fill in any missing values): `cp config/settings.sample.yml config/settings.yml`
  - Same for database config: copy and fill in your real username and password: `cp config/database.sample.yml config/database.yml`
+ - Run MySQL (if it is not already running) with `mysqld`. Open a new console tab or window for the following commands. 
  - Set up the database: run `rails db:create`, `rails db:schema:load`,
    and `rails db:migrate`.
  - Run the server with `rails s`
- 
+
 ## License
     SCOT - disaster response/relief management for volunteer teams
     Copyright (c) 2017 Owen Jenkins and contributors
