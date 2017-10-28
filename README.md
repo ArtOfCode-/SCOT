@@ -6,13 +6,51 @@ You'll need Ruby and MySQL installed to be able to set CrowdRescue up locally.
 
 ## Setup
  - Clone the repository and `cd` into the repository directory.
- - Install the required gems: `bundle install`
- - Copy sample config to real config (and fill in any missing values): `cp config/settings.sample.yml config/settings.yml`
- - Same for database config: copy and fill in your real username and password: `cp config/database.sample.yml config/database.yml`
- - Set up the database: run `rails db:create`, `rails db:schema:load`,
-   and `rails db:migrate`.
- - Run the server with `rails s`
- 
+ - Install the required gems:
+ ```bash
+ $ bundle install
+ ```
+ - Copy sample config to real config, and fill in any missing values. You'll need to [set up a Google Maps API token](https://developers.google.com/maps/documentation/javascript/get-api-key) to insert in the config file. 
+ ```bash
+ cp config/settings.sample.yml config/settings.yml
+ ```
+ - Same for database config: copy and fill in your real username and password:
+ ```bash
+ cp config/database.sample.yml config/database.yml
+ ```
+ - Run MySQL if it is not already running.
+
+You can check if MySQL is running with
+
+```bash
+$ ps aux | grep mysql
+```
+
+On Linux, start MySQL with
+
+```bash
+$ sudo systemctl restart mysql
+```
+
+On Mac, use
+
+```bash
+$ mysqld
+```
+
+ - Set up the database:
+
+```bash
+$ rails db:create
+$ rails db:schema:load
+$ rails db:migrate
+```
+
+ - Run the server with
+ ```bash
+ rails s
+ ```
+
 ## License
     SCOT - disaster response/relief management for volunteer teams
     Copyright (c) 2017 Owen Jenkins and contributors
