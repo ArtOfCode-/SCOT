@@ -157,6 +157,8 @@ Rails.application.routes.draw do
     post ':id/translate', to: 'translations#complete_translation', as: :complete_translation
     get ':id/dedupe', to: 'translations#deduplicate', as: :deduplicate_translation
     post ':id/dedupe', to: 'translations#submit_dedupe', as: :submit_dedupe_translation
+    get ':id/notes', to: 'translations#notes', as: :translation_notes
+    post ':id/notes', to: 'translations#submit_notes', as: :submit_translation_notes
   end
 
   scope '/dev' do

@@ -1,0 +1,20 @@
+<h1>Notes for Translation #<%= @translation.id %></h1>
+<p>You can add, or change, notes for this translation request here. Bear in mind that if you have identified a problem with this request, your
+  notes <strong>will not be forwarded to the author</strong> (<%= @translation.requester&.username %>) - you will need to do so manually.</p>
+
+<%= form_tag submit_translation_notes_path(@translation) do %>
+  <div class="field">
+    <%= label_tag :notes %><br/>
+    <%= text_area_tag :notes, @translation.notes, rows: 7, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= check_box_tag :hold_request, 1 %>
+    <%= label_tag :hold_request, 'Also mark this request "On Hold" (for example, while issues are resolved)?' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= submit_tag 'Submit', name: nil, class: 'btn btn-success mr-2' %>
+    <input type="reset" value="Cancel" class="btn btn-danger" />
+  </div>
+<% end %>

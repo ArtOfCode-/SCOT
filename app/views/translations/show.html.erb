@@ -1,4 +1,12 @@
-<h1>Translation Request #<%= @translation.id %> <small class="text-muted">Priority: <%= @translation.priority.name %></small></h1>
+<h1>
+  Translation Request #<%= @translation.id %>
+  <small class="text-muted">
+    Priority: <%= @translation.priority.name %>
+    <a href="#" data-toggle="modal" data-target="#translation-notes" class="text-success">
+      <i class="fa fa-sticky-note<%= "-o" unless @translation.notes.present? %>"></i>
+    </a>
+  </small>
+</h1>
 
 <% if @translation.duplicate_of.present? %>
   <h3 class="text-muted">
@@ -59,3 +67,23 @@
 <p>
   <%= link_to 'Duplicate request?', deduplicate_translation_path(@translation) %>
 </p>
+
+<div class="modal translation-notes" tabindex="-1" role="dialog" id="translation-notes">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Notes for #<%= @translation.id %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><%= raw(sanitize(@translation.notes).gsub("\n", "<br/>")) %></p>
+        <%= link_to 'Edit', translation_notes_path(@translation) %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,4 @@
 class TranslationsController < ApplicationController
-  before_action :authenticate_user!, only: [:my_requests, :new, :create, :final]
   before_action :set_translation, except: [:my_requests, :new, :create, :index, :my_assigns, :dedupe_remote_data]
   before_action :check_access, except: [:my_requests, :new, :create, :final, :edit, :update]
   before_action :check_edit, only: [:edit, :update]
@@ -92,6 +91,16 @@ class TranslationsController < ApplicationController
     results = Translation.where('id LIKE ?', "#{params[:q]}%")
     render json: { results: results.map { |i| { id: i.id, text: "##{i.id}", content: i.content.present? ? i.content : i.final } },
                    pagination: { more: false } }
+  end
+
+  def notes; end
+
+  def submit_notes
+    changes = { notes: params[:notes] }
+    changes[:status] = Translations::Status['On Hold'] if params[:hold_request].present?
+    @translation.update(**changes)
+    flash[:success] = "Added your notes."
+    redirect_to translation_path(@translation)
   end
 
   private
