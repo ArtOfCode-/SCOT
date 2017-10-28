@@ -1,8 +1,8 @@
 class TranslationsController < ApplicationController
-  before_action :authenticate_user!, only: [:my_requests, :new, :create, :final]
-  before_action :set_translation, except: [:my_requests, :new, :create, :index, :my_assigns]
+  before_action :set_translation, except: [:my_requests, :new, :create, :index, :my_assigns, :dedupe_remote_data]
   before_action :check_access, except: [:my_requests, :new, :create, :final, :edit, :update]
   before_action :check_edit, only: [:edit, :update]
+  before_action :redirect_duplicates, except: [:my_requests, :new, :create, :index, :my_assigns, :show, :dedupe_remote_data]
 
   def index
     @translations = Translation.includes(:source_lang, :target_lang, :priority).joins(:status)
@@ -79,6 +79,30 @@ class TranslationsController < ApplicationController
     @translations = Translation.where(assignee: current_user).order(id: :desc)
   end
 
+  def deduplicate; end
+
+  def submit_dedupe
+    @translation.make_duplicate params[:dupe_id]
+    flash[:success] = "Marked ##{@translation.id} as a duplicate of ##{params[:dupe_id]}."
+    redirect_to translation_path(id: params[:dupe_id])
+  end
+
+  def dedupe_remote_data
+    results = Translation.where('id LIKE ?', "#{params[:q]}%")
+    render json: { results: results.map { |i| { id: i.id, text: "##{i.id}", content: i.content.present? ? i.content : i.final } },
+                   pagination: { more: false } }
+  end
+
+  def notes; end
+
+  def submit_notes
+    changes = { notes: params[:notes] }
+    changes[:status] = Translations::Status['On Hold'] if params[:hold_request].present?
+    @translation.update(**changes)
+    flash[:success] = "Added your notes."
+    redirect_to translation_path(@translation)
+  end
+
   private
 
   def check_access
@@ -99,5 +123,12 @@ class TranslationsController < ApplicationController
 
   def set_translation
     @translation = Translation.find params[:id]
+  end
+
+  def redirect_duplicates
+    if @translation.present? && @translation.duplicate_of.present?
+      flash[:warning] = 'The record you selected is a duplicate; you have been redirected to the original record.'
+      redirect_to request.original_url.gsub(/\/\d+\//, "/#{@translation.duplicate_of_id}/")
+    end
   end
 end

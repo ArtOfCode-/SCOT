@@ -22,6 +22,21 @@ window.scot = {
     if (success) {
       el.hide();
     }
+  },
+
+  formatItem: function (item) {
+    if (!item.id) {
+      return item.content;
+    }
+
+    var text = item.content.substr(0, 100);
+    if (text.length === 100) {
+      text = text + '...';
+    }
+
+    return $(
+      '<div><strong>#' + item.id + '</strong><br/>' + text + '</div>'
+    );
   }
 };
 
@@ -34,6 +49,16 @@ $(document).ready(function() {
 
   $('.select2').select2({
     theme: 'bootstrap'
+  });
+
+  $('.select2-dedupe').select2({
+    theme: 'bootstrap',
+    ajax: {
+      url: '/translations/dedupe/data',
+      dataType: 'json'
+    },
+    templateResult: scot.formatItem,
+    minimumInputLength: 1
   });
 
   date = $('.datepicker').val();

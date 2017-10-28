@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  resource: one
+  resource_type: Resource
+  user: one
+  previous_state: MyText
+
+two:
+  resource: two
+  resource_type: Resource
+  user: two
+  previous_state: MyText

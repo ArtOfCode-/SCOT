@@ -12,3 +12,5 @@
   description: This request is attached to a broadcast item, which has recently been edited. The translation requires review.
 - name: Pending Review
   description: A translator has completed the translation for this request, and it is awaiting final review.
+- name: On Hold
+  description: Translation team has identified issues with this request, and it is on hold while they are resolved.
