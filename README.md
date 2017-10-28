@@ -10,13 +10,13 @@ You'll need Ruby and MySQL installed to be able to set CrowdRescue up locally.
  ```bash
  $ bundle install
  ```
- - Copy sample config to real config, and fill in any missing values. You'll need to [set up a Google Maps API token](https://developers.google.com/maps/documentation/javascript/get-api-key) to insert in the config file. 
+ - Copy sample config to real config, and fill in any missing values. You'll need to [set up a Google Maps API token](https://developers.google.com/maps/documentation/javascript/get-api-key) to insert in the config file.
  ```bash
- cp config/settings.sample.yml config/settings.yml
+$ cp config/settings.sample.yml config/settings.yml
  ```
  - Same for database config: copy and fill in your real username and password:
  ```bash
- cp config/database.sample.yml config/database.yml
+$ cp config/database.sample.yml config/database.yml
  ```
  - Run MySQL if it is not already running.
 
@@ -48,7 +48,7 @@ $ rails db:migrate
 
  - Run the server with
  ```bash
- rails s
+ $ rails s
  ```
 
 ## License
