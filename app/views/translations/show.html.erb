@@ -78,7 +78,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p><%= raw(sanitize(@translation.notes).gsub("\n", "<br/>")) %></p>
+        <p><%= raw(sanitize(@translation.notes)&.gsub("\n", "<br/>")) %></p>
         <%= link_to 'Edit', translation_notes_path(@translation) %>
       </div>
       <div class="modal-footer">
