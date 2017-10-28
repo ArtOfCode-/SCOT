@@ -147,6 +147,7 @@ Rails.application.routes.draw do
     get 'mine/assigned', to: 'translations#my_assigns', as: :my_assigned_translations
     get 'new', to: 'translations#new', as: :new_translation
     post 'new', to: 'translations#create', as: :create_translation
+    get 'dedupe/data', to: 'translations#dedupe_remote_data', as: :dedupe_translation_remote
     get ':id', to: 'translations#show', as: :translation
     get ':id/final', to: 'translations#final', as: :final_translation
     get ':id/edit', to: 'translations#edit', as: :edit_translation
@@ -154,6 +155,8 @@ Rails.application.routes.draw do
     post ':id/status', to: 'translations#update_status', as: :update_translation_status
     get ':id/translate', to: 'translations#translate', as: :translate_translation
     post ':id/translate', to: 'translations#complete_translation', as: :complete_translation
+    get ':id/dedupe', to: 'translations#deduplicate', as: :deduplicate_translation
+    post ':id/dedupe', to: 'translations#submit_dedupe', as: :submit_dedupe_translation
   end
 
   scope '/dev' do

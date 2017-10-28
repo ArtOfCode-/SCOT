@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171024123827) do
+ActiveRecord::Schema.define(version: 20171028112257) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -208,6 +208,17 @@ ActiveRecord::Schema.define(version: 20171024123827) do
     t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
   end
 
+  create_table "resource_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.bigint "user_id"
+    t.text "tracked_changes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id"], name: "index_resource_histories_on_resource_type_and_resource_id"
+    t.index ["user_id"], name: "index_resource_histories_on_user_id"
+  end
+
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.string "resource_type"
@@ -281,8 +292,10 @@ ActiveRecord::Schema.define(version: 20171024123827) do
     t.integer "priority_id"
     t.text "final", limit: 16777215, collation: "utf8_general_ci"
     t.bigint "broadcast_item_id"
+    t.bigint "duplicate_of_id"
     t.index ["broadcast_item_id"], name: "index_translations_on_broadcast_item_id"
     t.index ["content", "final"], name: "index_translations_on_content_and_final", type: :fulltext
+    t.index ["duplicate_of_id"], name: "fk_rails_9949297a6c"
   end
 
   create_table "user_authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -350,8 +363,10 @@ ActiveRecord::Schema.define(version: 20171024123827) do
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "medical_statuses"
   add_foreign_key "rescue_requests", "request_statuses"
+  add_foreign_key "resource_histories", "users"
   add_foreign_key "spam_reviews", "rescue_requests"
   add_foreign_key "spam_reviews", "users"
   add_foreign_key "suggested_edits", "users"
+  add_foreign_key "translations", "translations", column: "duplicate_of_id"
   add_foreign_key "user_authorizations", "users"
 end

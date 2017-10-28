@@ -1,4 +1,11 @@
 <h1>Translation Request #<%= @translation.id %> <small class="text-muted">Priority: <%= @translation.priority.name %></small></h1>
+
+<% if @translation.duplicate_of.present? %>
+  <h3 class="text-muted">
+    <small>Duplicate of <%= link_to "##{@translation.duplicate_of_id}", translation_path(@translation.duplicate_of) %></small>
+  </h3>
+<% end %>
+
 <p><strong><%= @translation.requester.username %></strong> requests the translation of the following item, from
   <%= @translation.source_lang.name %> to <%= @translation.target_lang.name %>:</p>
 
@@ -47,4 +54,8 @@
   | <%= link_to 'Reject', update_translation_status_path(@translation, status_id: Translations::Status['Rejected'].id),
               class: 'text-danger', method: :post %>
   <% end %>
+</p>
+
+<p>
+  <%= link_to 'Duplicate request?', deduplicate_translation_path(@translation) %>
 </p>

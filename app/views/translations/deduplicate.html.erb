@@ -1,0 +1,51 @@
+<h1>Deduplicate Translation #<%= @translation.id %></h1>
+<p>
+  If this request is a duplicate request, you can mark it as such here by selecting the original request. This will:
+  <ul>
+    <li>Copy the original text and translation of the original request to this request;</li>
+    <li>Close this request and mark it as a duplicate of the original.</li>
+  </ul>
+</p>
+
+<% unless @translation.content.nil? %>
+  <div class="card border-secondary mb-2">
+    <div class="card-header border-secondary">
+      <strong><%= @translation.source_lang.name %></strong>
+    </div>
+    <div class="card-body">
+      <% if uri? @translation.content %>
+          <%= link_to @translation.content, @translation.content %>
+      <% else %>
+          <%= raw(sanitize(@translation.content).gsub "\n", '<br/>') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% unless @translation.final.nil? %>
+  <div class="card border-secondary mb-2">
+    <div class="card-header border-secondary">
+      <strong><%= @translation.target_lang.name %></strong>
+    </div>
+    <div class="card-body">
+      <% if uri? @translation.final %>
+          <%= link_to @translation.final, @translation.final %>
+      <% else %>
+          <%= raw(sanitize(@translation.final).gsub "\n", '<br/>') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%= form_tag submit_dedupe_translation_path(@translation) do %>
+  <div class="field">
+    <%= label_tag :dupe_id, 'Duplicate' %><br/>
+    <%= select_tag :dupe_id, options_from_collection_for_select(Translation.last(100), 'id', 'content'),
+                   include_blank: true, class: 'form-control select2-dedupe', data: { ajax_remote: '/translations/dedupe/data' } %>
+  </div><br/>
+
+  <div class="actions">
+    <%= submit_tag 'Submit', class: 'btn btn-success mr-2' %>
+    <input type="reset" value="Cancel" class="btn btn-danger" />
+  </div>
+<% end %>
