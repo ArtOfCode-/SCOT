@@ -14,6 +14,8 @@
   </h3>
 <% end %>
 
+<p><%= link_to 'Back to translations list', translations_path %></p>
+
 <p><strong><%= @translation.requester.username %></strong> requests the translation of the following item, from
   <%= @translation.source_lang.name %> to <%= @translation.target_lang.name %>:</p>
 
