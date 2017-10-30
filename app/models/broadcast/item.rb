@@ -1,7 +1,7 @@
 class Broadcast::Item < ApplicationRecord
   belongs_to :municipality, class_name: 'Broadcast::Municipality', optional: true, foreign_key: 'broadcast_municipality_id'
   belongs_to :user, optional: true
-  belongs_to :status, class_name: 'Broadcast::Status', foreign_key: 'status_id'
+  belongs_to :status, class_name: 'Broadcast::Status', foreign_key: 'status_id', optional: true
   has_many :translations, class_name: 'Translation', foreign_key: 'broadcast_item_id'
 
   scope :active, -> { where(deprecated: false) }
