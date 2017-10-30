@@ -48,7 +48,7 @@
   </tbody>
 </table>
 
-<%= will_paginate @users, renderer: BootstrapPagination::Rails %>
+<%= will_paginate @users, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 
 <% if current_user.has_any_role? :developer, :admin %>
 <h3>Channel Leads</h3>

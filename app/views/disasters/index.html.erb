@@ -14,7 +14,7 @@
   </tbody>
 </table>
 
-<%= will_paginate @disasters, renderer: BootstrapPagination::Rails %>
+<%= will_paginate @disasters, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 
 <% if user_signed_in? && current_user.has_role?(:admin) %>
   <%= link_to 'Create new', new_disaster_path %>
