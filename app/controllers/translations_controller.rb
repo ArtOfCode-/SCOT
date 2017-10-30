@@ -99,7 +99,7 @@ class TranslationsController < ApplicationController
     changes = { notes: params[:notes] }
     changes[:status] = Translations::Status['On Hold'] if params[:hold_request].present?
     @translation.update(**changes)
-    flash[:success] = "Added your notes."
+    flash[:success] = 'Added your notes.'
     redirect_to translation_path(@translation)
   end
 
@@ -128,7 +128,7 @@ class TranslationsController < ApplicationController
   def redirect_duplicates
     if @translation.present? && @translation.duplicate_of.present?
       flash[:warning] = 'The record you selected is a duplicate; you have been redirected to the original record.'
-      redirect_to request.original_url.gsub(/\/\d+\//, "/#{@translation.duplicate_of_id}/")
+      redirect_to request.original_url.gsub(%r{\/\d+\/}, "/#{@translation.duplicate_of_id}/")
     end
   end
 end

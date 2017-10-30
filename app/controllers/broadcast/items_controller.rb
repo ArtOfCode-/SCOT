@@ -130,16 +130,15 @@ class Broadcast::ItemsController < ApplicationController
     @translation = @item.translations.first
   end
 
-
   def submit_review
     @translation = @item.translations.first
     status = case @translation.status
-               when Translations::Status['Completed']
-                 Broadcast::Status['Finalized']
-               when Translations::Status['Pending Review']
-                 Broadcast::Status['Translated']
-               else
-                 Broadcast::Status['Pending Translation']
+             when Translations::Status['Completed']
+               Broadcast::Status['Finalized']
+             when Translations::Status['Pending Review']
+               Broadcast::Status['Translated']
+             else
+               Broadcast::Status['Pending Translation']
              end
     success = ActiveRecord::Base.transaction do
       @item.update status: status
