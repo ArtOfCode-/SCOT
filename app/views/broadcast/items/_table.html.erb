@@ -1,3 +1,5 @@
+<% review ||= false %>
+
 <table class="table table-striped">
   <thead>
   <tr>
@@ -38,7 +40,7 @@
           <%= link_to deprecate_broadcast_item_path(i), method: :post, class: 'section-del-link mx-1' do %>
             <i class="fa fa-times text-danger"></i>
           <% end %>
-          <%= link_to edit_broadcast_item_path(i), method: :get, class: 'section-edit-link mx-2' do %>
+          <%= link_to review ? review_broadcast_item_path(i) : edit_broadcast_item_path(i), method: :get, class: 'section-edit-link mx-2' do %>
             <i class="fa fa-pencil"></i>
           <% end %>
           <a href="#" role="button" class="text-success notes-link" data-toggle="modal" data-target="#modal-<%= i.id %>" data-id="<%= i.id %>">

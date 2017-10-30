@@ -125,10 +125,13 @@ Rails.application.routes.draw do
       root to: 'broadcast/items#index', as: :broadcast_items
       get 'new', to: 'broadcast/items#new', as: :new_broadcast_item
       post 'new', to: 'broadcast/items#create', as: :create_broadcast_item
+      get 'review', to: 'broadcast/items#review', as: :review_broadcast_items
       get ':id/edit', to: 'broadcast/items#edit', as: :edit_broadcast_item
       patch ':id/edit', to: 'broadcast/items#update', as: :update_broadcast_item
       get ':id/added', to: 'broadcast/items#added', as: :added_broadcast_item
       post ':id/deprecate', to: 'broadcast/items#deprecate_item', as: :deprecate_broadcast_item
+      get ':id/review', to: 'broadcast/items#item_review', as: :review_broadcast_item
+      patch ':id/review', to: 'broadcast/items#submit_review', as: :submit_item_review
     end
 
     scope 'municipalities' do

@@ -1,0 +1,8 @@
+- name: Pending Review
+  description: This item is waiting for a copy-editor to review it and finalize the wording.
+- name: Pending Translation
+  description: This item is waiting for a translator to complete its translation.
+- name: Translated
+  description: This item has been translated, but its translation is waiting for review.
+- name: Finalized
+  description: The review and translation process for this item is complete.

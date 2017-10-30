@@ -14,6 +14,10 @@
 //= require_tree .
 
 window.scot = {
+  initialize: function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  },
+
   copy: function (elId) {
     var el = $(elId);
     el.show();
@@ -41,6 +45,8 @@ window.scot = {
 };
 
 $(document).ready(function() {
+  scot.initialize();
+
   $('.slide-body').hide();
 
   $('.slide-header').on('click', function() {

@@ -1,0 +1,52 @@
+<h1>Review Broadcast Item #<%= @item.id %></h1>
+<h2>Original</h2>
+<% unless @translation.content.nil? %>
+  <div class="card border-secondary mb-2">
+    <div class="card-header border-secondary">
+      <strong><%= @translation.source_lang.name %></strong>
+    </div>
+    <div class="card-body">
+      <% if uri? @translation.content %>
+          <%= link_to @translation.content, @translation.content %>
+      <% else %>
+          <%= raw(sanitize(@translation.content).gsub "\n", '<br/>') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% unless @translation.final.nil? %>
+  <div class="card border-secondary mb-2">
+    <div class="card-header border-secondary">
+      <strong><%= @translation.target_lang.name %></strong>
+    </div>
+    <div class="card-body">
+      <% if uri? @translation.final %>
+          <%= link_to @translation.final, @translation.final %>
+      <% else %>
+          <%= raw(sanitize(@translation.final).gsub "\n", '<br/>') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<h2>Modifications</h2>
+<%= form_for @translation, url: submit_item_review_path(@item) do |f| %>
+  <div class="field">
+    <%= f.label :content do %>
+      Content - <%= @translation.source_lang.name %>
+    <% end %><br/>
+    <%= f.text_area :content, rows: 7, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :final do %>
+        Translation - <%= @translation.target_lang.name %>
+    <% end %><br/>
+    <%= f.text_area :final, rows: 7, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Finish Review', class: 'btn btn-success' %>
+  </div>
+<% end %>

@@ -1,6 +1,6 @@
 class Broadcast::ItemsController < ApplicationController
   before_action :check_access, except: [:scripts, :view_script]
-  before_action :set_item, except: [:index, :new, :create, :setup_generation, :generate_script, :need_translation, :scripts, :view_script]
+  before_action :set_item, only: [:edit, :update, :add_translation, :submit_translation, :deprecate_item, :item_review, :submit_review]
 
   def index
     @language = Translations::Language[params[:lang] || 'en-US']
@@ -119,6 +119,38 @@ class Broadcast::ItemsController < ApplicationController
     else
       @broadcasts = YAML.load_file(Rails.root.join('data', "#{params[:file].tr('/', '')}.yml"))
       render :generate_script, formats: [:html, :erb]
+    end
+  end
+
+  def review
+    @items = Broadcast::Item.active.with_assoc.where(status: Broadcast::Status['Pending Review']).order(id: :desc)
+  end
+
+  def item_review
+    @translation = @item.translations.first
+  end
+
+
+  def submit_review
+    @translation = @item.translations.first
+    status = case @translation.status
+               when Translations::Status['Completed']
+                 Broadcast::Status['Finalized']
+               when Translations::Status['Pending Review']
+                 Broadcast::Status['Translated']
+               else
+                 Broadcast::Status['Pending Translation']
+             end
+    success = ActiveRecord::Base.transaction do
+      @item.update status: status
+      @translation.update params.require(:translation).permit(:content, :final)
+    end
+    if success
+      flash[:success] = 'Marked item review complete.'
+      redirect_to review_broadcast_items_path
+    else
+      flash[:danger] = 'Failed to complete review.'
+      render :item_review
     end
   end
 

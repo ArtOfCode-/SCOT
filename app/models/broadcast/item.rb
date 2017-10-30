@@ -1,12 +1,17 @@
 class Broadcast::Item < ApplicationRecord
   belongs_to :municipality, class_name: 'Broadcast::Municipality', optional: true, foreign_key: 'broadcast_municipality_id'
   belongs_to :user, optional: true
+  belongs_to :status, class_name: 'Broadcast::Status', foreign_key: 'status_id'
   has_many :translations, class_name: 'Translation', foreign_key: 'broadcast_item_id'
 
   scope :active, -> { where(deprecated: false) }
+  scope :with_assoc, -> { includes(:municipality, :user, :status, translations: [:source_lang, :target_lang]) }
 
   after_create do
-    update(originated_at: created_at) unless originated_at.present?
+    changes = {}
+    changes[:originated_at] = created_at unless originated_at.present?
+    changes[:status] = Broadcast::Status['Pending Review']
+    update(**changes)
   end
 
   def self.generate_script(params)

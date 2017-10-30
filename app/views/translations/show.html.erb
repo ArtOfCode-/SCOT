@@ -14,6 +14,10 @@
   </h3>
 <% end %>
 
+<% if @translation.broadcast_item.present? %>
+  <p>Broadcast item: <%= link_to "##{@translation.broadcast_item.id}", broadcast_items_path(id: @translation.broadcast_item.id) %></p>
+<% end %>
+
 <p><%= link_to 'Back to translations list', translations_path %></p>
 
 <p><strong><%= @translation.requester.username %></strong> requests the translation of the following item, from
@@ -51,6 +55,13 @@
 
 <p>The finished translation is needed by <strong><%= @translation.deliver_to %></strong>
   by <%= @translation.due&.strftime("%H:%M UTC %d %b %Y") %>.</p>
+
+<% if @translation.broadcast_item.present? && @translation.broadcast_item.status == Broadcast::Status['Pending Review'] %>
+  <div class="alert alert-warning">
+    <i class="fa fa-exclamation-triangle"></i> The broadcast item that this translation request is attached to is still waiting for a copy-review.
+    Translating it now will result in more work later if the reviewer makes changes to the item.
+  </div>
+<% end %>
 
 <p>
   <strong>Status:</strong> <%= @translation.status.name %><br/>

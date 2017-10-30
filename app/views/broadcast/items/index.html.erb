@@ -4,8 +4,16 @@
 <p>
   <%= link_to '+ Add item', new_broadcast_item_path %>
   <%= link_to 'Generate Script', broadcast_script_setup_path, class: 'btn btn-primary mx-2' %>
-  <%= link_to 'Items Needing Translations', translations_path, class: 'float-right mx-3' %>
-  <%= link_to 'Last Updates by Municipality', municipality_updates_path, class: 'float-right mx-3' %>
+  <div class="dropdown">
+    <button class="btn btn-outline-primary dropdown-toggle float-right mx-3" type="button" id="tools-menu-toggle" data-toggle="dropdown">
+      Tools & Lists
+    </button>
+    <div class="dropdown-menu" aria-labelledby="tools-menu-toggle">
+      <%= link_to 'Items awaiting review', review_broadcast_items_path, class: 'dropdown-item' %>
+      <%= link_to 'Items awaiting translation', translations_path, class: 'dropdown-item' %>
+      <%= link_to 'Last updates by municipality', municipality_updates_path, class: 'dropdown-item' %>
+    </div>
+  </div>
 </p>
 
 <%= form_tag broadcast_items_path, method: :get, class: 'my-2 form-inline clear-both' do %>
@@ -22,5 +30,5 @@
 <%= render 'broadcast/items/table' %>
 
 <div class="text-center">
-  <%= will_paginate @items, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @items, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div>

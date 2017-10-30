@@ -20,11 +20,17 @@
         <td class="text-muted"><%= t.id %></td>
         <td><%= t.source_lang.name %> &rarr; <%= t.target_lang.name %></td>
         <td><%= uri?(t.content) ? link_to(URI.parse(t.content).host, t.content) :
-                (t.content.length > 100 ? t.content.first(100) + '...' : t.content) %></td>
+                (t.content.length > 90 ? t.content.first(90) + '...' : t.content) %></td>
         <td><%= t.assignee&.username || 'Unassigned' %></td>
         <td title="<%= t.status.description %>"><%= t.status.name %></td>
         <td title="<%= t.priority.description %>"><%= t.priority.name %></td>
-        <td><%= link_to 'Actions', translation_path(t) %></td>
+        <td>
+          <% if t.broadcast_item.present? && t.broadcast_item.status == Broadcast::Status['Pending Review'] %>
+            <i class="fa fa-exclamation-triangle text-warning" data-toggle="tooltip" data-placement="top"
+               title="The item this request is attached to has not been copy-reviewed yet!"></i>
+          <% end %>
+          <%= link_to 'Actions', translation_path(t) %>
+        </td>
       </tr>
     <% end %>
   </tbody>
