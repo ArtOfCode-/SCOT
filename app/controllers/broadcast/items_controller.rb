@@ -1,6 +1,6 @@
 class Broadcast::ItemsController < ApplicationController
   before_action :check_access, except: [:scripts, :view_script]
-  before_action :set_item, only: [:edit, :update, :add_translation, :submit_translation, :deprecate_item, :item_review, :submit_review]
+  before_action :set_item, only: [:added, :edit, :update, :add_translation, :submit_translation, :deprecate_item, :item_review, :submit_review]
 
   def index
     @language = Translations::Language[params[:lang] || 'en-US']
