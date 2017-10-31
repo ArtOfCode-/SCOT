@@ -132,6 +132,7 @@ class Broadcast::ItemsController < ApplicationController
 
   def submit_review
     @translation = @item.translations.first
+    orig = { content: @translation.content, final: @translation.final }
     status = case @translation.status
              when Translations::Status['Completed']
                Broadcast::Status['Finalized']
@@ -143,6 +144,9 @@ class Broadcast::ItemsController < ApplicationController
     success = ActiveRecord::Base.transaction do
       @item.update status: status
       @translation.update params.require(:translation).permit(:content, :final)
+      if @translation.final != orig[:final] || @translation.content != orig[:content]
+        @translation.update status: Translations::Status['Edited']
+      end
     end
     if success
       flash[:success] = 'Marked item review complete.'
