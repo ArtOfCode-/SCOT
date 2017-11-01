@@ -1,0 +1,23 @@
+<h1>Apps You've Authorized</h1>
+<p>This is a list of apps that you've authorized to access your account. You can also revoke access from here, if you need to do so.</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>App Name</th>
+      <th>Active Tokens</th>
+      <th>Last Authorized</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @keys.each do |k| %>
+      <tr>
+        <td><%= k.name %></td>
+        <td><%= k.api_tokens.where(user: current_user).count %></td>
+        <td><%= time_ago_in_words k.api_tokens.where(user: current_user).last.created_at %> ago</td>
+        <td><%= link_to 'Revoke Access', revoke_user_api_tokens_path(key_id: k.id), method: :post, class: 'text-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

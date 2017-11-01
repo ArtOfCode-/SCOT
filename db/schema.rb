@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171101182844) do
+ActiveRecord::Schema.define(version: 20171101205526) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(version: 20171101182844) do
     t.text "scopes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "api_keys_id"
-    t.index ["api_keys_id"], name: "index_api_tokens_on_api_keys_id"
+    t.bigint "api_key_id"
+    t.index ["api_key_id"], name: "index_api_tokens_on_api_key_id"
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
@@ -381,7 +381,7 @@ ActiveRecord::Schema.define(version: 20171101182844) do
 
   add_foreign_key "access_logs", "users"
   add_foreign_key "api_keys", "users"
-  add_foreign_key "api_tokens", "api_keys", column: "api_keys_id"
+  add_foreign_key "api_tokens", "api_keys"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "broadcast_items", "broadcast_municipalities"
   add_foreign_key "broadcast_items", "users"

@@ -185,7 +185,6 @@ Rails.application.routes.draw do
     end
 
     scope 'tokens' do
-      root to: 'api_tokens#index', as: :api_tokens
       get 'request', to: 'api_tokens#auth_request', as: :request_api_token
       post 'request/grant', to: 'api_tokens#auth_grant', as: :grant_api_token
       get 'request/reject', to: 'api_tokens#auth_reject', as: :reject_api_token

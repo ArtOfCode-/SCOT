@@ -1,14 +1,8 @@
 class APITokensController < ApplicationController
   before_action :authenticate_user!, except: [:fetch_token]
-  before_action :require_developer, only: [:index]
-  before_action :set_key, except: [:index, :authorized]
-  before_action :set_token, only: [:fetch_token, :revoke_user_app]
-  before_action :check_user_access, only: [:revoke_user_app]
+  before_action :set_key, except: [:authorized, :revoke_app, :revoke_user_app, :authorized]
+  before_action :set_token, only: [:fetch_token]
   before_action :check_app_access, only: [:revoke_app]
-
-  def index
-    @tokens = APIToken.all.paginate(page: params[:page], per_page: 100)
-  end
 
   def authorized
     @keys = APIKey.where(id: current_user.api_tokens.map(&:api_key_id))
@@ -18,7 +12,7 @@ class APITokensController < ApplicationController
 
   def auth_grant
     available_scopes = ['write_access']
-    valid_scopes = params[:scopes].split(';').select { |s| available_scopes.include? s }
+    valid_scopes = (params[:scopes] || '').split(';').select { |s| available_scopes.include? s }
     @token = @key.api_tokens.create user: current_user, token: SecureRandom.base64(30), code: SecureRandom.hex(4), scopes: valid_scopes
   end
 
@@ -50,12 +44,6 @@ class APITokensController < ApplicationController
 
   def set_token
     @token = @key.api_tokens.find_by_code params[:code]
-  end
-
-  def check_user_access
-    unless @token.user == current_user
-      require_developer
-    end
   end
 
   def check_app_access

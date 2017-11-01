@@ -1,0 +1,4 @@
+<h1>Authorized Access Request</h1>
+<p>You have authorized the app "<%= @key.name %>" to access your account on SCOT. <strong>If you did not mean to do this,</strong> you can
+  <%= link_to 'revoke its access', revoke_user_api_tokens_path(key_id: @key.id), method: :post %>.</p>
+<p>The code you will need to provide the app is <strong><code><%= @token.code %></code></strong>.</p>

@@ -1,0 +1,18 @@
+<h1>API Authorization Request</h1>
+<p>The app "<%= @key.name %>" is requesting access to your account. In addition to being able to identify your SCOT account,
+  the app will also gain:</p>
+<ul>
+  <% if params[:scopes].present? %>
+    <% params[:scopes].split(';').each do |s| %>
+      <li><%= s.humanize %></li>
+    <% end %>
+  <% else %>
+    <li><em>No additional access.</em></li>
+  <% end %>
+</ul>
+
+<p>If you are expecting this request and recognize the app, click Grant Access to allow the app access. If this is unexpected or you don't
+  recognize the app, click Reject.</p>
+
+<%= link_to 'Grant Access', grant_api_token_path(key: params[:key], scopes: params[:scopes]), method: :post, class: 'btn btn-success mx-2' %>
+<%= link_to 'Reject', reject_api_token_path(key: params[:key]), class: 'btn btn-danger mx-2' %>

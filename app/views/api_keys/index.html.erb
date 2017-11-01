@@ -9,7 +9,7 @@ page.</p>
       <th>Name</th>
       <th>Owner</th>
       <th>Key</th>
-      <th colspan="2"></th>
+      <th colspan="3"></th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +21,8 @@ page.</p>
         <td><%= k.key %></td>
         <td><%= link_to 'Edit', edit_api_key_path(k) %></td>
         <td><%= link_to 'Delete', destroy_api_key_path(k), method: :delete, class: 'text-danger', data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Revoke Tokens', revoke_app_api_tokens_path(key_id: k.id), method: :post, class: 'text-danger',
+                        data: { confirm: 'Are you REALLY REALLY sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
