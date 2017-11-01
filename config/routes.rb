@@ -172,6 +172,7 @@ Rails.application.routes.draw do
 
   scope '/api' do
     get 'directory', to: 'api_keys#directory', as: :app_directory
+    get 'my-apps', to: 'api_tokens#authorized', as: :my_apps
 
     scope 'keys' do
       root to: 'api_keys#index', as: :api_keys
@@ -181,6 +182,16 @@ Rails.application.routes.draw do
       delete ':id', to: 'api_keys#destroy', as: :destroy_api_key
       get ':id/edit', to: 'api_keys#edit', as: :edit_api_key
       patch ':id/edit', to: 'api_keys#update', as: :update_api_key
+    end
+
+    scope 'tokens' do
+      root to: 'api_tokens#index', as: :api_tokens
+      get 'request', to: 'api_tokens#auth_request', as: :request_api_token
+      post 'request/grant', to: 'api_tokens#auth_grant', as: :grant_api_token
+      get 'request/reject', to: 'api_tokens#auth_reject', as: :reject_api_token
+      get 'request/token', to: 'api_tokens#fetch_token', as: :fetch_api_token
+      post ':key_id/revoke-user', to: 'api_tokens#revoke_user_app', as: :revoke_user_api_tokens
+      post ':key_id/revoke-app', to: 'api_tokens#revoke_app', as: :revoke_app_api_tokens
     end
   end
 end

@@ -19,4 +19,7 @@ class User < ApplicationRecord
   has_many :spam_reviews
   has_many :dedupe_reviews
   has_many :suggested_edits
+  has_many :api_keys
+  has_many :api_tokens
+  has_many :apps, class_name: 'APIKey', through: :api_tokens, source: :user
 end
