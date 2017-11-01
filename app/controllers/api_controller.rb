@@ -1,6 +1,4 @@
-require 'csv'
-
-class ApiController < ApplicationController
+class APIController < ApplicationController
   def geojson
     features = Disaster.find(params[:disaster_id]).rescue_requests.map do |request|
       {
