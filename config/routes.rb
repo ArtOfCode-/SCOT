@@ -169,4 +169,18 @@ Rails.application.routes.draw do
     post 'impersonate/stop', to: 'developers#verify_elevation', as: :stop_impersonating
     get 'impersonate/:id', to: 'developers#change_users', as: :change_user
   end
+
+  scope '/api' do
+    get 'directory', to: 'api_keys#directory', as: :app_directory
+
+    scope 'keys' do
+      root to: 'api_keys#index', as: :api_keys
+      get 'new', to: 'api_keys#new', as: :new_api_key
+      post 'new', to: 'api_keys#create', as: :create_api_key
+      get ':id', to: 'api_keys#show', as: :api_key
+      delete ':id', to: 'api_keys#destroy', as: :destroy_api_key
+      get ':id/edit', to: 'api_keys#edit', as: :edit_api_key
+      patch ':id/edit', to: 'api_keys#update', as: :update_api_key
+    end
+  end
 end

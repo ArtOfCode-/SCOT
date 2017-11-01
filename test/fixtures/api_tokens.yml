@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  token: MyString
+  code: MyString
+  scopes: MyText
+
+two:
+  user: two
+  token: MyString
+  code: MyString
+  scopes: MyText

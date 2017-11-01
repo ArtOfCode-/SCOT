@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171030105609) do
+ActiveRecord::Schema.define(version: 20171101182844) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -22,6 +22,28 @@ ActiveRecord::Schema.define(version: 20171030105609) do
     t.string "url"
     t.index ["resource_type", "resource_id"], name: "index_access_logs_on_resource_type_and_resource_id"
     t.index ["user_id"], name: "index_access_logs_on_user_id"
+  end
+
+  create_table "api_keys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "name"
+    t.string "key"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
+  create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.bigint "user_id"
+    t.string "token"
+    t.string "code"
+    t.text "scopes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "api_keys_id"
+    t.index ["api_keys_id"], name: "index_api_tokens_on_api_keys_id"
+    t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
   create_table "broadcast_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -358,6 +380,9 @@ ActiveRecord::Schema.define(version: 20171030105609) do
   end
 
   add_foreign_key "access_logs", "users"
+  add_foreign_key "api_keys", "users"
+  add_foreign_key "api_tokens", "api_keys", column: "api_keys_id"
+  add_foreign_key "api_tokens", "users"
   add_foreign_key "broadcast_items", "broadcast_municipalities"
   add_foreign_key "broadcast_items", "users"
   add_foreign_key "case_notes", "rescue_requests"

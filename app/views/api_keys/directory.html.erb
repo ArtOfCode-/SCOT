@@ -1,0 +1,25 @@
+<h1>App Directory</h1>
+<p>This is a list of apps that make use of the SCOT API to work.</p>
+
+<div class="container">
+  <% @keys.in_groups_of(2).map(&:compact).each do |group| %>
+    <div class="row">
+      <% group.each do |k| %>
+        <div class="col">
+          <div class="card border-info">
+            <div class="card-header border-info">
+              <h3 class="card-title"><%= k.name %></h3>
+            </div>
+            <div class="card-body">
+              <%= k.description %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<%= will_paginate @keys, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+
+<%= link_to 'Register a new app', new_api_key_path %>

@@ -1,0 +1,29 @@
+<h1>Developer: API Keys</h1>
+<p>This is a <strong>developer-only</strong> list of API keys. It includes the keys themselves, so take care with sharing information from this
+page.</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-muted">ID</th>
+      <th>Name</th>
+      <th>Owner</th>
+      <th>Key</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @keys.each do |k| %>
+      <tr>
+        <td class="text-muted"><%= k.id %></td>
+        <td><%= k.name %></td>
+        <td><%= k.user.username %></td>
+        <td><%= k.key %></td>
+        <td><%= link_to 'Edit', edit_api_key_path(k) %></td>
+        <td><%= link_to 'Delete', destroy_api_key_path(k), method: :delete, class: 'text-danger', data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @keys, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

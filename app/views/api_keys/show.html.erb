@@ -1,0 +1,30 @@
+<h1><%= @key.name %></h1>
+<h3 class="text-muted"><small>Creator: <%= @key.user.username %></small></h3>
+<p><%= @key.description %></p>
+
+<% if current_user == @key.user || has_role?(:developer) %>
+  <a href="#" data-toggle="modal" data-target="#key-modal" class="mr-4"><i class="fa fa-key"></i> Show key</a>
+  <%= link_to 'Edit', edit_api_key_path(@key), class: 'mr-4' %>
+  <%= link_to 'Delete', destroy_api_key_path(@key), method: :delete, class: 'text-danger', data: { confirm: 'Are you sure?' } %>
+
+  <div class="modal" tabindex="-1" role="dialog" id="key-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5></h5>
+          <div class="float-right">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <%= @key.key %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -76,10 +76,11 @@
                   <%= link_to 'manage request statuses', request_status_index_path, class: 'dropdown-item' %>
                 <% end %>
                 <% if current_user.has_role?(:developer) || (current_user.has_role?(:admin) && current_user.has_role?(:medical)) %>
-                  <div class="dropdown-divider"></div>
-                <% end %>
-                <% if current_user.has_any_role? :developer, :medical %>
                   <%= link_to 'manage medical statuses', medical_status_index_path, class: 'dropdown-item' %>
+                <% end %>
+                <% if current_user.has_role? :developer %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to 'API keys', api_keys_path, class: 'dropdown-item' %>
                 <% end %>
               <% end %>
             </div>
