@@ -51,6 +51,91 @@ $ rails db:migrate
  $ rails s
  ```
 
+## MySQL permissions setup
+
+You may see an error about MySQL permissions. If you do, you need to set up your user's permissions within MySQL.
+
+You'll want to log in to MySQL as `root` so you can make these changes. Make sure MySQL is running first. On MacOS, run:
+
+```bash
+$ sudo mysql
+```
+
+On Linux, use:
+
+```bash
+$ mysql -u root -p
+```
+
+Enter your password (the one you normally use with `sudo`, not a MySQL related password). You'll be in the MySQL console.
+
+Change to the system database for MySQL.
+
+```sql
+mysql> use mysql;
+```
+
+List the MySQL users.
+
+```sql
+mysql> select user from user;
++---------------+
+| user          |
++---------------+
+| <your name>   |
+| mysql.session |
+| mysql.sys     |
+| root          |
++---------------+
+```
+
+`<your name>` should be there; this should be the same name as the `username` listed in `config/database.yml`.
+
+Look at the grants given to your user.
+
+```sql
+mysql> show grants for <your name>@localhost;
+```
+
+If you're having permission errors you probably do not have the needed grants.
+
+Grant yourself all privileges on all tables on `crowdrescue_dev`. This will have been created when you ran the rails setup commands listed above.
+
+```sql
+mysql> GRANT ALL PRIVILEGES ON `crowdrescue_dev`.* TO '<your name>'@'localhost';
+```
+
+If you have other databases set up locally, like `crowdrescue_test` or `crowdrescue_prod`, grant yourself permission on those as well.
+
+```sql
+mysql> GRANT ALL PRIVILEGES ON `crowdrescue_test`.* TO '<your name>'@'localhost';
+mysql> GRANT ALL PRIVILEGES ON `crowdrescue_prod`.* TO '<your name>'@'localhost';
+
+```
+
+Then tell MySQL to apply these changes with
+
+Now make sure the privileges got added properly:
+
+```sql
+mysql> show grants for <your name>@localhost;
++--------------------------------------------------------------------------------------+
+| Grants for <your name>@localhost                                                           |
++--------------------------------------------------------------------------------------+
+| GRANT ALL PRIVILEGES ON `crowdrescue_dev`.* TO '<your name>'@'localhost' WITH GRANT OPTION |
+| GRANT ALL PRIVILEGES ON `crowdrescue_test`.* TO '<your name>'@'localhost'                  |
++--------------------------------------------------------------------------------------+
+```
+
+You can now leave the MySQL console.
+
+```sql
+mysql> exit
+Bye
+```
+
+Now try running SCOT again, you should have the permissions you need.
+
 ## License
     SCOT - disaster response/relief management for volunteer teams
     Copyright (c) 2017 Owen Jenkins and contributors
