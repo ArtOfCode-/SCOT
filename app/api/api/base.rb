@@ -1,6 +1,6 @@
 module API
   class Base < Grape::API
-    version 'v1', using: :path
+    version 'v1', using: :accept_version_header, strict: true, cascade: false
     prefix :api
     format :json
 
@@ -28,6 +28,28 @@ module API
         return if current_user.has_any_role?(*names)
         error!({ name: 'unauthorized', detail: 'The authenticated user does not have the required permissions for this action.' }, 403)
       end
+
+      def per_page
+        [(params[:per_page] || 10).to_i, 100].min
+      end
+
+      def more?(col)
+        col.count > per_page * (params[:page].to_i || 1)
+      end
+
+      def paginated(col)
+        col.paginate(page: params[:page], per_page: per_page)
+      end
+
+      def std_result(col)
+        { items: paginated(col), has_more: more?(col) }
+      end
     end
+
+    before do
+      authenticate_app!
+    end
+
+    mount API::Broadcasts
   end
 end

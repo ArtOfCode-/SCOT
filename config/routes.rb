@@ -193,4 +193,6 @@ Rails.application.routes.draw do
       post ':key_id/revoke-app', to: 'api_tokens#revoke_app', as: :revoke_app_api_tokens
     end
   end
+
+  mount API::Base => '/api'
 end

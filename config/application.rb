@@ -8,6 +8,9 @@ Bundler.require(*Rails.groups)
 
 module Crowdrescue
   class Application < Rails::Application
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
