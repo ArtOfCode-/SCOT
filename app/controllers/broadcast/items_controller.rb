@@ -12,6 +12,7 @@ class Broadcast::ItemsController < ApplicationController
     @items = conditional_filter @items, originated_at: params[:originated_at], broadcast_municipality_id: params[:municipality],
                                         source: params[:source], id: params[:id]
     @items = @items.order(originated_at: :desc).paginate page: params[:page], per_page: 100
+    @review_count = Broadcast::Item.active.where(status: Broadcast::Status['Pending Review']).count
   end
 
   def new
