@@ -33,16 +33,21 @@ module API
         [(params[:per_page] || 10).to_i, 100].min
       end
 
-      def more?(col)
-        col.count > per_page * (params[:page].to_i || 1)
+      def more?(col, **opts)
+        ctr = if opts[:countable].nil? || opts[:countable] == true
+                col.count
+              else
+                col.to_a.size
+              end
+        ctr > per_page * (params[:page] || '1').to_i
       end
 
       def paginated(col)
         col.paginate(page: params[:page], per_page: per_page)
       end
 
-      def std_result(col)
-        { items: paginated(col), has_more: more?(col) }
+      def std_result(col, **opts)
+        { items: paginated(col), has_more: more?(col, **opts) }
       end
     end
 
@@ -50,6 +55,7 @@ module API
       authenticate_app!
     end
 
-    mount API::Broadcasts
+    mount API::BroadcastsAPI
+    mount API::TranslationsAPI
   end
 end

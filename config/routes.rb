@@ -194,5 +194,6 @@ Rails.application.routes.draw do
     end
   end
 
+  # This needs to be after the app's own /api routes so that it doesn't override them.
   mount API::Base => '/api'
 end
