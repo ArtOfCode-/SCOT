@@ -56,10 +56,10 @@ class Broadcast::ItemsController < ApplicationController
   def edit; end
 
   def update
-    success = ActiveRecord::Base.transaction do
-      @item.update(item_params)
-      @item.translations.first.update(status: Translations::Status['Edited'], assignee: nil,
-                                      **params[:translation].permit(:content, :final, :source_lang_id, :target_lang_id).to_h.symbolize_keys)
+    success = ApplicationRecord.status_transaction do
+      @item.update!(item_params)
+      @item.translations.first.update!(status: Translations::Status['Edited'], assignee: nil,
+                                       **params[:translation].permit(:content, :final, :source_lang_id, :target_lang_id).to_h.symbolize_keys)
     end
     if success
       hash = @item.municipality.present? ? "#{@item.municipality&.name&.downcase&.tr(' ', '_')}_eng" : nil
@@ -142,11 +142,11 @@ class Broadcast::ItemsController < ApplicationController
              else
                Broadcast::Status['Pending Translation']
              end
-    success = ActiveRecord::Base.transaction do
-      @item.update status: status
-      @translation.update params.require(:translation).permit(:content, :final)
+    success = ApplicationRecord.status_transaction do
+      @item.update! status: status
+      @translation.update! params.require(:translation).permit(:content, :final)
       if @translation.final != orig[:final] || @translation.content != orig[:content]
-        @translation.update status: Translations::Status['Edited']
+        @translation.update! status: Translations::Status['Edited']
       end
     end
     if success

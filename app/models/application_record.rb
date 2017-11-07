@@ -14,6 +14,18 @@ class ApplicationRecord < ActiveRecord::Base
     where(sanitized)
   end
 
+  def self.status_transaction
+    status = true
+    ActiveRecord::Base.transaction do
+      begin
+        yield
+      rescue StandardError
+        status = false
+      end
+    end
+    status
+  end
+
   def self.sanitize_name(name)
     name.to_s.delete('`').insert(0, '`').insert(-1, '`')
   end
