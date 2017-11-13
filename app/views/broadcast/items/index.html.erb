@@ -1,10 +1,10 @@
 <h1>Broadcast Items</h1>
 <p>The following is a list of all items that have been entered for broadcast. They won't all necessarily be included in broadcast scripts.</p>
 
-<p>
+<div class="mb-4 clearfix">
   <%= link_to '+ Add item', new_broadcast_item_path %>
   <%= link_to 'Generate Script', broadcast_script_setup_path, class: 'btn btn-primary mx-2' %>
-  <div class="dropdown">
+  <div class="dropdown float-right">
     <button class="btn btn-outline-primary dropdown-toggle float-right mx-3" type="button" id="tools-menu-toggle" data-toggle="dropdown">
       Tools & Lists
     </button>
@@ -14,7 +14,14 @@
       <%= link_to 'Last updates by municipality', municipality_updates_path, class: 'dropdown-item' %>
     </div>
   </div>
-</p>
+</div>
+
+<% if @review_count > 0 %>
+  <div class="alert alert-warning my-2">
+    <i class="fa fa-exclamation-triangle"></i> There <%= @review_count == 1 ? 'is' : 'are' %> <%= pluralize(@review_count, 'item') %>
+    awaiting review. <%= link_to 'Review now', review_broadcast_items_path %>
+  </div>
+<% end %>
 
 <%= form_tag broadcast_items_path, method: :get, class: 'my-2 form-inline clear-both' do %>
   <%= label_tag :id, "ID:" %>
