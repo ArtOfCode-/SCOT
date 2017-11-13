@@ -71,7 +71,7 @@ module API
           end
 
           if success
-            std_result @item
+            single_result @item
           else
             error!({name: 'save_failed', detail: 'Creation transaction failed'}, 500)
           end

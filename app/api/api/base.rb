@@ -49,6 +49,10 @@ module API
       def std_result(col, **opts)
         { items: paginated(col), has_more: more?(col, **opts) }
       end
+
+      def single_result(item, **opts)
+        { items: [item], has_more: false }
+      end
     end
 
     before do
