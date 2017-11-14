@@ -61,13 +61,15 @@ You'll want to log in to MySQL as `root` so you can make these changes. Make sur
 $ sudo mysql
 ```
 
+Enter your password (the one you normally use with `sudo`, not a MySQL related password). 
+
 On Linux, use:
 
 ```bash
 $ mysql -u root -p
 ```
 
-Enter your password (the one you normally use with `sudo`, not a MySQL related password). You'll be in the MySQL console.
+You'll now be in the MySQL console.
 
 Change to the system database for MySQL.
 
