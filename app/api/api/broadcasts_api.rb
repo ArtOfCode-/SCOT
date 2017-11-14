@@ -79,6 +79,17 @@ module API
           error!({name: 'missing_data', detail: 'Either content or translation is required'}, 400)
         end
       end
+
+      params do
+        requires :key, type: String
+        requires :token, type: String
+      end
+      post '/:id/deprecate' do
+        authenticate_user! && role(:miner, :broadcast)
+        @item = Broadcast::Item.find params[:id]
+        @item.update deprecated: true
+        single_result @item
+      end
     end
 
     resource :municipalities do
