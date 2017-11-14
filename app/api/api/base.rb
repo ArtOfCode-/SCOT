@@ -39,7 +39,7 @@ module API
               else
                 col.to_a.size
               end
-        ctr > per_page * (params[:page] || '1').to_i
+        ctr > per_page * (params[:page]&.to_i || 1)
       end
 
       def paginated(col)
