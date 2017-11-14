@@ -1,2 +1,2 @@
-module ApiHelper
+module APIHelper
 end

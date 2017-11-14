@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171030105609) do
+ActiveRecord::Schema.define(version: 20171114184550) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -22,6 +22,28 @@ ActiveRecord::Schema.define(version: 20171030105609) do
     t.string "url"
     t.index ["resource_type", "resource_id"], name: "index_access_logs_on_resource_type_and_resource_id"
     t.index ["user_id"], name: "index_access_logs_on_user_id"
+  end
+
+  create_table "api_keys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "name"
+    t.string "key"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
+  create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.bigint "user_id"
+    t.string "token"
+    t.string "code"
+    t.text "scopes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "api_key_id"
+    t.index ["api_key_id"], name: "index_api_tokens_on_api_key_id"
+    t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
   create_table "broadcast_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -47,7 +69,7 @@ ActiveRecord::Schema.define(version: 20171030105609) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "broadcast_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "broadcast_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
@@ -129,6 +151,15 @@ ActiveRecord::Schema.define(version: 20171030105609) do
     t.string "updated_at"
   end
 
+  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "title"
+    t.text "content"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "creator_id"
+  end
+
   create_table "people_roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.text "description"
@@ -166,6 +197,16 @@ ActiveRecord::Schema.define(version: 20171030105609) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "read_notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.bigint "notification_id"
+    t.bigint "user_id"
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_id"], name: "index_read_notifications_on_notification_id"
+    t.index ["user_id"], name: "index_read_notifications_on_user_id"
   end
 
   create_table "request_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -358,6 +399,9 @@ ActiveRecord::Schema.define(version: 20171030105609) do
   end
 
   add_foreign_key "access_logs", "users"
+  add_foreign_key "api_keys", "users"
+  add_foreign_key "api_tokens", "api_keys"
+  add_foreign_key "api_tokens", "users"
   add_foreign_key "broadcast_items", "broadcast_municipalities"
   add_foreign_key "broadcast_items", "users"
   add_foreign_key "case_notes", "rescue_requests"
@@ -368,6 +412,8 @@ ActiveRecord::Schema.define(version: 20171030105609) do
   add_foreign_key "dedupe_reviews", "users"
   add_foreign_key "people_team_memberships", "people_teams"
   add_foreign_key "people_team_memberships", "people_volunteers"
+  add_foreign_key "read_notifications", "notifications"
+  add_foreign_key "read_notifications", "users"
   add_foreign_key "request_priorities", "rescue_requests"
   add_foreign_key "rescue_requests", "disasters"
   add_foreign_key "rescue_requests", "medical_statuses"

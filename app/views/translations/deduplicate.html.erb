@@ -40,10 +40,9 @@
 <%= form_tag submit_dedupe_translation_path(@translation) do %>
   <div class="field">
     <%= label_tag :dupe_id do %>
-      Duplicate <small class="text-muted">Enter the original's ID here. Start typing numbers and results will pop up.</small>
+      Duplicate <small class="text-muted">Enter the original's ID here.</small>
     <% end %><br/>
-    <%= select_tag :dupe_id, options_from_collection_for_select(Translation.last(100), 'id', 'content'),
-                   include_blank: true, class: 'form-control select2-dedupe', data: { ajax_remote: '/translations/dedupe/data' } %>
+    <%= number_field_tag :dupe_id, nil, class: 'form-control' %>
   </div><br/>
 
   <div class="actions">

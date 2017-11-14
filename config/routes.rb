@@ -14,6 +14,15 @@ Rails.application.routes.draw do
     scope 'accesses' do
       get ':resource_type/:resource_id', to: 'access_logs#on_resource', as: :resource_access_logs
     end
+
+    scope 'notifications' do
+      root to: 'notifications#index', as: :notifications
+      get 'new', to: 'notifications#new', as: :new_notification
+      post 'new', to: 'notifications#create', as: :create_notification
+      get ':id', to: 'notifications#show', as: :notification
+      delete ':id', to: 'notifications#destroy', as: :destroy_notification
+      post ':id/read', to: 'notifications#read', as: :read_notification
+    end
   end
 
   scope '/disasters' do

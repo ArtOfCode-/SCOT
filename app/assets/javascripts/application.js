@@ -54,7 +54,9 @@ $(document).ready(function() {
   });
 
   $('.select2').select2({
-    theme: 'bootstrap'
+    theme: 'bootstrap',
+    allowClear: true,
+    closeOnSelect: $(this).hasClass('multiple')
   });
 
   $('.select2-dedupe').select2({
@@ -86,5 +88,17 @@ $(document).ready(function() {
     onOpen: function () {
       $('.pika-time .pika-select').addClass('form-control');
     }
+  });
+
+  $('.s2-all').on('click', function (ev) {
+    var targetSelector = $(ev.target).data('target');
+    $(targetSelector + ' > option').attr('selected', 'selected');
+    $(targetSelector).trigger('change');
+  });
+
+  $('.s2-none').on('click', function (ev) {
+    var targetSelector = $(ev.target).data('target');
+    $(targetSelector + ' > option').removeAttr('selected');
+    $(targetSelector).trigger('change');
   });
 });

@@ -1,0 +1,22 @@
+<h1>Active Notifications</h1>
+<%= link_to '+ Create new', new_notification_path %>
+<% @active.each do |n| %>
+  <%= render 'notifications/notification', notification: n, no_dismiss: true %>
+  <%= link_to 'Details', show_notification_path(n) %>
+  <hr/>
+<% end %>
+
+<% unless @active.any? %>
+  <p><em>No notifications.</em></p>
+<% end %>
+
+<h1>Expired Notifications</h1>
+<% @inactive.each do |n| %>
+    <%= render 'notifications/notification', notification: n, no_dismiss: true %>
+    <%= link_to 'Details', show_notification_path(n) %>
+    <hr/>
+<% end %>
+
+<% unless @inactive.any? %>
+  <p><em>No notifications.</em></p>
+<% end %>
