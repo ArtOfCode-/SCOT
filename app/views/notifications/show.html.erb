@@ -1,0 +1,33 @@
+<h1>Notification: <%= @notification.title %></h1>
+<%= render 'notifications/notification', notification: @notification, no_dismiss: true %>
+
+<div class="mb-2">
+  <%= link_to expire_notification_path(@notification), method: :post, class: 'mr-2'  do %>
+    <i class="fa fa-clock-o"></i> Expire Now
+  <% end %>
+  <%= link_to destroy_notification_path(@notification), method: :delete, class: 'text-danger', data: { confirm: 'Are you sure?' } do %>
+    <i class="fa fa-times"></i> Delete
+  <% end %>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Sent To</th>
+      <th>Read</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reads.each do |r| %>
+      <tr>
+        <td><%= r.user.username %></td>
+        <td>
+          <i class="fa fa-<%= r.read? ? 'check' : 'times' %> <%= r.read? ? 'text-success' : 'text-danger' %>"></i>
+          <% if r.read? %>
+            <span class="text-muted" title="<%= r.read_at %>"><%= time_ago_in_words(r.read_at) %> ago</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

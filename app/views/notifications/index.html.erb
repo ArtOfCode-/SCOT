@@ -1,8 +1,10 @@
 <h1>Active Notifications</h1>
-<%= link_to '+ Create new', new_notification_path %>
+<%= link_to '+ Create new', new_notification_path, class: 'mb-4' %>
 <% @active.each do |n| %>
   <%= render 'notifications/notification', notification: n, no_dismiss: true %>
-  <%= link_to 'Details', show_notification_path(n) %>
+  <%= link_to 'Details', notification_path(n) %> |
+  <%= link_to 'Expire Now', expire_notification_path(n), method: :post %> |
+  <%= link_to 'Delete', destroy_notification_path(n), method: :delete, class: 'text-danger', data: { confirm: 'Are you sure?' } %>
   <hr/>
 <% end %>
 
@@ -10,10 +12,10 @@
   <p><em>No notifications.</em></p>
 <% end %>
 
-<h1>Expired Notifications</h1>
+<h2>Expired Notifications</h2>
 <% @inactive.each do |n| %>
     <%= render 'notifications/notification', notification: n, no_dismiss: true %>
-    <%= link_to 'Details', show_notification_path(n) %>
+    <%= link_to 'Details', notification_path(n) %>
     <hr/>
 <% end %>
 

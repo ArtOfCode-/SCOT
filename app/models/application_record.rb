@@ -25,6 +25,7 @@ class ApplicationRecord < ActiveRecord::Base
         yield
       rescue StandardError
         status = false
+        raise ActiveRecord::Rollback, 'A query raised an error.'
       end
     end
     status

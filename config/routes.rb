@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       get ':id', to: 'notifications#show', as: :notification
       delete ':id', to: 'notifications#destroy', as: :destroy_notification
       post ':id/read', to: 'notifications#read', as: :read_notification
+      post ':id/expire', to: 'notifications#expire', as: :expire_notification
     end
   end
 

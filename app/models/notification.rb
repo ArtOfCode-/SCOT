@@ -4,6 +4,7 @@ class Notification < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
   def add_users(ids)
-    ReadNotification.mass_insert([:user_id, :notification_id], ids.map { |i| [id, i] })
+    ReadNotification.mass_insert([:user_id, :notification_id, :created_at, :updated_at],
+                                 ids.map { |i| [i.to_i, id, DateTime.now, DateTime.now] })
   end
 end

@@ -2,7 +2,7 @@
 <p>Fill in this form to create a notification. Notifications will appear at the top of every page for the users you specify; use
   them sparingly.</p>
 
-<%= form_for @notification, url: create_notification_path do |f| %>
+<%= form_for @notification, url: create_notification_path, method: :post do |f| %>
   <div class="field">
     <%= f.label :title do %>
       Title <small class="text-muted">Short summary. Will be displayed as the heading of the notification.</small>
