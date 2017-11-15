@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :find_notifications, if: :user_signed_in?
 
   protected
 
@@ -23,5 +24,10 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit :sign_up, keys: [:username]
+  end
+
+  def find_notifications
+    @unread = Notification.joins(:read_notifications).where(read_notifications: { user: current_user, read: false })
+                          .where('notifications.expires_at > ?', DateTime.now)
   end
 end

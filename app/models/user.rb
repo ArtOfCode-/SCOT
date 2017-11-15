@@ -19,4 +19,6 @@ class User < ApplicationRecord
   has_many :spam_reviews
   has_many :dedupe_reviews
   has_many :suggested_edits
+  has_many :read_notifications
+  has_many :notifications, through: :read_notifications
 end
