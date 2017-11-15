@@ -14,6 +14,14 @@
  *= require_self
  */
 
+body {
+    font-size: 0.95rem;
+}
+
+h1 {
+    font-size: 2.2rem;
+}
+
 label {
     font-weight: bold;
 }
@@ -33,4 +41,13 @@ label {
 
 .clipboard {
     display: none;
+}
+
+.s2-input-group button {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.s2-with-ig + .select2 .select2-selection {
+    border-bottom-left-radius: 0;
 }

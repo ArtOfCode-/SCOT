@@ -22,4 +22,6 @@ class User < ApplicationRecord
   has_many :api_keys
   has_many :api_tokens
   has_many :apps, class_name: 'APIKey', through: :api_tokens, source: :user
+  has_many :read_notifications
+  has_many :notifications, through: :read_notifications
 end

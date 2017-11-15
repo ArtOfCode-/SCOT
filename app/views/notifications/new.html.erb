@@ -1,0 +1,47 @@
+<h1>Create Notification</h1>
+<p>Fill in this form to create a notification. Notifications will appear at the top of every page for the users you specify; use
+  them sparingly.</p>
+
+<%= form_for @notification, url: create_notification_path, method: :post do |f| %>
+  <div class="field">
+    <%= f.label :title do %>
+      Title <small class="text-muted">Short summary. Will be displayed as the heading of the notification.</small>
+    <% end %>
+    <%= f.text_field :title, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :content do %>
+      Content <small class="text-muted">The body of the notification.</small>
+    <% end %>
+    <%= f.text_area :content, rows: 5, cols: 100, class: 'form-control' %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :expires_at do %>
+      Expiry <small class="text-muted">After this point, the notification will no longer be displayed to anyone.</small>
+    <% end %>
+    <%= f.text_field :expires_at, class: 'form-control datepicker' %>
+  </div><br/>
+
+  <div class="field">
+    <%= label_tag :users do %>
+      Users <small class="text-muted">The users that this notification will be shown to.</small>
+    <% end %>
+    <%= select_tag :users, options_from_collection_for_select(User.all, 'id', 'username'), multiple: true,
+                   class: 'form-control select2 multiple s2-with-ig', id: 'notif-users' %>
+    <div class="input-group s2-input-group">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-secondary btn-sm s2-all" data-target="#notif-users">Select all</button>
+      </span>
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-secondary btn-sm s2-none" data-target="#notif-users">Deselect all</button>
+      </span>
+    </div>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Create', class: 'btn btn-success' %>
+    <input type="reset" value="Cancel" class="btn btn-danger" />
+  </div>
+<% end %>

@@ -82,6 +82,10 @@
                   <div class="dropdown-divider"></div>
                   <%= link_to 'API keys', api_keys_path, class: 'dropdown-item' %>
                 <% end %>
+                <% if has_any_role? :developer, :admin %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to 'notifications', notifications_path, class: 'dropdown-item' %>
+                <% end %>
               <% end %>
             </div>
           </li>
@@ -152,6 +156,10 @@
         <div class="alert alert-<%= k == 'alert' ? 'danger' : (k == 'notice' ? 'info' : k) %>">
           <%= v %>
         </div>
+      <% end %>
+
+      <% @unread.each do |n| %>
+        <%= render 'notifications/notification', notification: n %>
       <% end %>
 
       <%= yield %>

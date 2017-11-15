@@ -1,0 +1,13 @@
+<% no_dismiss = no_dismiss || nil %>
+
+<div class="alert alert-info notification <%= 'alert-dismissible fade show' if no_dismiss.nil? %>"
+     id="notif-<%= notification.id %>"
+     data-id="<%= notification.id %>">
+  <% if no_dismiss.nil? %>
+    <button type="button" class="close float-right" data-dismiss="alert">
+      &times;
+    </button>
+  <% end %>
+  <h5><%= notification.title %></h5>
+  <%= notification.content %>
+</div>
