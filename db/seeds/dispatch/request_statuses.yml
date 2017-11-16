@@ -1,0 +1,10 @@
+- name: New
+  description: This is a new request, just entered and awaiting review.
+- name: PendingDispatch
+  description: This request is valid, and is waiting for a crew to be dispatched.
+- name: Dispatched
+  description: A crew has been dispatched to the location of this request.
+- name: OnScene
+  description: The assigned crew has arrived and made contact with the victims.
+- name: Safe
+  description: The victims have been transported to a relief center or other safe place.

@@ -1,0 +1,8 @@
+- name: Emergency
+  description: Highest-priority cases that require response as soon as possible.
+- name: Urgent
+  description: Cases that require a quick response, but in which some delay is not likely to cause serious issues.
+- name: Semi-Urgent
+  description: A longer response time is acceptable for these cases.
+- name: New
+  description: New cases that have not yet been assigned a priority level.
