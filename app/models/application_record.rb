@@ -37,7 +37,7 @@ class ApplicationRecord < ActiveRecord::Base
       wrapper = "(#{('?, ' * cols.size).chomp(', ')})"
       ActiveRecord::Base.send(:sanitize_sql_array, [wrapper, *v])
     end
-    stmt = "INSERT INTO #{sanitize_name self.table_name} (#{cols.join(', ')}) VALUES #{values.join(', ')};"
+    stmt = "INSERT INTO #{sanitize_name table_name} (#{cols.join(', ')}) VALUES #{values.join(', ')};"
     ActiveRecord::Base.connection.execute stmt
   end
 
