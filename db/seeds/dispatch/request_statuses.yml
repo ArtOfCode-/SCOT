@@ -8,3 +8,5 @@
   description: The assigned crew has arrived and made contact with the victims.
 - name: Safe
   description: The victims have been transported to a relief center or other safe place.
+- name: Closed
+  description: This request has been closed; this may be for a number of reasons.
