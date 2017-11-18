@@ -154,8 +154,10 @@
         </div>
       <% end %>
 
+      <% if user_signed_in? %>
       <% @unread.each do |n| %>
         <%= render 'notifications/notification', notification: n %>
+      <% end %>
       <% end %>
 
       <%= yield %>
