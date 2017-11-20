@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171120171905) do
+ActiveRecord::Schema.define(version: 20171120221838) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -163,6 +163,8 @@ ActiveRecord::Schema.define(version: 20171120171905) do
     t.bigint "priority_id"
     t.bigint "rescue_crew_id"
     t.bigint "disaster_id"
+    t.string "state"
+    t.text "media"
     t.index ["disaster_id"], name: "index_dispatch_requests_on_disaster_id"
     t.index ["priority_id"], name: "index_dispatch_requests_on_priority_id"
     t.index ["status_id"], name: "index_dispatch_requests_on_status_id"

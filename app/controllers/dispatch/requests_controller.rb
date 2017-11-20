@@ -13,7 +13,7 @@ class Dispatch::RequestsController < ApplicationController
   end
 
   def create
-    @request = @disaster.requests.new request_params
+    @request = @disaster.requests.new request_params.merge(status: Dispatch::RequestStatus['New'], priority: Dispatch::Priority['New'])
     if @request.save
       flash[:success] = 'Saved request successfully.'
       redirect_to cad_request_path(@disaster, @request)
@@ -71,5 +71,10 @@ class Dispatch::RequestsController < ApplicationController
 
   def set_disaster
     @disaster = Disaster.find params[:disaster_id]
+  end
+
+  def request_params
+    params.require(:dispatch_request).permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
+                                             :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 end

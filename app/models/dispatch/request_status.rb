@@ -4,6 +4,6 @@ class Dispatch::RequestStatus < ApplicationRecord
   validates :name, uniqueness: true
 
   def self.[](key)
-    Dispatch::RequestStatus.find_by name: key
+    find_by name: key
   end
 end
