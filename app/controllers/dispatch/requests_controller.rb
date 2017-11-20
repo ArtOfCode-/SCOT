@@ -2,7 +2,7 @@ class Dispatch::RequestsController < ApplicationController
   before_action :authenticate_user!
   before_action :check_access, except: [:new, :create]
   before_action :set_disaster
-  before_action :set_request, except: [:index, :new, :create]
+  before_action :set_request, except: [:index, :new, :create, :cad]
 
   def index
     @requests = @disaster.requests.paginate page: params[:page], per_page: 100
@@ -23,7 +23,12 @@ class Dispatch::RequestsController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @request }
+    end
+  end
 
   def edit; end
 
@@ -58,6 +63,10 @@ class Dispatch::RequestsController < ApplicationController
 
   def check_access
     require_any :developer, :admin, :dispatch
+  end
+
+  def set_request
+    @request = Dispatch::Request.find params[:id]
   end
 
   def set_disaster

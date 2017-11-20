@@ -1,3 +1,24 @@
 // Place all the styles related to the dispatch/requests controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.request-list-format {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .people {
+    padding: 7px 25px;
+  }
+
+  .statuses {
+    padding: 7px 25px;
+  }
+}
+
+.tab-content {
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 4px;
+  padding: 1rem;
+}

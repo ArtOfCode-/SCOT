@@ -181,23 +181,22 @@ Rails.application.routes.draw do
   end
 
   scope '/cad' do
+    scope 'notes' do
+      post ':rid/new', to: 'dispatch/case_notes#create', as: :cad_create_case_note
+      get ':rid', to: 'dispatch/case_notes#get', as: :cad_get_case_notes
+      post ':id/edit', to: 'dispatch/case_notes#update', as: :cad_update_case_note
+      delete ':id', to: 'dispatch/case_notes#destroy', as: :cad_destroy_case_note
+    end
+
     scope ':disaster_id' do
       root to: 'dispatch/requests#index', as: :cad_requests
+      get 'dashboard', to: 'dispatch/requests#cad', as: :cad_dashboard
       get 'new', to: 'dispatch/requests#new', as: :cad_new_request
       post 'new', to: 'dispatch/requests#create', as: :cad_create_request
       get ':id', to: 'dispatch/requests#show', as: :cad_request
       get ':id/edit', to: 'dispatch/requests#edit', as: :cad_edit_request
       patch ':id/edit', to: 'dispatch/requests#update', as: :cad_update_request
       delete ':id', to: 'dispatch/requests#destroy', as: :cad_destroy_request
-    end
-
-    get 'dashboard', to: 'dispatch/requests#cad', as: :cad_dashboard
-
-    scope 'notes' do
-      post ':rid/new', to: 'dispatch/case_notes#create', as: :cad_create_case_note
-      get ':rid', to: 'dispatch/case_notes#get', as: :cad_get_case_notes
-      post ':id/edit', to: 'dispatch/case_notes#update', as: :cad_update_case_note
-      delete ':id', to: 'dispatch/case_notes#destroy', as: :cad_destroy_case_note
     end
   end
 end

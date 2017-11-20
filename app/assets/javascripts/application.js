@@ -41,6 +41,32 @@ window.scot = {
     return $(
       '<div><strong>#' + item.id + '</strong><br/>' + text + '</div>'
     );
+  },
+
+  errorAlert: function (text, under) {
+    $(under).append('<div class="alert alert-danger">' + text + '</div>');
+  },
+
+  cad: {
+    cache: { requests: {} },
+
+    fillDetailsModal: function (id) {
+      var modal = $(id);
+      var requestId = modal.data('request-id'),
+          disasterId = modal.data('disaster-id');
+      $.ajax({
+        type: 'GET',
+        url: '/cad/' + disasterId + '/' + requestId + '.json'
+      })
+      .done(function (data) {
+        scot.cad.cache.requests[requestId] = data;
+        modal.find('.extra-details').text(data.extra_details);
+        modal.find('.medical-details').text(data.medical_details);
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        scot.errorAlert(jqXHR.status + ': ' + textStatus, modal.find('.extra-details'));
+      });
+    }
   }
 };
 

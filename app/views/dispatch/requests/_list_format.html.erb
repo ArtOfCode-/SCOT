@@ -1,0 +1,18 @@
+<div class="clearfix request-list-format">
+  <div class="people float-left">
+    <h5><%= request.name %> <span class="text-muted">(#<%= request.id %>)</span></h5>
+    <h6 class="text-muted"><%= pluralize(request.people_count, 'person') %></h6>
+  </div>
+  <div class="statuses float-left">
+    <%= status_el(request.status, 'h6') %>
+    <%= priority_el(request.priority, 'h6') %>
+  </div>
+  <div class="details float-left">
+    <% details = request.extra_details&.first(150) %>
+    <%= details.length == 150 ? details + '...' : details %>
+    <a href="#" data-toggle="modal" data-target="#list-modal-<%= request.id %>">more</a>
+  </div>
+</div>
+<hr/>
+
+<%= render 'dispatch/requests/modal', request: request %>
