@@ -1,12 +1,18 @@
 - name: New
   description: This is a new request, just entered and awaiting review.
+  index: 1
 - name: PendingDispatch
   description: This request is valid, and is waiting for a crew to be dispatched.
+  index: 0
 - name: Dispatched
   description: A crew has been dispatched to the location of this request.
+  index: 1
 - name: OnScene
   description: The assigned crew has arrived and made contact with the victims.
+  index: 2
 - name: Safe
   description: The victims have been transported to a relief center or other safe place.
+  index: 3
 - name: Closed
   description: This request has been closed; this may be for a number of reasons.
+  index: 4

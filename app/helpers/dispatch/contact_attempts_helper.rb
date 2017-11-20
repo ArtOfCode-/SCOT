@@ -1,0 +1,2 @@
+module Dispatch::ContactAttemptsHelper
+end

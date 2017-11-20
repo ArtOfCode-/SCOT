@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171116235332) do
+ActiveRecord::Schema.define(version: 20171120171905) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(version: 20171116235332) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "index"
   end
 
   create_table "dispatch_request_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -134,6 +135,7 @@ ActiveRecord::Schema.define(version: 20171116235332) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "index"
   end
 
   create_table "dispatch_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -160,6 +162,8 @@ ActiveRecord::Schema.define(version: 20171116235332) do
     t.bigint "status_id"
     t.bigint "priority_id"
     t.bigint "rescue_crew_id"
+    t.bigint "disaster_id"
+    t.index ["disaster_id"], name: "index_dispatch_requests_on_disaster_id"
     t.index ["priority_id"], name: "index_dispatch_requests_on_priority_id"
     t.index ["status_id"], name: "index_dispatch_requests_on_status_id"
   end
@@ -403,6 +407,7 @@ ActiveRecord::Schema.define(version: 20171116235332) do
   add_foreign_key "broadcast_items", "broadcast_municipalities"
   add_foreign_key "broadcast_items", "users"
   add_foreign_key "dispatch_contact_attempts", "users"
+  add_foreign_key "dispatch_requests", "disasters"
   add_foreign_key "people_team_memberships", "people_teams"
   add_foreign_key "people_team_memberships", "people_volunteers"
   add_foreign_key "read_notifications", "notifications"
