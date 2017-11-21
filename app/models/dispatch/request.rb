@@ -8,4 +8,8 @@ class Dispatch::Request < ApplicationRecord
   belongs_to :status, class_name: 'Dispatch::RequestStatus'
   belongs_to :priority, class_name: 'Dispatch::Priority'
   belongs_to :rescue_crew, class_name: 'Dispatch::RescueCrew', optional: true
+
+  validates :lat, presence: true
+  validates :long, presence: true
+  validates :name, presence: true
 end
