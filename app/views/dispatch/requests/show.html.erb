@@ -1,0 +1,21 @@
+<h1>Assistance Request: <%= @request.name %> <span class="text-muted">(#<%= @request.id %>)</span></h1>
+<h4><span class="text-muted"><%= pluralize(@request.people_count, 'person') %></span></h4>
+<% if has_any_role? :developer, :admin, :dispatch %>
+  <p><%= link_to 'Edit', cad_edit_request_path(@disaster, @request) %></p>
+<% end %>
+
+<div id="map" data-center="<%= @request.lat %>,<%= @request.long %>" data-marker-type="<%= @request.status.marker_type %>"></div>
+<div class="map-coords"><%= @request.lat %>&deg; N, <%= @request.long %>&deg; E</div>
+
+<div class="statuses">
+  <%= status_el @request.status, 'strong' %> |
+  <%= priority_el @request.priority, 'strong' %>
+</div>
+
+<p><strong>Address: </strong> <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
+  <%= @request.city %> <%= @request.zip_code %></p>
+
+<%= render 'details_tables' %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initShowMap' %>

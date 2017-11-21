@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171120221838) do
+ActiveRecord::Schema.define(version: 20171121211813) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -139,8 +139,8 @@ ActiveRecord::Schema.define(version: 20171120221838) do
   end
 
   create_table "dispatch_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.decimal "lat", precision: 10
-    t.decimal "long", precision: 10
+    t.decimal "lat", precision: 20, scale: 15
+    t.decimal "long", precision: 20, scale: 15
     t.string "name"
     t.string "city"
     t.string "country"

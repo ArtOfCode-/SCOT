@@ -26,3 +26,24 @@
 .collapse.section {
   margin-left: 1.6em;
 }
+
+input[type=hidden] + .invalid-feedback {
+  border: 1px solid #dc3545;
+  border-left: 5px solid #dc3545;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.maps-marker-ref {
+  display: none;
+}
+
+#map {
+  margin-bottom: 10px;
+}
+
+.map-coords {
+  color: #666;
+  text-align: center;
+}

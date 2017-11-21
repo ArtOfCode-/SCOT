@@ -12,6 +12,7 @@
  *
  *= require_tree .
  *= require_self
+ *= stub shims/maps_font
  */
 
 body {

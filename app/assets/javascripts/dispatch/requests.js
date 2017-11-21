@@ -39,10 +39,10 @@ $(document).ready(function () {
     var requiredInputs = $('form input[required]');
     if (requiredInputs.toArray().some(function (el) { return !$(el).val(); })) {
       ev.preventDefault();
-      var problems = requiredInputs.filter(function (el) { return !$(el).val(); });
+      var problems = requiredInputs.filter(function (i, el) { return !$(el).val(); });
       problems.each(function (i, el) {
-        console.log(el);
         $(el).addClass('is-invalid');
+        $(el).nextAll('.invalid-feedback').show();
       });
       var firstProblem = $(problems[0]);
       var problemSection = firstProblem.parents('.section.collapse').first();
@@ -52,9 +52,13 @@ $(document).ready(function () {
   });
 });
 
+function markerPath(name) {
+  return $("a[data-name=" + name + "]").attr('href');
+}
+
 function moveToSecondStage(lat, lng) {
-  $('input[name=lat]').val(lat);
-  $('input[name=long]').val(lng);
+  $('#dispatch_request_lat').val(lat);
+  $('#dispatch_request_long').val(lng);
   scot.cad.reverseGeocode(lat, lng, $('#section-1').data('key'));
   scot.cad.submitNextStep();
 }
@@ -80,5 +84,23 @@ function initMap() {
     var long = event.latLng.lng();
     console.log('map.click', lat, long);
     moveToSecondStage(lat, long);
+  });
+}
+
+function initShowMap() {
+  var mapContainer = $('#map');
+  var center = mapContainer.data('center').split(',');
+  var markerType = mapContainer.data('marker-type');
+  var image = markerPath(markerType);
+  console.log(image);
+  var location = { lat: parseFloat(center[0], 10), lng: parseFloat(center[1], 10) };
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 9,
+    center: location
+  });
+  var marker = new google.maps.Marker({
+    position: location,
+    map: map,
+    icon: image
   });
 }
