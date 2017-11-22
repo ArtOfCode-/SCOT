@@ -1,5 +1,8 @@
 $(document).ready(function () {
   $(document).on('shown.bs.modal', function (ev) {
+    if (!$(ev.target).hasClass('list-modal')) {
+      return;
+    }
     var id = '#' + $(ev.target).attr('id');
     scot.cad.fillDetailsModal(id);
   });
@@ -49,6 +52,46 @@ $(document).ready(function () {
       problemSection.collapse('show');
       scot.scrollToAnchor('#' + firstProblem.attr('id'));
     }
+  });
+
+  $('.select2-cad-crew').each(function (i, el) {
+    $.ajax({
+      type: 'GET',
+      url: crewsUri($(el).parents('.modal'))
+    })
+    .done(function (data) {
+      var options = {
+        theme: 'bootstrap',
+        data: data.results,
+        dropdownParent: $(el).parents('.modal').first()
+      };
+      $(el).select2(options);
+    })
+    .fail(function (jqXHR, textStatus) {
+      scot.errorAlert(jqXHR.status + ': ' + textStatus, $(el).parents('.modal').first());
+    });
+  });
+
+  $('.crew-select-update').on('change', function (ev) {
+    var select = $(ev.target).parents('.modal-body').find('.select2-cad-crew');
+    select.children('option').remove();
+
+    $.ajax({
+      type: 'GET',
+      url: crewsUri(select.parents('.modal'))
+    })
+    .done(function (data) {
+
+      var options = {
+        theme: 'bootstrap',
+        data: [{id: -1, text: ''}].concat(data.results),
+        dropdownParent: select.parents('.modal').first()
+      };
+      select.select2(options);
+    })
+    .fail(function (jqXHR, textStatus) {
+      scot.errorAlert(jqXHR.status + ': ' + textStatus, select.parents('.modal').first());
+    });
   });
 });
 
@@ -103,4 +146,30 @@ function initShowMap() {
     map: map,
     icon: image
   });
+}
+
+function initCadMaps() {
+  var maps = $('.map');
+  maps.each(function (i, el) {
+    var container = $(el);
+    var center = container.data('center').split(',');
+    var location = { lat: parseFloat(center[0], 10), lng: parseFloat(center[1], 10) };
+    var image = markerPath(container.data('marker-type'));
+    var map = new google.maps.Map(el, {
+      zoom: 8,
+      center: location
+    });
+    var marker = new google.maps.Marker({
+      position: location,
+      map: map,
+      icon: image
+    });
+  });
+}
+
+function crewsUri(ctx) {
+  console.log(ctx, ctx.find('.crew-medical'));
+  var medical = ctx.find('.crew-medical').is(':checked');
+  var minCapacity = ctx.find('.crew-min-capacity').val() || '0';
+  return '/cad/crews.json?medical=' + medical + '&min_capacity=' + minCapacity;
 }

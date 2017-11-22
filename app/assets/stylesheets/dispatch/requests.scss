@@ -43,7 +43,23 @@ input[type=hidden] + .invalid-feedback {
   margin-bottom: 10px;
 }
 
+.map {
+  height: 250px;
+}
+
 .map-coords {
   color: #666;
   text-align: center;
+}
+
+.crew-form-container {
+  width: 100%;
+}
+
+.select2-cad-crew {
+  width: 100%;
+
+  + .select2 {
+    width: 100% !important;
+  }
 }

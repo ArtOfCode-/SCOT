@@ -1,0 +1,18 @@
+<h1>CAD Dashboard</h1>
+<p class="form-inline">
+  <span class="input-group">
+    <input type="text" id="cad-search" name="cad-search" class="form-control form-control-sm" />
+    <span class="input-group-btn"><button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-fw fa-search"></i></button></span>
+  </span>
+</p>
+
+<% @requests.in_groups_of(3).map(&:compact).each do |g| %>
+  <div class="row">
+    <% g.each do |r| %>
+      <%= render 'cad_panel', request: r %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initCadMaps' %>

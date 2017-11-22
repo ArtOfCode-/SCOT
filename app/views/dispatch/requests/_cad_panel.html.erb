@@ -1,0 +1,20 @@
+<div class="col-sm-4">
+  <div class="card border-<%= request.priority.color_class %> mb-4">
+    <div class="card-body">
+      <h5><%= request.name %> <span class="text-muted">(#<%= request.id %>)</span></h5>
+      <h6 class="text-muted"><%= pluralize(request.people_count, 'person') %></h6>
+
+      <div class="map" data-center="<%= request.lat %>,<%= request.long %>" data-marker-type="<%= request.status.marker_type %>"></div>
+      <div class="map-coords"><%= request.lat %>&deg; N, <%= request.long %>&deg; E</div>
+
+      <p class="row">
+        <span class="col-sm-6 text-center"><%= status_el request.status, 'strong' %></span>
+        <span class="col-sm-6 text-center"><%= priority_el request.priority, 'strong' %></span>
+      </p>
+
+      <button type="button" class="btn btn-success mx-2" data-toggle="modal" data-target="#dispatch-crew-<%= request.id %>">Dispatch crew</button>
+    </div>
+  </div>
+</div>
+
+<%= render 'modals', request: request %>

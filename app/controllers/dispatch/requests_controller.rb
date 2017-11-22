@@ -55,8 +55,23 @@ class Dispatch::RequestsController < ApplicationController
   def cad
     @requests = @disaster.requests.joins(:status).where.not(dispatch_requests: { status: [Dispatch::RequestStatus['Closed'],
                                                                                           Dispatch::RequestStatus['Safe']] })
-                                  .joins(:priority).order('SUM(dispatch_priorities.index, dispatch_request_statuses.index) ASC')
+                                  .joins(:priority).order('dispatch_priorities.index + dispatch_request_statuses.index ASC')
+                                  .includes(:status, :priority)
                                   .paginate(page: params[:page], per_page: 15)
+    @crews = Dispatch::RescueCrew.dispatch_menu
+  end
+
+  def assign_crew
+    @crew = Dispatch::RescueCrew.find params[:crew_id]
+    success = @request.update(rescue_crew: @crew)
+    response = { success: success }
+    response[:crew] = @crew if success
+    response[:errors] = @request.errors.full_messages unless success
+    render json: response
+  end
+
+  def available_crews
+
   end
 
   private
