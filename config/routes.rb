@@ -202,6 +202,7 @@ Rails.application.routes.draw do
       patch ':id/edit', to: 'dispatch/requests#update', as: :cad_update_request
       delete ':id', to: 'dispatch/requests#destroy', as: :cad_destroy_request
       post ':id/crew', to: 'dispatch/requests#assign_crew', as: :cad_assign_crew
+      post ':id/close', to: 'dispatch/requests#close', as: :cad_close_request
     end
   end
 end

@@ -93,6 +93,24 @@ $(document).ready(function () {
       scot.errorAlert(jqXHR.status + ': ' + textStatus, select.parents('.modal').first());
     });
   });
+
+  $('.close-request').on('ajax:success', function (ev) {
+    $(ev.target).parents('.cad-panel').fadeOut(200, function () { $(this).remove(); });
+  });
+
+  $('.dispatch-crew-form').on('ajax:success', function (ev) {
+    var modal = $(ev.target).parents('.modal');
+    modal.modal('hide');
+
+    var requestId = modal.data('request-id');
+    var request = new scot.cad.RequestPanel(requestId);
+    var responseData = ev.detail[0];
+
+    request.updateCrew(responseData.crew);
+    request.updateStatus(responseData.status);
+    request.updateButtons(responseData.buttons);
+    request.doVisibleUpdate(400);
+  });
 });
 
 function markerPath(name) {
@@ -118,14 +136,12 @@ function initMap() {
     var place = autocomplete.getPlace().geometry.location;
     var lat = place.lat();
     var long = place.lng();
-    console.log('place.autocomplete', lat, long);
     moveToSecondStage(lat, long);
   });
 
   google.maps.event.addListener(map, 'click', function (event) {
     var lat = event.latLng.lat();
     var long = event.latLng.lng();
-    console.log('map.click', lat, long);
     moveToSecondStage(lat, long);
   });
 }
@@ -135,7 +151,6 @@ function initShowMap() {
   var center = mapContainer.data('center').split(',');
   var markerType = mapContainer.data('marker-type');
   var image = markerPath(markerType);
-  console.log(image);
   var location = { lat: parseFloat(center[0], 10), lng: parseFloat(center[1], 10) };
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 9,
@@ -164,11 +179,12 @@ function initCadMaps() {
       map: map,
       icon: image
     });
+
+    $(el).data('map', map).data('marker', marker);
   });
 }
 
 function crewsUri(ctx) {
-  console.log(ctx, ctx.find('.crew-medical'));
   var medical = ctx.find('.crew-medical').is(':checked');
   var minCapacity = ctx.find('.crew-min-capacity').val() || '0';
   return '/cad/crews.json?medical=' + medical + '&min_capacity=' + minCapacity;

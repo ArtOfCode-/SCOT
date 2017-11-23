@@ -127,6 +127,55 @@ window.scot = {
       .fail(function (jqXHR, textStatus) {
         scot.errorAlert(jqXHR.status + ': ' + textStatus, '#section-1');
       });
+    },
+
+    RequestPanel: function (id) {
+      this.id = id;
+      this.column = $('.cad-panel[data-request-id=' + id + ']');
+      this.card = this.column.children('.card');
+      this.buttons = this.card.find('.request-buttons');
+      this.spinner = $('.cad-panel[data-request-id=' + id + '] .request-spinner');
+
+      this.map = {};
+      this.map.el = this.card.find('.map');
+      this.map.gmap = $(this.map.el).data('map');
+      this.map.marker = $(this.map.el).data('marker');
+
+      this.status = this.card.find('.request-status');
+      this.priority = this.card.find('.request-priority');
+      this.crew = this.card.find('.assigned-crew');
+
+      this.doVisibleUpdate = function (duration) {
+        this.spinner.css('visibility', 'visible');
+        this.card.addClass('request-disabled');
+        var self = this;
+        setTimeout(function () {
+          self.spinner.css('visibility', 'hidden');
+          self.card.removeClass('request-disabled');
+        }, duration);
+      };
+
+      this.updateCrew = function (crew) {
+        var displayName = crew.callsign + ' (' + crew.contact_name + ')';
+        if (this.crew.length > 0) {
+          this.crew.text(displayName);
+        }
+        else {
+          this.card.find('.statuses').after('<p><strong>Assigned Crew:</strong> <span class="assigned-crew">' + displayName  + '</span>')
+          this.crew = this.card.find('.assigned-crew');
+        }
+      };
+
+      this.updateStatus = function (status) {
+        this.status.html('<strong class="text-' + status.color + '" title="' + status.description + '">Status: <i class="fa fa-fw fa-' +
+                         status.icon + '"></i> ' + status.name + '</strong>');
+        this.status.tooltip();
+        this.map.marker.setIcon(markerPath(status.color));
+      };
+
+      this.updateButtons = function (buttons) {
+        this.buttons.html(buttons);
+      }
     }
   }
 };

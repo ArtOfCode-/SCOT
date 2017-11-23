@@ -1,5 +1,5 @@
 <!-- Crew Dispatch modal -->
-<div class="modal" id="dispatch-crew-<%= request.id %>">
+<div class="modal" id="dispatch-crew-<%= request.id %>" data-request-id="<%= request.id %>">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -16,7 +16,7 @@
           <input type="number" name="crew-min-capacity" id="crew-min-capacity-<%= request.id %>"
                  class="form-control form-control-sm mx-2 number-sm crew-select-update crew-min-capacity" />
         </div>
-        <%= form_tag cad_assign_crew_path(@disaster, request), method: :post, remote: true, class: 'mt-3' do %>
+        <%= form_tag cad_assign_crew_path(@disaster, request), method: :post, remote: true, class: 'mt-3 dispatch-crew-form' do %>
           <%= select_tag :crew_id, nil, include_blank: true,
                          class: 'form-control select2-cad-crew', id: "select2-cad-crew-#{request.id}" %>
           <%= submit_tag 'Dispatch', class: 'btn btn-success mt-2 float-right' %>

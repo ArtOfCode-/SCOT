@@ -63,15 +63,18 @@ class Dispatch::RequestsController < ApplicationController
 
   def assign_crew
     @crew = Dispatch::RescueCrew.find params[:crew_id]
-    success = @request.update(rescue_crew: @crew)
-    response = { success: success }
-    response[:crew] = @crew if success
-    response[:errors] = @request.errors.full_messages unless success
-    render json: response
+    @success = ApplicationRecord.status_transaction do
+      @request.update!(status: Dispatch::RequestStatus['Dispatched'], rescue_crew: @crew)
+      @crew.update!(status: Dispatch::CrewStatus['Assigned'])
+    end
+    render format: :json
   end
 
-  def available_crews
-
+  def close
+    success = @request.update status: Dispatch::RequestStatus['Closed']
+    response = { success: success }
+    response[:errors] = @request.errors.full_messages unless success
+    render json: response
   end
 
   private
