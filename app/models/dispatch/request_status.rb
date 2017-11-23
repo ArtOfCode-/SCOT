@@ -10,4 +10,8 @@ class Dispatch::RequestStatus < ApplicationRecord
   def marker_type
     %w[danger warning success info][index]
   end
+
+  def icon
+    %w[exclamation-triangle exclamation-circle check info-circle][index]
+  end
 end

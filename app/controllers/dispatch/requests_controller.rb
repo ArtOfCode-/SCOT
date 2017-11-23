@@ -59,6 +59,7 @@ class Dispatch::RequestsController < ApplicationController
                                   .includes(:status, :priority)
                                   .paginate(page: params[:page], per_page: 15)
     @crews = Dispatch::RescueCrew.dispatch_menu
+    @resources = Dispatch::Resource.dispatch_menu
   end
 
   def assign_crew
@@ -75,6 +76,20 @@ class Dispatch::RequestsController < ApplicationController
     response = { success: success }
     response[:errors] = @request.errors.full_messages unless success
     render json: response
+  end
+
+  def add_resource
+    @center = Dispatch::Resource.find params[:resource_id]
+    use = Dispatch::ResourceUse.new request: @request, resource: @center
+    @success = use.save
+    render format: :json
+  end
+
+  def set_status
+    status = Dispatch::RequestStatus.find params[:status_id]
+    @success = @request.update status: status
+    @request = @request.reload
+    render format: :json
   end
 
   private

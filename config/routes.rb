@@ -192,6 +192,10 @@ Rails.application.routes.draw do
       root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
     end
 
+    scope 'resources' do
+      root to: 'dispatch/resources#index', as: :cad_resources
+    end
+
     scope ':disaster_id' do
       root to: 'dispatch/requests#index', as: :cad_requests
       get 'dashboard', to: 'dispatch/requests#cad', as: :cad_dashboard
@@ -203,6 +207,8 @@ Rails.application.routes.draw do
       delete ':id', to: 'dispatch/requests#destroy', as: :cad_destroy_request
       post ':id/crew', to: 'dispatch/requests#assign_crew', as: :cad_assign_crew
       post ':id/close', to: 'dispatch/requests#close', as: :cad_close_request
+      post ':id/status', to: 'dispatch/requests#set_status', as: :cad_set_request_status
+      post ':id/add_resource', to: 'dispatch/requests#add_resource', as: :cad_add_resource
     end
   end
 end
