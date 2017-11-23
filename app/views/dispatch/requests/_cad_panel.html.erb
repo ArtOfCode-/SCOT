@@ -1,15 +1,23 @@
 <div class="col-sm-4 cad-panel" data-request-id="<%= request.id %>">
   <div class="card border-<%= request.priority.color_class %> mb-4">
     <div class="card-body">
-      <h5><%= request.name %> <span class="text-muted">(#<%= request.id %>)</span> <i class="fa fa-fw fa-pulse fa-spinner request-spinner"></i></h5>
+      <h5>
+        <span class="request-name"><%= request.name %></span>
+        <span class="text-muted">(#<%= request.id %>)</span>
+        <i class="fa fa-fw fa-pulse fa-spinner request-spinner"></i>
+      </h5>
       <h6 class="text-muted"><%= pluralize(request.people_count, 'person') %></h6>
 
       <div class="map" data-center="<%= request.lat %>,<%= request.long %>" data-marker-type="<%= request.status.marker_type %>"></div>
       <div class="map-coords"><%= request.lat %>&deg; N, <%= request.long %>&deg; E</div>
 
       <p class="statuses row">
-        <span class="col-sm-6 text-center request-status"><%= status_el request.status, 'strong' %></span>
-        <span class="col-sm-6 text-center request-priority"><%= priority_el request.priority, 'strong' %></span>
+        <span class="col-sm-6 text-center request-status" data-index="<%= request.status.index %>">
+          <%= status_el request.status, 'strong' %>
+        </span>
+        <span class="col-sm-6 text-center request-priority" data-index="<%= request.priority.index %>">
+          <%= priority_el request.priority, 'strong' %>
+        </span>
       </p>
 
       <% if request.rescue_crew.present? %>
