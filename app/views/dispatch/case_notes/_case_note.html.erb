@@ -1,0 +1,19 @@
+<div class="card border-danger my-4">
+  <div class="card-header border-danger py-1">
+    Case Note <span class="text-muted mx-1" title="<%= case_note.created_at %>"><%= time_ago_in_words case_note.created_at %> ago</span>
+    <% if case_note.medical? %>
+      <span class="text-danger mx-1">(medical only)</span>
+    <% end %>
+  </div>
+  <div class="card-body">
+    <%= raw(sanitize(case_note.content).gsub("\n", "<br>")) %>
+  </div>
+  <div class="card-footer border-danger py-1 text-small">
+    By <%= case_note.author.present? ? case_note.author.username : 'System' %> at <%= case_note.created_at.strftime("%H:%M %d %b %Y") %>
+    <% if (case_note.author.present? && case_note.author == current_user) || has_any_role?(:developer, :admin) %>
+      - <%= link_to 'edit', cad_edit_case_note_path(case_note.request, case_note) %>
+      - <%= link_to 'delete', cad_destroy_case_note_path(case_note.request, case_note), method: :delete,
+                    data: { confirm: 'Are you sure?' }, class: 'text-danger' %>
+    <% end %>
+  </div>
+</div>

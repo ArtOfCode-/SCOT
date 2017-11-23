@@ -2,7 +2,9 @@
   <div class="card border-<%= request.priority.color_class %> mb-4">
     <div class="card-body">
       <h5>
-        <span class="request-name"><%= request.name %></span>
+        <%= link_to cad_request_path(@disaster, request), target: '_blank' do %>
+          <span class="request-name"><%= request.name %></span>
+        <% end %>
         <span class="text-muted">(#<%= request.id %>)</span>
         <i class="fa fa-fw fa-pulse fa-spinner request-spinner"></i>
       </h5>
@@ -44,8 +46,9 @@
 
       <div class="mt-3">
         View:
-        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-details-link">details</a> |
-        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-medical-link">medical</a>
+        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-details-link" data-tab="details">details</a> |
+        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-details-link" data-tab="medical">medical</a> |
+        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-details-link" data-tab="notes">notes</a>
       </div>
     </div>
   </div>

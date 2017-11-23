@@ -74,7 +74,7 @@
 
 <!-- Request details modal -->
 <div class="modal request-details" id="details-<%= request.id %>">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Request Details</h5>
@@ -90,6 +90,9 @@
           <li class="nav-item">
             <a class="nav-link medical-tab" data-toggle="tab" href="#medical-tab-<%= request.id %>">Medical</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link notes-tab" data-toggle="tab" href="#notes-tab-<%= request.id %>">Notes</a>
+          </li>
         </ul>
         <div class="tab-content">
           <div class="tab-pane fade show active" id="details-tab-<%= request.id %>">
@@ -97,6 +100,12 @@
           </div>
           <div class="tab-pane fade" id="medical-tab-<%= request.id %>">
             <p><%= request.medical_details %></p>
+          </div>
+          <div class="tab-pane fade" id="notes-tab-<%= request.id %>">
+            <% request.case_notes.each do |cn| %>
+              <%= render 'dispatch/case_notes/case_note', case_note: cn %>
+            <% end %>
+            <%= link_to 'New note', cad_new_case_note_path(request) %>
           </div>
         </div>
       </div>

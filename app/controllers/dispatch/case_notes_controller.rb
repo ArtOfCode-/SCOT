@@ -1,23 +1,42 @@
 class Dispatch::CaseNotesController < ApplicationController
   before_action :check_access
-  before_action :set_note, except: [:create, :get]
-  before_action :set_request, except: [:update, :destroy]
+  before_action :set_note, except: [:new, :create]
+  before_action :set_request
+
+  def new
+    @note = @request.case_notes.new
+  end
 
   def create
     @note = @request.case_notes.new note_params.merge(author: current_user)
-    render_status @note.save, @note
+    if @note.save
+      flash[:success] = 'Saved case note.'
+      redirect_to cad_request_path(@request.disaster, @request)
+    else
+      flash[:danger] = 'Failed to save case note.'
+      render :new
+    end
   end
 
+  def edit; end
+
   def update
-    render_status @note.update(note_params), @note
+    if @note.update note_params
+      flash[:success] = 'Updated case note.'
+      redirect_to cad_request_path(@request.disaster, @request)
+    else
+      flash[:danger] = 'Failed to update case note.'
+      render :edit
+    end
   end
 
   def destroy
-    render_status @note.destroy, @note
-  end
-
-  def get
-    render json: { items: @request.case_notes }
+    if @note.destroy
+      flash[:success] = 'Removed case note.'
+    else
+      flash[:danger] = 'Failed to remove case note.'
+    end
+    redirect_to cad_request_path(@request.disaster, @request)
   end
 
   private
@@ -27,7 +46,7 @@ class Dispatch::CaseNotesController < ApplicationController
   end
 
   def note_params
-    params.require(:case_note).permit(:content, :medical)
+    params.require(:dispatch_case_note).permit(:content, :medical)
   end
 
   def set_note
