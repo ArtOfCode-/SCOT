@@ -15,7 +15,7 @@
 <p><strong>Address: </strong> <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
   <%= @request.city %> <%= @request.zip_code %></p>
 
-<%= render 'details_tables' %>
+<%= render 'details_tables', request: @request %>
 
 <%= marker_paths %>
 <%= maps_javascript 'initShowMap' %>

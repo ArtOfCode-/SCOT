@@ -33,6 +33,12 @@
       <div class="request-buttons">
         <%= render 'buttons', request: request %>
       </div>
+
+      <div class="mt-3">
+        View:
+        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-details-link">details</a> |
+        <a href="#" data-toggle="modal" data-target="#details-<%= request.id %>" class="request-medical-link">medical</a>
+      </div>
     </div>
   </div>
 </div>
