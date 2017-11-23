@@ -56,10 +56,9 @@ class Dispatch::RequestsController < ApplicationController
     @requests = @disaster.requests.joins(:status).where.not(dispatch_requests: { status: [Dispatch::RequestStatus['Closed'],
                                                                                           Dispatch::RequestStatus['Safe']] })
                                   .joins(:priority).order('dispatch_priorities.index + dispatch_request_statuses.index ASC')
-                                  .includes(:status, :priority)
+                                  .includes(:status, :priority, resource_uses: [:resource], resources: [:resource_type])
                                   .paginate(page: params[:page], per_page: 15)
     @crews = Dispatch::RescueCrew.dispatch_menu
-    @resources = Dispatch::Resource.dispatch_menu
   end
 
   def assign_crew
@@ -80,8 +79,8 @@ class Dispatch::RequestsController < ApplicationController
 
   def add_resource
     @center = Dispatch::Resource.find params[:resource_id]
-    use = Dispatch::ResourceUse.new request: @request, resource: @center
-    @success = use.save
+    @use = Dispatch::ResourceUse.new request: @request, resource: @center
+    @success = @use.save
     render format: :json
   end
 

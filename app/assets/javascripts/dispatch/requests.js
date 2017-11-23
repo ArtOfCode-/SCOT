@@ -123,14 +123,15 @@ $(document).ready(function () {
     request.doVisibleUpdate(200);
   });
 
-  $(document).on('shown.bs.modal', '.relief-center', function (ev) {
-    var requestId = $(this).data('request-id');
+  $(document).on('shown.bs.modal', '.relief-center, .rest-stop', function (ev) {
+    var requestId = $(ev.target).data('request-id');
+    var ajaxEndpoint = $(ev.target).data('ajax');
     $.ajax({
       type: 'GET',
-      url: '/cad/resources.json?request_id=' + requestId
+      url: ajaxEndpoint + '?request_id=' + requestId
     })
     .done(function (data) {
-      var mapContainer = $(ev.target).find('.cad-relief-map');
+      var mapContainer = $(ev.target).find('.cad-resource-map');
       var center = mapContainer.data('center').split(',');
       var location = { lat: parseFloat(center[0]), lng: parseFloat(center[1]) };
 
@@ -173,6 +174,26 @@ $(document).ready(function () {
     .fail(function (jqXHR, textStatus) {
       scot.errorAlert(jqXHR.status + ': ' + textStatus, $(ev.target).find('.modal-body'));
     });
+  });
+
+  $(document).on('ajax:success', '.dispatch-resource-form', function (ev) {
+    var modal = $(ev.target).parents('.modal');
+    var requestId = modal.data('request-id');
+    modal.modal('hide');
+
+    var request = new scot.cad.RequestPanel(requestId);
+    var responseData = ev.detail[0];
+    request.addResource(responseData.resource);
+    request.updateButtons(responseData.buttons);
+    request.doVisibleUpdate(300);
+  });
+
+  $(document).on('ajax:success', '.request-safe', function (ev) {
+    var request = new scot.cad.RequestPanel($(ev.target).parents('.cad-panel').data('request-id'));
+    var responseData = ev.detail[0];
+    request.updateStatus(responseData.status);
+    request.updateButtons(responseData.buttons);
+    request.doVisibleUpdate(200);
   });
 });
 

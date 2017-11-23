@@ -194,6 +194,7 @@ Rails.application.routes.draw do
 
     scope 'resources' do
       root to: 'dispatch/resources#index', as: :cad_resources
+      get 'rest-stops', to: 'dispatch/resources#rest_stops', as: :cad_rest_stops
     end
 
     scope ':disaster_id' do

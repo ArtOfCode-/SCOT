@@ -9,13 +9,22 @@ class Dispatch::ResourcesController < ApplicationController
       end
       format.json do
         request = Dispatch::Request.find params[:request_id]
-        @resources = Dispatch::Resource.all.includes(:resource_type)
+        @resources = Dispatch::Resource.all.includes(:resource_type).where.not(resource_type: Dispatch::ResourceType['Rest Stop'])
                                        .order("SQRT(POW(`long` - (#{request.long}), 2) + POW(`lat` - (#{request.lat}), 2))")
         @count = @resources.count
-        @crews = @resources.paginate(page: params[:page], per_page: 50)
+        @resources = @resources.paginate(page: params[:page], per_page: 50)
         @more = @resources.count > 50 * (params[:page]&.to_i || 1)
       end
     end
+  end
+
+  def rest_stops
+    request = Dispatch::Request.find params[:request_id]
+    @resources = Dispatch::Resource.all.includes(:resource_type).where(resource_type: Dispatch::ResourceType['Rest Stop'])
+                                   .order("SQRT(POW(`long` - (#{request.long}), 2) + POW(`lat` - (#{request.lat}), 2))")
+    @count = @resources.count
+    @resources = @resources.paginate(page: params[:page], per_page: 50)
+    @more = @resources.count > 50 * (params[:page]&.to_i || 1)
   end
 
   private

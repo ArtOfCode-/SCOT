@@ -136,6 +136,10 @@ window.scot = {
       this.buttons = this.card.find('.request-buttons');
       this.spinner = $('.cad-panel[data-request-id=' + id + '] .request-spinner');
 
+      this.resources = {};
+      this.resources.container = this.card.find('.request-resources');
+      this.resources.list = this.resources.container.find('.resources-list');
+
       this.map = {};
       this.map.el = this.card.find('.map');
       this.map.gmap = $(this.map.el).data('map');
@@ -175,8 +179,18 @@ window.scot = {
       };
 
       this.updateButtons = function (buttons) {
+        this.buttons.find('[data-toggle=tooltip]').tooltip('hide');
         this.buttons.html(buttons);
-      }
+      };
+
+      this.addResource = function (resource) {
+        if (this.resources.container.length === 0) {
+          this.buttons.before('<div class="request-resources"><strong>Resources:</strong><br/><ol class="resources-list"></ol></div>');
+          this.resources.container = this.card.find('.request-resources');
+          this.resources.list = this.resources.container.find('.resources-list');
+        }
+        this.resources.list.append('<li><strong>' + resource.name + '</strong> (' + resource.resource_type.name + ')</li>');
+      };
     }
   }
 };
