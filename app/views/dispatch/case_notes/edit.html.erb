@@ -1,0 +1,4 @@
+<h1>Edit Case Note</h1>
+<p>You are editing case note #CN<%= @note.id %>, on request #RQ<%= @request.id %> (<%= @request.name %>).</p>
+
+<%= render 'form', url: cad_update_case_note_path %>

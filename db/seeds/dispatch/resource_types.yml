@@ -1,0 +1,6 @@
+- name: Relief Center
+  description: Centers providing temporary shelter and immediate recovery resources.
+- name: Medical Center
+  description: Dedicated medical facilities for more serious injuries than can be treated at relief centers.
+- name: Rest Stop
+  description: Centers where rescue crews can stop and take a break before continuing work.

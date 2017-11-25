@@ -1,0 +1,55 @@
+<%= form_for @crew, url: url do |f| %>
+  <div class="field">
+    <%= f.label :contact_name do %>
+      <i class="fa fa-fw fa-user"></i> Contact Name
+    <% end %><br/>
+    <%= f.text_field :contact_name, class: 'form-control', required: true %>
+    <div class="form-text text-muted">Required. The name of someone who can be contacted for updates on this crew's status.</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :contact_phone do %>
+      <i class="fa fa-fw fa-phone"></i> Contact Telephone
+    <% end %><br/>
+    <%= f.phone_field :contact_phone, class: 'form-control', required: true %>
+    <div class="form-text text-muted">Required. A telephone number for the person named above.</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :contact_email do %>
+      <i class="fa fa-fw fa-envelope"></i> Contact Email
+    <% end %><br/>
+    <%= f.email_field :contact_email, class: 'form-control' %>
+    <div class="form-text text-muted">Optional. An email address for the named contact.</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :callsign do %>
+      <i class="fa fa-fw fa-bullhorn"></i> Callsign
+    <% end %><br/>
+    <%= f.text_field :callsign, class: 'form-control', required: true %>
+    <div class="form-text text-muted">Required. A unique callsign for this crew; use whatever you like, but ideally something short and
+      indicative of the nature of the crew - think aircraft callsigns (BA924, LH454, etc).</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :capacity do %>
+      <i class="fa fa-fw fa-users"></i> Capacity
+    <% end %><br/>
+    <%= f.number_field :capacity, class: 'form-control', required: true %>
+    <div class="form-text text-muted">Required. How many victims is this unit capable of transporting, <em>excluding</em> the crew themselves?</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.check_box :medical, value: 'true' %>
+    <%= f.label :medical, class: 'ml-2 mb-0' do %>
+      <i class="fa fa-fw fa-medkit"></i> Medical
+    <% end %>
+    <div class="form-text text-muted">Does this crew have medical skills and equipment with them?</div>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Save', class: 'btn btn-success' %>
+    <input type="reset" class="btn btn-danger" value="Cancel" />
+  </div>
+<% end %>

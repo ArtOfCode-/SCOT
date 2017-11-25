@@ -12,6 +12,7 @@
  *
  *= require_tree .
  *= require_self
+ *= stub shims/maps_font
  */
 
 body {
@@ -50,4 +51,12 @@ label {
 
 .s2-with-ig + .select2 .select2-selection {
     border-bottom-left-radius: 0;
+}
+
+.text-warning {
+    color: #f9bb00 !important;
+}
+
+.number-sm {
+    max-width: 5rem;
 }

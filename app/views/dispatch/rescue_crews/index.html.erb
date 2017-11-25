@@ -1,0 +1,14 @@
+<h1>Rescue Crews</h1>
+<p>This is a list of all rescue crews held in the database.</p>
+
+<% @crews.in_groups_of(2).map(&:compact).each do |g| %>
+  <div class="row">
+    <% g.each do |c| %>
+      <div class="col-sm-6">
+        <%= render 'crew', crew: c %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= will_paginate @crews, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

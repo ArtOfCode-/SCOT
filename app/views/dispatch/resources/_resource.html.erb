@@ -1,0 +1,11 @@
+<div class="card border-secondary mb-3">
+  <div class="card-body">
+    <div class="resource-map" data-center="<%= resource.lat %>,<%= resource.long %>"></div>
+    <div class="map-coords"><%= resource.lat %>&deg; N, <%= resource.long %>&deg; E</div>
+    <h4><%= link_to "#{resource.resource_type.name}: #{resource.name}", cad_resource_path(resource) %></h4>
+    <p><%= resource.details %></p>
+    <div>
+      <i class="fa fa-fw fa-address-book"></i> <%= pluralize(resource.resource_uses.count, 'case') %>
+    </div>
+  </div>
+</div>

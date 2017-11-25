@@ -1,0 +1,77 @@
+// Place all the styles related to the dispatch/requests controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.request-list-format {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .people {
+    padding: 7px 25px;
+  }
+
+  .statuses {
+    padding: 7px 25px;
+  }
+}
+
+.tab-content {
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.collapse.section {
+  margin-left: 1.6em;
+}
+
+input[type=hidden] + .invalid-feedback {
+  border: 1px solid #dc3545;
+  border-left: 5px solid #dc3545;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.maps-marker-ref {
+  display: none;
+}
+
+#map {
+  margin-bottom: 10px;
+}
+
+.map {
+  height: 250px;
+}
+
+.map-coords {
+  color: #666;
+  text-align: center;
+}
+
+.crew-form-container {
+  width: 100%;
+}
+
+.select2-cad-crew {
+  width: 100%;
+
+  + .select2 {
+    width: 100% !important;
+  }
+}
+
+.request-spinner {
+  visibility: hidden;
+}
+
+.request-disabled {
+  filter: opacity(40%);
+}
+
+.cad-resource-map {
+  height: 400px;
+}

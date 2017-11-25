@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  request_id: 
+  author_id: 
+  content: MyText
+  medical: false
+
+two:
+  request_id: 
+  author_id: 
+  content: MyText
+  medical: false

@@ -1,0 +1,4 @@
+<h1>New Contact Attempt</h1>
+<p>You are creating a contact attempt for request #RQ<%= @request.id %> (<%= @request.name %>).</p>
+
+<%= render 'form', url: cad_create_contact_attempt_path(@request) %>
