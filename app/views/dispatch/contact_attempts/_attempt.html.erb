@@ -1,0 +1,20 @@
+<div class="card border-primary my-4">
+  <div class="card-header border-primary py-1">
+    Contact Attempt <span class="text-muted mx-1" title="<%= attempt.created_at %>"><%= time_ago_in_words attempt.created_at %> ago</span>
+  </div>
+  <div class="card-body">
+    <strong><%= attempt.user.username %></strong> tried to contact the originator of this request:
+    <p>
+      <strong>Result:</strong> <%= attempt.outcome %><br/>
+      <strong>Medium:</strong> <%= attempt.medium %><br/>
+      <strong>Details:</strong> <%= attempt.details %>
+    </p>
+  </div>
+  <div class="card-footer border-primary py-1 text-small">
+    <% if (attempt.user.present? && attempt.user == current_user) || has_any_role?(:developer, :admin) %>
+      <%= link_to 'edit', edit_contact_attempt_path(request_id: rid, id: attempt.id) %> -
+      <%= link_to 'delete', destroy_contact_attempt_path(request_id: rid, id: attempt.id), data: { confirm: 'Are you sure?' },
+                  method: :delete, class: 'text-danger' %>
+    <% end %>
+  </div>
+</div>

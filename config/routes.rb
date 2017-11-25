@@ -189,6 +189,14 @@ Rails.application.routes.draw do
       delete ':rid/:id', to: 'dispatch/case_notes#destroy', as: :cad_destroy_case_note
     end
 
+    scope 'contacts' do
+      get ':rid/new', to: 'dispatch/contact_attempts#new', as: :cad_new_contact_attempt
+      post ':rid/new', to: 'dispatch/contact_attempts#create', as: :cad_create_contact_attempt
+      get ':rid/:id/edit', to: 'dispatch/contact_attempts#edit', as: :cad_edit_contact_attempt
+      patch ':rid/:id/edit', to: 'dispatch/contact_attempts#update', as: :cad_update_contact_attempt
+      delete ':rid/:id', to: 'dispatch/contact_attempts#destroy', as: :cad_destroy_contact_attempt
+    end
+
     scope 'crews' do
       root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
     end

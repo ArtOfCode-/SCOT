@@ -1,0 +1,4 @@
+<h1>Edit Contact Attempt</h1>
+<p>You are editing contact attempt #CA<%= @attempt.id %>, on request #RQ<%= @request.id %> (<%= @request.name %>).</p>
+
+<%= render 'form', url: cad_edit_contact_attempt_path(@request, @attempt) %>
