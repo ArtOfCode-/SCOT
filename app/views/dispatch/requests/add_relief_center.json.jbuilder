@@ -1,4 +1,2 @@
 json.success @success
-if @success
-  json.resource @center
-end
+json.resource @center if @success

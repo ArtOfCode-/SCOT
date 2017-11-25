@@ -57,9 +57,9 @@ class Dispatch::RequestsController < ApplicationController
   def cad
     @requests = @disaster.requests.joins(:status).where.not(dispatch_requests: { status: [Dispatch::RequestStatus['Closed'],
                                                                                           Dispatch::RequestStatus['Safe']] })
-                                  .joins(:priority).order('dispatch_priorities.index + dispatch_request_statuses.index ASC')
-                                  .includes(:status, :priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
-                                  .paginate(page: params[:page], per_page: 15)
+                         .joins(:priority).order('dispatch_priorities.index + dispatch_request_statuses.index ASC')
+                         .includes(:status, :priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
+                         .paginate(page: params[:page], per_page: 15)
     @crews = Dispatch::RescueCrew.dispatch_menu
   end
 
