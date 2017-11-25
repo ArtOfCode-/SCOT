@@ -1,0 +1,19 @@
+<div class="card border-secondary mb-3">
+  <div class="card-body">
+    <h4><%= link_to crew.callsign, cad_rescue_crew_path(crew) %></h4>
+    <h6 class="text-muted">Status: <%= crew.status.name %></h6>
+    <div class="row">
+      <div class="col-sm-4">
+        <i class="fa fa-fw fa-address-book"></i> <%= pluralize(crew.requests.count, 'case') %>
+      </div>
+      <div class="col-sm-4">
+        <span class="<%= crew.medical? ? 'text-success' : 'text-danger' %>">
+          <i class="fa fa-fw fa-<%= crew.medical? ? 'check' : 'times' %>"></i> Medical: <%= crew.medical? ? 'Yes' : 'No' %>
+        </span>
+      </div>
+      <div class="col-sm-4">
+        <i class="fa fa-fw fa-user"></i> Capacity: <%= crew.capacity %>
+      </div>
+    </div>
+  </div>
+</div>

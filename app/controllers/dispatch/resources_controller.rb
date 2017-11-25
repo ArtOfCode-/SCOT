@@ -1,6 +1,7 @@
 class Dispatch::ResourcesController < ApplicationController
   before_action :authenticate_user!
   before_action :check_access
+  before_action :set_resource, except: [:index, :rest_stops, :new, :create]
 
   def index
     respond_to do |format|
@@ -27,9 +28,51 @@ class Dispatch::ResourcesController < ApplicationController
     @more = @resources.count > 50 * (params[:page]&.to_i || 1)
   end
 
+  def new
+    @resource = Dispatch::Resource.new
+  end
+
+  def create
+    @resource = Dispatch::Resource.new resource_params
+    if @resource.save
+      flash[:success] = 'Saved new resource.'
+      redirect_to cad_resource_path(@resource)
+    else
+      flash[:danger] = 'Failed to save new resource.'
+      render :new
+    end
+  end
+
+  def show; end
+
+  def edit; end
+
+  def update
+    if @resource.update resource_params
+      flash[:success] = 'Updated resource.'
+      redirect_to cad_resource_path(@resource)
+    else
+      flash[:danger] = 'Failed to update resource.'
+      render :edit
+    end
+  end
+
+  def destroy
+    if @resource.destroy
+      flash[:success] = 'Removed resource.'
+    else
+      flash[:danger] = 'Failed to remove resource.'
+    end
+    redirect_to cad_resources_path
+  end
+
   private
 
   def check_access
     require_any :developer, :admin, :dispatch
+  end
+
+  def set_resource
+    @resource = Dispatch::Resource.find params[:id]
   end
 end

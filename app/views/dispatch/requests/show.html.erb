@@ -12,12 +12,26 @@
   <%= priority_el @request.priority, 'strong' %>
 </div>
 
+<% if @request.rescue_crew.present? %>
+  <h4 class="mt-3">Assigned Crew</h4>
+  <%= render 'dispatch/rescue_crews/crew', crew: @request.rescue_crew %>
+<% end %>
+
 <p><strong>Address: </strong> <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
   <%= @request.city %> <%= @request.zip_code %></p>
 
 <%= render 'details_tables', request: @request %>
 
-<h3>Timeline</h3>
+<h3>
+  Timeline
+  <%= link_to cad_create_case_note_path(@request) do %><small class="text-small">+ Case Note</small><% end %>
+  <span class="text-small text-muted">|</span>
+  <%= link_to cad_create_contact_attempt_path(@request) do %><small class="text-small">+ Contact Attempt</small><% end %>
+</h3>
+<% unless @timeline.any? %>
+  <em>No events yet.</em>
+<% end %>
+
 <% @timeline.each do |to| %>
   <% if to.class == Dispatch::CaseNote %>
     <%= render 'dispatch/case_notes/case_note', case_note: to %>

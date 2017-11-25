@@ -199,6 +199,13 @@ Rails.application.routes.draw do
 
     scope 'crews' do
       root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
+      get 'new', to: 'dispatch/rescue_crews#new', as: :cad_new_crew
+      post 'new', to: 'dispatch/rescue_crews#create', as: :cad_create_crew
+      get ':id', to: 'dispatch/rescue_crews#show', as: :cad_rescue_crew
+      get ':id/edit', to: 'dispatch/rescue_crews#edit', as: :cad_edit_crew
+      patch ':id/edit', to: 'dispatch/rescue_crews#update', as: :cad_update_crew
+      post ':id/status', to: 'dispatch/rescue_crews#set_status', as: :cad_set_crew_status
+      delete ':id', to: 'dispatch/rescue_crews#destroy', as: :cad_destroy_crew_path
     end
 
     scope 'resources' do
