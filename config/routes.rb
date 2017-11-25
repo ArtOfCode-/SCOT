@@ -211,6 +211,12 @@ Rails.application.routes.draw do
     scope 'resources' do
       root to: 'dispatch/resources#index', as: :cad_resources
       get 'rest-stops', to: 'dispatch/resources#rest_stops', as: :cad_rest_stops
+      get 'new', to: 'dispatch/resources#new', as: :cad_new_resource
+      post 'new', to: 'dispatch/resources#create', as: :cad_create_resource
+      get ':id', to: 'dispatch/resources#show', as: :cad_resource
+      get ':id/edit', to: 'dispatch/resources#edit', as: :cad_edit_resource
+      patch ':id/edit', to: 'dispatch/resources#update', as: :cad_update_resource
+      delete ':id', to: 'dispatch/resources#destroy', as: :cad_destroy_resource
     end
 
     scope ':disaster_id' do
