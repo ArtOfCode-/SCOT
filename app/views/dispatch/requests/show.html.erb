@@ -17,5 +17,14 @@
 
 <%= render 'details_tables', request: @request %>
 
+<h3>Timeline</h3>
+<% @timeline.each do |to| %>
+  <% if to.class == Dispatch::CaseNote %>
+    <%= render 'dispatch/case_notes/case_note', case_note: to %>
+  <% elsif to.class == Dispatch::ContactAttempt %>
+    <%= render 'dispatch/contact_attempts/attempt', attempt: to %>
+  <% end %>
+<% end %>
+
 <%= marker_paths %>
 <%= maps_javascript 'initShowMap' %>
