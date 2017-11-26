@@ -189,6 +189,14 @@ Rails.application.routes.draw do
       get 'rest-stops', to: 'dispatch/resources#rest_stops', as: :cad_rest_stops
     end
 
+    scope 'contacts' do
+      get ':rid/new', to: 'dispatch/contact_attempts#new', as: :cad_new_contact_attempt
+      post ':rid/new', to: 'dispatch/contact_attempts#create', as: :cad_create_contact_attempt
+      get ':rid/:id/edit', to: 'dispatch/contact_attempts#edit', as: :cad_edit_contact_attempt
+      patch ':rid/:id/edit', to: 'dispatch/contact_attempts#update', as: :cad_update_contact_attempt
+      delete ':rid/:id', to: 'dispatch/contact_attempts#destroy', as: :cad_destroy_contact_attempt
+    end
+
     scope ':disaster_id' do
       root to: 'rescue_requests#cad_index', as: :cad_requests
       get 'dashboard', to: 'rescue_requests#cad', as: :cad_dashboard

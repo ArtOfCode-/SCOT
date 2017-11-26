@@ -12,9 +12,9 @@
   </div>
   <div class="card-footer border-primary py-1 text-small">
     <% if (attempt.user.present? && attempt.user == current_user) || has_any_role?(:developer, :admin) %>
-        <%= link_to 'edit', edit_contact_attempt_path(request_id: rid, id: attempt.id) %> -
-        <%= link_to 'delete', destroy_contact_attempt_path(request_id: rid, id: attempt.id), data: { confirm: 'Are you sure?' },
-                    method: :delete, class: 'text-danger' %>
+      <%= link_to 'edit', edit_contact_attempt_path(request_id: rid, id: attempt.id) %> -
+      <%= link_to 'delete', destroy_contact_attempt_path(request_id: rid, id: attempt.id), data: { confirm: 'Are you sure?' },
+                  method: :delete, class: 'text-danger' %>
     <% end %>
   </div>
 </div>
