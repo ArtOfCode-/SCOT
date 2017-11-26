@@ -1,2 +1,4 @@
 <h1>Edit Case Note</h1>
+<p>You are editing case note #CN<%= @case_note.id %>, on request #RQ<%= @rescue_request.id %> (<%= @rescue_request.name %>).</p>
+
 <%= render 'form', url: update_case_note_path(request_id: params[:request_id], id: @case_note.id) %>

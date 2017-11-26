@@ -205,10 +205,12 @@ Rails.application.routes.draw do
     end
 
     scope 'notes' do
+      get ':rid/new', to: 'case_notes#new', as: :cad_new_case_note
       post ':rid/new', to: 'case_notes#create', as: :cad_create_case_note
       get ':rid', to: 'case_notes#get', as: :cad_get_case_notes
-      post ':id/edit', to: 'case_notes#update', as: :cad_update_case_note
-      delete ':id', to: 'case_notes#destroy', as: :cad_destroy_case_note
+      get ':rid/:id/edit', to: 'dispatch/case_notes#edit', as: :cad_edit_case_note
+      patch ':rid/:id/edit', to: 'dispatch/case_notes#update', as: :cad_update_case_note
+      delete ':rid/:id', to: 'dispatch/case_notes#destroy', as: :cad_destroy_case_note
     end
   end
 end

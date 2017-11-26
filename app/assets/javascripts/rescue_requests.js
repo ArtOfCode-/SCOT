@@ -204,13 +204,7 @@ $(document).ready(function () {
   $('.request-details-link').on('click', function (ev) {
     ev.preventDefault();
     var modal = $($(ev.target).data('target'));
-    modal.find('.details-tab').tab('show');
-  });
-
-  $('.request-medical-link').on('click', function (ev) {
-    ev.preventDefault();
-    var modal = $($(ev.target).data('target'));
-    modal.find('.medical-tab').tab('show');
+    modal.find('.' + $(ev.target).data('tab') + '-tab').tab('show');
   });
 
   $('#cad-search').on('keyup', function (ev) {

@@ -3,7 +3,7 @@ class CaseNotesController < ApplicationController
   before_action :check_access
   before_action :set_case_note, except: [:new, :create, :get]
   before_action :check_owner, except: [:new, :create, :get]
-  before_action :set_rescue_request, except: [:update, :destroy]
+  before_action :set_rescue_request
 
   # ==============
   # In ArtOfCode's brach, many of these (#destroy, #create, #update) use the private return_status

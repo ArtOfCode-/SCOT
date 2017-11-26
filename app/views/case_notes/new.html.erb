@@ -1,2 +1,4 @@
 <h1>New Case Note</h1>
+<p>You are creating a case note for request #RQ<%= @rescue_request.id %> (<%= @rescue_request.name %>).</p>
+
 <%= render 'form', url: create_case_note_path(request_id: params[:request_id]) %>
