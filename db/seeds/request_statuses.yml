@@ -1,22 +1,29 @@
 - name: New
   description: Requests just created and awaiting review by triage staff.
+  index: 1
 
 - name: PendingDispatch
   description: Triage has checked this request and confirmed its validity; the victims are waiting for a crew to be dispatched.
+  index: 0
 
 - name: NotEnoughInformation
   description: >
     Triage has revealed that this request doesn't contain enough information to effect assistance.
     Further contact attempts are required to gain the necessary information.
+  index: 1
 
 - name: Dispatched
   description: A crew has been dispatched to the location of this request.
+  index: 1
 
 - name: OnScene
   description: The assigned crew has arrived and made contact with the victims.
+  index: 2
 
 - name: Safe
   description: The victims have been transported to a relief center or other safe place.
+  index: 3
 
 - name: Closed
   description: This request has been closed by triage/admin staff.
+  index: 4

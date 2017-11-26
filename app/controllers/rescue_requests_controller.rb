@@ -157,6 +157,14 @@ class RescueRequestsController < ApplicationController
     end
   end
 
+  def cad
+    @rescue_requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { status: [RequestStatus['Closed'],
+                                                                                          RequestStatus['Safe']] })
+                                  .joins(:request_priority).order('SUM(request_priorities.index, rescue_request_statuses.index) ASC')
+                                  .paginate(page: params[:page], per_page: 15)
+    # MAY NEED TO ADD INDEX TO PRIORITY AND STATUS; SEE FIRST COMMIT ON cad BRANCH
+  end
+
   private
 
   def set_disaster

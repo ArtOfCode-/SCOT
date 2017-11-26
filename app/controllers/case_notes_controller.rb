@@ -1,8 +1,15 @@
 class CaseNotesController < ApplicationController
   before_action :authenticate_user!
-  before_action :verify_access
-  before_action :set_case_note, except: [:new, :create]
-  before_action :check_owner, except: [:new, :create]
+  before_action :check_access
+  before_action :set_case_note, except: [:new, :create, :get]
+  before_action :check_owner, except: [:new, :create, :get]
+  before_action :set_rescue_request, except: [:update, :destroy]
+
+  # ==============
+  # In ArtOfCode's brach, many of these (#destroy, #create, #update) use the private return_status
+  # private method. I've avoided doing so, because the redirects are more user-friendly, but may
+  # revisit later because I have a feeling they're important for CAD.
+  # ==============
 
   def new
     @case_note = CaseNote.new
@@ -43,9 +50,13 @@ class CaseNotesController < ApplicationController
     redirect_to disaster_request_path(disaster_id: did, num: num)
   end
 
+  def get
+    render json: { items: @rescue_request.case_notes }
+  end
+
   private
 
-  def verify_access
+  def check_access
     require_any :developer, :admin, :triage, :rescue, :medical
   end
 
@@ -59,5 +70,16 @@ class CaseNotesController < ApplicationController
 
   def set_case_note
     @case_note = CaseNote.find params[:id]
+  end
+
+  def set_rescue_request
+    @request = RescueRequest.find(params[:rid])
+  end
+
+  # Possibly unnceccesary -- see comment at top
+  def render_status(status, object)
+    data = { success: status }
+    data[:errors] = object.errors.full_messages unless status
+    render json: data
   end
 end

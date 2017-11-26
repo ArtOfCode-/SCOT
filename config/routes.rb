@@ -179,4 +179,25 @@ Rails.application.routes.draw do
     post 'impersonate/stop', to: 'developers#verify_elevation', as: :stop_impersonating
     get 'impersonate/:id', to: 'developers#change_users', as: :change_user
   end
+
+  scope '/cad' do
+    scope ':disaster_id' do
+      root to: 'rescue_requests#index', as: :cad_requests
+      get 'new', to: 'rescue_requests#new', as: :cad_new_request
+      post 'new', to: 'rescue_requests#create', as: :cad_create_request
+      get ':id', to: 'rescue_requests#show', as: :cad_request
+      get ':id/edit', to: 'rescue_requests#edit', as: :cad_edit_request
+      patch ':id/edit', to: 'rescue_requests#update', as: :cad_update_request
+      delete ':id', to: 'rescue_requests#destroy', as: :cad_destroy_request
+    end
+
+    get 'dashboard', to: 'rescue_requests#cad', as: :cad_dashboard
+
+    scope 'notes' do
+      post ':rid/new', to: 'case_notes#create', as: :cad_create_case_note
+      get ':rid', to: 'case_notes#get', as: :cad_get_case_notes
+      post ':id/edit', to: 'case_notes#update', as: :cad_update_case_note
+      delete ':id', to: 'case_notes#destroy', as: :cad_destroy_case_note
+    end
+  end
 end
