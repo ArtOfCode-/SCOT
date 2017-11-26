@@ -1,7 +1,7 @@
 module RescueRequestsHelper
   def status_el(status, wrap = 'p')
-    cls = %w[text-danger text-warning text-success text-info][status.index]
-    icon = %w[exclamation-triangle exclamation-circle check info-circle][status.index]
+    cls = "text-#{status.marker_type}"
+    icon = status.icon
     raw("<#{wrap} class='#{cls}' title='#{status.description}' data-toggle='tooltip'>Status: <i class='fa fa-#{icon}'></i> #{status.name}</#{wrap}>")
   end
 

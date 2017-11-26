@@ -167,6 +167,7 @@ window.scot = {
       };
 
       this.updateStatus = function (status) {
+        console.log(status);
         this.status.html('<strong class="text-' + status.color + '" title="' + status.description + '">Status: <i class="fa fa-fw fa-' +
                          status.icon + '"></i> ' + status.name + '</strong>');
         this.status.tooltip();

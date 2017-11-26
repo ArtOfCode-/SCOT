@@ -5,10 +5,14 @@ class RequestStatus < ApplicationRecord
 
 
   def self.[](key)
-      find_by name: key
+    find_by name: key
   end
 
   def marker_type
     %w[danger warning success info][index]
+  end
+
+  def icon
+    %w[exclamation-triangle exclamation-circle check info-circle][index]
   end
 end

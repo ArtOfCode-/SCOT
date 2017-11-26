@@ -6,6 +6,15 @@
   <%= link_to 'Close Request', cad_close_request_path(@disaster, request), class: 'btn btn-danger close-request', method: :post,
               data: { confirm: 'Are you sure?' }, remote: true %>
 <% when 'Dispatched' %>
+  <%= link_to 'On Scene', cad_set_request_status_path(@disaster, request, status_id: Dispatch::RequestStatus['OnScene'].id),
+              class: 'mr-2 btn btn-primary request-on-scene', method: :post, remote: true, data: { toggle: 'tooltip' },
+              title: 'Mark requests On Scene once the assigned crew have arrived.' %>
+  <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#relief-center-<%= request.id %>">
+    Find Relief Center
+  </button>
+  <%= link_to 'Close Request', cad_close_request_path(@disaster, request), class: 'btn btn-danger close-request', method: :post,
+              data: { confirm: 'Are you sure?' }, remote: true %>
+<% when 'OnScene' %>
   <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#relief-center-<%= request.id %>">
     Find Relief Center
   </button>

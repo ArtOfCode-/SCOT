@@ -94,11 +94,13 @@ $(document).ready(function () {
     });
   });
 
-  $('.close-request').on('ajax:success', function (ev) {
+  $(document).on('ajax:success', '.close-request', function (ev) {
+    ev.stopPropagation();
     $(ev.target).parents('.cad-panel').fadeOut(200, function () { $(this).remove(); });
   });
 
-  $('.dispatch-crew-form').on('ajax:success', function (ev) {
+  $(document).on('ajax:success', '.dispatch-crew-form', function (ev) {
+    ev.stopPropagation();
     var modal = $(ev.target).parents('.modal');
     modal.modal('hide');
 
@@ -110,6 +112,67 @@ $(document).ready(function () {
     request.updateStatus(responseData.status);
     request.updateButtons(responseData.buttons);
     request.doVisibleUpdate(400);
+  });
+
+  $(document).on('ajax:success', '.request-on-scene', function (ev) {
+    ev.stopPropagation();
+    var request = new scot.cad.RequestPanel($(ev.target).parents('.cad-panel').data('request-id'));
+    var responseData = ev.detail[0];
+    request.updateStatus(responseData.status);
+    request.updateButtons(responseData.buttons);
+    request.doVisibleUpdate(200);
+  });
+
+  $(document).on('shown.bs.modal', '.relief-center', function (ev) {
+    var requestId = $(this).data('request-id');
+    $.ajax({
+      type: 'GET',
+      url: '/cad/resources.json?request_id=' + requestId
+    })
+    .done(function (data) {
+      var mapContainer = $(ev.target).find('.cad-relief-map');
+      var center = mapContainer.data('center').split(',');
+      var location = { lat: parseFloat(center[0]), lng: parseFloat(center[1]) };
+
+      var map = new google.maps.Map(mapContainer[0], {
+        center: location,
+        zoom: 8
+      });
+      var requestMarker = new google.maps.Marker({
+        position: location,
+        map: map,
+        icon: markerPath('danger'),
+        title: 'Request'
+      });
+      mapContainer.data('map', map).data('request-marker', requestMarker);
+
+      $.each(data.results, function (i, el) {
+        var location = { lat: parseFloat(el.lat), lng: parseFloat(el.long) };
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: markerPath('success'),
+          title: el.text
+        });
+        marker.addListener('click', function () {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout(function () {
+            marker.setAnimation(null);
+          }, 1400);
+          var select = $(ev.target).find('.select2-cad-resource');
+          select.val(el.id);
+          select.trigger('change');
+        });
+      });
+
+      $(ev.target).find('.select2-cad-resource').select2({
+        theme: 'bootstrap',
+        data: data.results
+      });
+    })
+    .fail(function (jqXHR, textStatus) {
+      scot.errorAlert(jqXHR.status + ': ' + textStatus, $(ev.target).find('.modal-body'));
+    });
   });
 });
 
@@ -147,7 +210,7 @@ function initShowMap() {
   var center = mapContainer.data('center').split(',');
   var markerType = mapContainer.data('marker-type');
   var image = markerPath(markerType);
-  var location = { lat: parseFloat(center[0], 10), lng: parseFloat(center[1], 10) };
+  var location = { lat: parseFloat(center[0]), lng: parseFloat(center[1]) };
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 9,
     center: location
@@ -164,7 +227,7 @@ function initCadMaps() {
   maps.each(function (i, el) {
     var container = $(el);
     var center = container.data('center').split(',');
-    var location = { lat: parseFloat(center[0], 10), lng: parseFloat(center[1], 10) };
+    var location = { lat: parseFloat(center[0]), lng: parseFloat(center[1]) };
     var image = markerPath(container.data('marker-type'));
     var map = new google.maps.Map(el, {
       zoom: 8,
