@@ -1,6 +1,6 @@
 class RescueRequestsController < ApplicationController
   before_action :set_disaster, except: [:index]
-  before_action :set_request, except: [:index, :new, :create, :disaster_index]
+  before_action :set_request, except: [:index, :new, :create, :disaster_index, :cad]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe, :update]
   before_action :check_access, only: [:show, :edit, :update, :assignee, :apply_assignee]
   before_action :check_triage, only: [:triage_status, :apply_triage_status]
@@ -72,6 +72,11 @@ class RescueRequestsController < ApplicationController
     @duplicates = RescueRequest.where(dupe_of: @request.id)
     @duplicate_of = RescueRequest.find(@request.dupe_of) if @request.dupe_of.to_i > 0
     @timeline = (@request.case_notes + @request.contact_attempts + @request.suggested_edits).sort_by(&:created_at).reverse
+
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @request }
+    end
   end
 
   def edit; end
@@ -163,6 +168,10 @@ class RescueRequestsController < ApplicationController
                                   .joins(:request_priority).order('SUM(request_priorities.index, rescue_request_statuses.index) ASC')
                                   .paginate(page: params[:page], per_page: 15)
     # MAY NEED TO ADD INDEX TO PRIORITY AND STATUS; SEE FIRST COMMIT ON cad BRANCH
+  end
+
+  def cad_index
+    @disasters = Disaster.all
   end
 
   private

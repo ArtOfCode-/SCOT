@@ -1,0 +1,10 @@
+<h1>Assistance Requests</h1>
+<p>This is a list of all requests that have been submitted to SCOT - either self-serve by the victims themselves, or by volunteers
+  entering details on their behalf. <strong>This is not intended for CAD:</strong> you're looking for the
+  <%= link_to 'CAD Dashboard', cad_dashboard_path %>.</p>
+<hr/>
+<% @requests.each do |r| %>
+  <%= render 'rescue_requests/list_format', request: r %>
+<% end %>
+
+<%= will_paginate @rescue_requests, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

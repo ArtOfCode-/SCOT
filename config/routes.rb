@@ -182,7 +182,8 @@ Rails.application.routes.draw do
 
   scope '/cad' do
     scope ':disaster_id' do
-      root to: 'rescue_requests#index', as: :cad_requests
+      root to: 'rescue_requests#cad_index', as: :cad_requests
+      get 'dashboard', to: 'rescue_requests#cad', as: :cad_dashboard
       get 'new', to: 'rescue_requests#new', as: :cad_new_request
       post 'new', to: 'rescue_requests#create', as: :cad_create_request
       get ':id', to: 'rescue_requests#show', as: :cad_request
@@ -190,8 +191,6 @@ Rails.application.routes.draw do
       patch ':id/edit', to: 'rescue_requests#update', as: :cad_update_request
       delete ':id', to: 'rescue_requests#destroy', as: :cad_destroy_request
     end
-
-    get 'dashboard', to: 'rescue_requests#cad', as: :cad_dashboard
 
     scope 'notes' do
       post ':rid/new', to: 'case_notes#create', as: :cad_create_case_note

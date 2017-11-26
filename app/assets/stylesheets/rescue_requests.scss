@@ -25,3 +25,26 @@
 .rescued .text-muted {
   color: rgba(140, 180, 140, 1) !important;
 }
+
+/* THE FOLLOWING COMES FROM CAD. IT MAY BELONG ELSEWHERE */
+
+.request-list-format {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .people {
+    padding: 7px 25px;
+  }
+
+  .statuses {
+    padding: 7px 25px;
+  }
+}
+
+.tab-content {
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 4px;
+  padding: 1rem;
+}

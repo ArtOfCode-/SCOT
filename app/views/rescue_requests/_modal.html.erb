@@ -1,0 +1,28 @@
+<div class="modal" id="list-modal-<%= rescue_request.id %>" data-rescue-request-id="<%= rescue_request.id %>" data-disaster-id="<%= @disaster.id %>">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= rescue_request.name %> <span class="text-muted">(#<%= rescue_request.id %>)</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#extra-details-<%= rescue_request.id %>" data-toggle="tab">Extra Details</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#medical-details-<%= rescue_request.id %>" data-toggle="tab">Medical Details</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active extra-details" id="extra-details-<%= rescue_request.id %>">
+            <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+          </div>
+          <div class="tab-pane fade medical-details" id="medical-details-<%= rescue_request.id %>"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

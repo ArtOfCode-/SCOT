@@ -1,6 +1,6 @@
 - name: New
   description: Requests just created and awaiting review by triage staff.
-  index: 1
+  index: 3
 
 - name: PendingDispatch
   description: Triage has checked this request and confirmed its validity; the victims are waiting for a crew to be dispatched.
@@ -18,12 +18,12 @@
 
 - name: OnScene
   description: The assigned crew has arrived and made contact with the victims.
-  index: 2
+  index: 1
 
 - name: Safe
   description: The victims have been transported to a relief center or other safe place.
-  index: 3
+  index: 2
 
 - name: Closed
   description: This request has been closed by triage/admin staff.
-  index: 4
+  index: 3

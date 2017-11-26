@@ -1,0 +1,18 @@
+<div class="clearfix rescue-request-list-format">
+  <div class="people float-left">
+    <h5><%= rescue_request.name %> <span class="text-muted">(#<%= rescue_request.id %>)</span></h5>
+    <h6 class="text-muted"><%= pluralize(rescue_request.people_count, 'person') %></h6>
+  </div>
+  <div class="statuses float-left">
+    <%= status_el(rescue_request.status, 'h6') %>
+    <%= priority_el(rescue_request.priority, 'h6') %>
+  </div>
+  <div class="details float-left">
+    <% details = rescue_request.extra_details&.first(150) %>
+    <%= details.length == 150 ? details + '...' : details %>
+    <a href="#" data-toggle="modal" data-target="#list-modal-<%= rescue_request.id %>">more</a>
+  </div>
+</div>
+<hr/>
+
+<%= render 'rescue_requests/modal', rescue_request: rescue_request %>
