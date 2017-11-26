@@ -27,6 +27,11 @@
   <%= priority_el @request.priority, 'strong' %>
 </div>
 
+<% if @request.rescue_crew.present? %>
+  <h4 class="mt-3">Assigned Crew</h4>
+  <%= render 'dispatch/rescue_crews/crew', crew: @request.rescue_crew %>
+<% end %>
+
 <p class="text-warning">
   <strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %>
   <% if has_any_role? :developer, :admin, :medical %>
@@ -66,7 +71,7 @@
     <% end %>
   <% end %>
 <% else %>
-  <p><em>No events.</em></p>
+  <p><em>No events yes.</em></p>
 <% end %>
 
 <% if has_any_role? :developer, :admin %>
