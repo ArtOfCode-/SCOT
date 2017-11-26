@@ -36,35 +36,20 @@ class RescueRequestsController < ApplicationController
     @requests = @requests.paginate(page: params[:page], per_page: 100)
   end
 
-  def new; end
-
-  def create
-    @request = @disaster.rescue_requests.new(lat: params[:lat], long: params[:long], key: SecureRandom.hex(32))
-    if @request.save
-      render json: { status: 'success', id: @request.id, key: @request.key }
-    else
-      render json: { status: 'failed' }, status: 500
-    end
+  def new
+    @rescue_request = RescueRequest.new
   end
 
-  def update
-    @request = RescueRequest.find params[:request_id]
-    redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key]) : nil
-    cn = RescueRequest.column_names - PROHIBITED_FIELDS - %w[chart_code]
-    cn.push 'chart_code' if current_user.present? && current_user.has_any_role?(:medical, :developer)
-
+  def create
     medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
                                .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
-
-    # Yes, there is a reason I did this in such a convoluted way.
-    if @request.update({ medical_conditions: medical_conditions }.merge(params.permit(params.keys).to_h.select { |k, _| cn.include? k }))
-      if params[:redirect]
-        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
-      else
-        render json: { status: 'success', request: @request.as_json, location: redirect }
-      end
+    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), status: RequestStatus['New'], priority: RequestPriority['New'], medical_conditions: {medical_conditions})
+    if @request.save
+      flash[:success] = 'Saved request successfully.'
+      redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key])
     else
-      render json: { status: 'failed' }, status: 500
+      flash[:danger] = 'Failed to save your request.'
+      render :new
     end
   end
 
@@ -167,7 +152,6 @@ class RescueRequestsController < ApplicationController
                                                                                           RequestStatus['Safe']] })
                                   .joins(:request_priority).order('SUM(request_priorities.index, rescue_request_statuses.index) ASC')
                                   .paginate(page: params[:page], per_page: 15)
-    # MAY NEED TO ADD INDEX TO PRIORITY AND STATUS; SEE FIRST COMMIT ON cad BRANCH
   end
 
   def cad_index
@@ -222,6 +206,11 @@ class RescueRequestsController < ApplicationController
 
   def check_admin
     require_any :developer, :admin
+  end
+
+  def request_params
+    params.require(:rescue_request).permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
+                                             :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
   protected

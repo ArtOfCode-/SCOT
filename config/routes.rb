@@ -37,7 +37,6 @@ Rails.application.routes.draw do
         root to: 'rescue_requests#disaster_index', as: :disaster_requests
         get 'new', to: 'rescue_requests#new', as: :new_disaster_request
         post 'new', to: 'rescue_requests#create', as: :create_disaster_request
-        post 'update', to: 'rescue_requests#update', as: :update_disaster_request
         post ':num/suggest_edit', to: 'rescue_requests#suggest_edit_submit', as: :suggested_edit_submit
         get ':num/edit', to: 'rescue_requests#edit', as: :edit_disaster_request
         get ':num/suggest_edit', to: 'rescue_requests#suggest_edit', as: :suggest_edit_disaster_request

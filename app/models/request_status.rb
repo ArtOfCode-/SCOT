@@ -5,6 +5,6 @@ class RequestStatus < ApplicationRecord
 
 
   def self.[](key)
-      RequestStatus.find_by name: key
+      find_by name: key
   end
 end
