@@ -1,0 +1,8 @@
+- name: Inactive
+  description: This crew is currently unavailable for assignments.
+- name: Available
+  description: This crew is available to be assigned for rescue work.
+- name: Assigned
+  description: This crew has been assigned to a request.
+- name: Resting
+  description: This crew is taking a break but will go active again afterwards.
