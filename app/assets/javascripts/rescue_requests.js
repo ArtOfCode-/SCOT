@@ -1,4 +1,9 @@
 $(document).ready(function () {
+  $('.cad-panel').each(function(i, el) {
+    var requestId = $(el).data('request-id');
+    scot.cad.cache.requestPanels[parseInt(requestId, 10)] = new scot.cad.RequestPanel(requestId);
+  });
+
   $(document).on('shown.bs.modal', function (ev) {
     if (!$(ev.target).hasClass('list-modal')) {
       return;
@@ -207,7 +212,59 @@ $(document).ready(function () {
     var modal = $($(ev.target).data('target'));
     modal.find('.medical-tab').tab('show');
   });
+
+  $('#cad-search').on('keyup', function (ev) {
+    var query = $(ev.target).val();
+    $('.cad-panel, .cad-panel-search-hidden').show().removeClass('cad-panel-search-hidden');
+    var filtered = Object.filter(scot.cad.cache.requestPanels, function (panel) {
+      if (query.indexOf('#') === 0) {
+        var id = parseInt(query.split(' ')[0].replace('#', ''), 10);
+        if (id) {
+          return panel.id !== id;
+        }
+      }
+      else {
+        return panel.getName().indexOf(query) === -1;
+      }
+    });
+    $.each(filtered, function (i, panel) {
+      panel.column.hide();
+    });
+    resolveGrid();
+  });
 });
+
+function resolveGrid() {
+  var visiblePanels = $('.cad-panel').filter(':visible').removeClass('cad-panel').addClass('cad-panel-search-hidden');
+  var rows = $('.cad-grid-row');
+  visiblePanels.sort(function (a, b) {
+    var aId = $(a).data('request-id');
+    var bId = $(b).data('request-id');
+
+    var aReq = new scot.cad.RequestPanel(aId);
+    var bReq = new scot.cad.RequestPanel(bId);
+
+    var aSortIndex = aReq.getStatusIndex() + aReq.getPriorityIndex();
+    var bSortIndex = bReq.getStatusIndex() + bReq.getPriorityIndex();
+
+    if (aSortIndex < bSortIndex) {
+      return -1;
+    }
+    else if (aSortIndex === bSortIndex) {
+      return 0;
+    }
+    else {
+      return 1;
+    }
+  }).each(function (i, el) {
+    for (var ri = 0; ri < rows.length; ri++) {
+      var row = rows[ri];
+      if ($(row).find('.cad-panel').length < 3) {
+        $(el).detach().appendTo(row);
+      }
+    }
+  });
+}
 
 function moveToSecondStage(lat, lng) {
   $('#rescue_request_lat').val(lat);

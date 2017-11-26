@@ -58,7 +58,7 @@ window.scot = {
   },
 
   cad: {
-    cache: { requests: {} },
+    cache: { requests: {}, requestPanels: {} },
 
     fillDetailsModal: function (id) {
       var modal = $(id);
@@ -130,7 +130,12 @@ window.scot = {
     },
 
     RequestPanel: function (id) {
-      this.id = id;
+      var cached = scot.cad.cache.requestPanels[parseInt(id, 10)];
+      if (cached) {
+        return cached;
+      }
+
+      this.id = parseInt(id, 10);
       this.column = $('.cad-panel[data-request-id=' + id + ']');
       this.card = this.column.children('.card');
       this.buttons = this.card.find('.request-buttons');
@@ -191,8 +196,30 @@ window.scot = {
         }
         this.resources.list.append('<li><strong>' + resource.name + '</strong> (' + resource.resource_type.name + ')</li>');
       };
+
+      this.getName = function () {
+        return this.card.find('.request-name').text();
+      };
+
+      this.getStatusIndex = function () {
+        return parseInt(this.status.data('index'), 10);
+      };
+
+      this.getPriorityIndex = function () {
+        return parseInt(this.priority.data('index'), 10);
+      }
     }
   }
+};
+
+Object.filter = function (obj, predicate) {
+  var results = {};
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key) && predicate(obj[key])) {
+      results[key] = obj[key];
+    }
+  }
+  return results;
 };
 
 $(document).ready(function() {
