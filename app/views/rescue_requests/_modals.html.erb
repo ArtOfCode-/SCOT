@@ -1,0 +1,27 @@
+<!-- Crew Dispatch modal -->
+<div class="modal" id="dispatch-crew-<%= request.id %>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Dispatch Crew</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="align-items-center form-inline">
+          <input type="checkbox" class="crew-medical crew-select-update" name="crew-medical" id="crew-medical-<%= request.id %>" />
+          <label for="crew-medical-<%= request.id %>" class="ml-2 mr-4">Require medical?</label>
+          <label for="crew-min-capacity-<%= request.id %>">Min. capacity: </label>
+          <input type="number" name="crew-min-capacity" id="crew-min-capacity-<%= request.id %>"
+                 class="form-control form-control-sm mx-2 number-sm crew-select-update crew-min-capacity" />
+        </div>
+        <%= form_tag cad_assign_crew_path(@disaster, request), method: :post, remote: true, class: 'mt-3' do %>
+          <%= select_tag :crew_id, nil, include_blank: true,
+                         class: 'form-control select2-cad-crew', id: "select2-cad-crew-#{request.id}" %>
+          <%= submit_tag 'Dispatch', class: 'btn btn-success mt-2 float-right' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

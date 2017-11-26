@@ -147,15 +147,30 @@ class RescueRequestsController < ApplicationController
     end
   end
 
+  # I have a feeling that this should go over to the dispatch controller
+
   def cad
     @rescue_requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { status: [RequestStatus['Closed'],
                                                                                           RequestStatus['Safe']] })
-                                  .joins(:request_priority).order('SUM(request_priorities.index, rescue_request_statuses.index) ASC')
+                                  .joins(:request_priority).order('request_priorities.index + rescue_request_statuses.index ASC')
                                   .paginate(page: params[:page], per_page: 15)
+    @crews = Dispatch::RescueCrew.dispatch_menu
   end
 
   def cad_index
     @disasters = Disaster.all
+  end
+
+  def assign_crew
+    @crew = Dispatch::RescueCrew.find params[:crew_id]
+    success = @request.update(rescue_crew: @crew)
+    response = { success: success }
+    response[:crew] = @crew if success
+    response[:errors] = @request.errors.full_messages unless success
+    render json: response
+  end
+
+  def available_crews
   end
 
   private

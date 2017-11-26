@@ -180,6 +180,10 @@ Rails.application.routes.draw do
   end
 
   scope '/cad' do
+    scope 'crews' do
+      root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
+    end
+
     scope ':disaster_id' do
       root to: 'rescue_requests#cad_index', as: :cad_requests
       get 'dashboard', to: 'rescue_requests#cad', as: :cad_dashboard
@@ -189,6 +193,7 @@ Rails.application.routes.draw do
       get ':id/edit', to: 'rescue_requests#edit', as: :cad_edit_request
       patch ':id/edit', to: 'rescue_requests#update', as: :cad_update_request
       delete ':id', to: 'rescue_requests#destroy', as: :cad_destroy_request
+      post ':id/crew', to: 'dispatch/requests#assign_crew', as: :cad_assign_crew
     end
 
     scope 'notes' do

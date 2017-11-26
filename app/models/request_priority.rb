@@ -6,4 +6,8 @@ class RequestPriority < ApplicationRecord
   def self.[](key)
     find_by name: key
   end
+
+  def color_class
+    %w[danger warning success][index]
+  end
 end
