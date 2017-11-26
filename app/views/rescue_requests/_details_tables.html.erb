@@ -7,27 +7,27 @@
   <tbody>
   <tr>
     <td>Reported by</td>
-    <td><%= @request.name %></td>
+    <td><%= request.name %></td>
   </tr>
   <tr>
     <td>Tel. no</td>
-    <td><%= @request.phone %></td>
+    <td><%= request.phone %></td>
   </tr>
   <tr>
     <td>Email address</td>
-    <td><%= @request.email %></td>
+    <td><%= request.email %></td>
   </tr>
   <tr>
     <td>Twitter</td>
-    <td><%= @request.twitter %></td>
+    <td><%= request.twitter %></td>
   </tr>
   <tr>
     <td>Tweet</td>
-    <td><%= @request.media %></td>
+    <td><%= request.media %></td>
   </tr>
   <tr>
     <td>Source</td>
-    <td><%= @request.source %></td>
+    <td><%= request.source %></td>
   </tr>
   </tbody>
 </table>
@@ -42,20 +42,20 @@
   <% if has_any_role?(:medical, :developer) %>
       <tr>
         <td>Chart Code</td>
-        <td><%= @request.chart_code %></td>
+        <td><%= request.chart_code %></td>
       </tr>
   <% end %>
   <tr>
     <td>People needing assistance</td>
-    <td><%= @request.people_count %></td>
+    <td><%= request.people_count %></td>
   </tr>
   <tr>
     <td>Medical conditions</td>
-    <td><%= @request.medical_details %></td>
+    <td><%= request.medical_details %></td>
   </tr>
   <tr>
     <td>Extra details</td>
-    <td><%= @request.extra_details %></td>
+    <td><%= request.extra_details %></td>
   </tr>
   </tbody>
 </table>

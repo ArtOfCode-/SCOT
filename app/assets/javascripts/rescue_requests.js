@@ -195,6 +195,18 @@ $(document).ready(function () {
     request.updateButtons(responseData.buttons);
     request.doVisibleUpdate(200);
   });
+
+  $('.request-details-link').on('click', function (ev) {
+    ev.preventDefault();
+    var modal = $($(ev.target).data('target'));
+    modal.find('.details-tab').tab('show');
+  });
+
+  $('.request-medical-link').on('click', function (ev) {
+    ev.preventDefault();
+    var modal = $($(ev.target).data('target'));
+    modal.find('.medical-tab').tab('show');
+  });
 });
 
 function moveToSecondStage(lat, lng) {
