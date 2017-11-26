@@ -27,7 +27,7 @@
 </div>
 
 <!-- Find Relief Center modal -->
-<div class="modal relief-center" id="relief-center-<%= request.id %>" data-request-id="<%= request.id %>">
+<div class="modal relief-center" id="relief-center-<%= request.id %>" data-request-id="<%= request.id %>" data-ajax="/cad/resources.json">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -38,7 +38,30 @@
       </div>
       <div class="modal-body">
         <p>Select a relief center using the green map markers or the dropdown, and click Use to add it to the request.</p>
-        <div class="cad-relief-map mb-3" data-center="<%= request.lat %>,<%= request.long %>"></div>
+        <div class="cad-resource-map mb-3" data-center="<%= request.lat %>,<%= request.long %>"></div>
+        <%= form_tag cad_add_resource_path(@disaster, request), method: :post, remote: true, class: 'mt-3 dispatch-resource-form' do %>
+          <%= select_tag :resource_id, nil, include_blank: true,
+                         class: 'form-control select2-cad-modal select2-cad-resource', id: "select2-cad-resource-#{request.id}" %>
+          <%= submit_tag 'Use', class: 'btn btn-success mt-2 float-right' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Find Rest Stop modal -->
+<div class="modal rest-stop" id="rest-stop-<%= request.id %>" data-request-id="<%= request.id %>" data-ajax="/cad/resources/rest-stops">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Find Rest Stop</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Select a relief center using the green map markers or the dropdown, and click Use to add it to the request.</p>
+        <div class="cad-resource-map mb-3" data-center="<%= request.lat %>,<%= request.long %>"></div>
         <%= form_tag cad_add_resource_path(@disaster, request), method: :post, remote: true, class: 'mt-3 dispatch-resource-form' do %>
           <%= select_tag :resource_id, nil, include_blank: true,
                          class: 'form-control select2-cad-modal select2-cad-resource', id: "select2-cad-resource-#{request.id}" %>

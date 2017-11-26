@@ -153,9 +153,9 @@ class RescueRequestsController < ApplicationController
     @rescue_requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { status: [RequestStatus['Closed'],
                                                                                           RequestStatus['Safe']] })
                                   .joins(:request_priority).order('request_priorities.index + rescue_request_statuses.index ASC')
+                                  .includes(:status, :priority, resource_uses: [:resource], resources: [:resource_type])
                                   .paginate(page: params[:page], per_page: 15)
     @crews = Dispatch::RescueCrew.dispatch_menu
-    @resources = Dispatch::Resource.dispatch_menu
   end
 
   def cad_index
@@ -180,8 +180,8 @@ class RescueRequestsController < ApplicationController
 
   def add_resource
     @center = Dispatch::Resource.find params[:resource_id]
-    use = Dispatch::ResourceUse.new request: @request, resource: @center
-    @success = use.save
+    @use = Dispatch::ResourceUse.new request: @request, resource: @center
+    @success = @use.save
     render format: :json
   end
  

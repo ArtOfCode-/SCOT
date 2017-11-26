@@ -19,6 +19,17 @@
         </p>
       <% end %>
 
+      <% if request.resources.any? %>
+        <div class="request-resources mb-3">
+          <strong>Resources:</strong><br/>
+          <ol class="resources-list">
+            <% request.resource_uses.each do |u| %>
+                <li><strong><%= u.resource.name %></strong> (<%= u.resource.resource_type.name %>)</li>
+            <% end %>
+          </ol>
+        </div>
+      <% end %>
+
       <div class="request-buttons">
         <%= render 'buttons', request: request %>
       </div>

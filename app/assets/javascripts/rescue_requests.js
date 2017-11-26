@@ -3,7 +3,7 @@ $(document).ready(function () {
     if (!$(ev.target).hasClass('list-modal')) {
       return;
     }
-    var id = '#' + $(ev.target).attr('id');
+    var id = '#' $(ev.target).attr('id');
     scot.cad.fillDetailsModal(id);
   });
 
@@ -50,7 +50,7 @@ $(document).ready(function () {
       var firstProblem = $(problems[0]);
       var problemSection = firstProblem.parents('.section.collapse').first();
       problemSection.collapse('show');
-      scot.scrollToAnchor('#' + firstProblem.attr('id'));
+      scot.scrollToAnchor('#' firstProblem.attr('id'));
     }
   });
 
@@ -68,7 +68,7 @@ $(document).ready(function () {
       $(el).select2(options);
     })
     .fail(function (jqXHR, textStatus) {
-      scot.errorAlert(jqXHR.status + ': ' + textStatus, $(el).parents('.modal').first());
+      scot.errorAlert(jqXHR.status ': ' textStatus, $(el).parents('.modal').first());
     });
   });
 
@@ -90,7 +90,7 @@ $(document).ready(function () {
       select.select2(options);
     })
     .fail(function (jqXHR, textStatus) {
-      scot.errorAlert(jqXHR.status + ': ' + textStatus, select.parents('.modal').first());
+      scot.errorAlert(jqXHR.status ': ' textStatus, select.parents('.modal').first());
     });
   });
 
@@ -123,14 +123,15 @@ $(document).ready(function () {
     request.doVisibleUpdate(200);
   });
 
-  $(document).on('shown.bs.modal', '.relief-center', function (ev) {
-    var requestId = $(this).data('request-id');
+  $(document).on('shown.bs.modal', '.relief-center, .rest-stop', function (ev) {
+    var requestId = $(ev.target).data('request-id');
+    var ajaxEndpoint = $(ev.target).data('ajax');
     $.ajax({
       type: 'GET',
-      url: '/cad/resources.json?request_id=' + requestId
+      url: ajaxEndpoint '?request_id=' requestId
     })
     .done(function (data) {
-      var mapContainer = $(ev.target).find('.cad-relief-map');
+      var mapContainer = $(ev.target).find('.cad-resource-map');
       var center = mapContainer.data('center').split(',');
       var location = { lat: parseFloat(center[0]), lng: parseFloat(center[1]) };
 
@@ -171,8 +172,28 @@ $(document).ready(function () {
       });
     })
     .fail(function (jqXHR, textStatus) {
-      scot.errorAlert(jqXHR.status + ': ' + textStatus, $(ev.target).find('.modal-body'));
+      scot.errorAlert(jqXHR.status ': ' textStatus, $(ev.target).find('.modal-body'));
     });
+  });
+
+  $(document).on('ajax:success', '.dispatch-resource-form', function (ev) {
+    var modal = $(ev.target).parents('.modal');
+    var requestId = modal.data('request-id');
+    modal.modal('hide');
+
+    var request = new scot.cad.RequestPanel(requestId);
+    var responseData = ev.detail[0];
+    request.addResource(responseData.resource);
+    request.updateButtons(responseData.buttons);
+    request.doVisibleUpdate(300);
+  });
+
+  $(document).on('ajax:success', '.request-safe', function (ev) {
+    var request = new scot.cad.RequestPanel($(ev.target).parents('.cad-panel').data('request-id'));
+    var responseData = ev.detail[0];
+    request.updateStatus(responseData.status);
+    request.updateButtons(responseData.buttons);
+    request.doVisibleUpdate(200);
   });
 });
 
@@ -245,5 +266,5 @@ function initCadMaps() {
 function crewsUri(ctx) {
   var medical = ctx.find('.crew-medical').is(':checked');
   var minCapacity = ctx.find('.crew-min-capacity').val() || '0';
-  return '/cad/crews.json?medical=' + medical + '&min_capacity=' + minCapacity;
+  return '/cad/crews.json?medical=' medical '&min_capacity=' minCapacity;
 }
