@@ -59,7 +59,9 @@ class RescueRequestsController < ApplicationController
     @timeline = (@request.case_notes + @request.contact_attempts + @request.suggested_edits).sort_by(&:created_at).reverse
 
     respond_to do |format|
-      format.html { render :show }
+      format.html do
+        @timeline = (@request.case_notes + @request.contact_attempts).sort_by(&:created_at).reverse
+      end
       format.json { render json: @request }
     end
   end
@@ -153,7 +155,7 @@ class RescueRequestsController < ApplicationController
     @rescue_requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { status: [RequestStatus['Closed'],
                                                                                           RequestStatus['Safe']] })
                                   .joins(:request_priority).order('request_priorities.index + rescue_request_statuses.index ASC')
-                                  .includes(:status, :priority, resource_uses: [:resource], resources: [:resource_type])
+                                  .includes(:status, :priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
                                   .paginate(page: params[:page], per_page: 15)
     @crews = Dispatch::RescueCrew.dispatch_menu
   end
