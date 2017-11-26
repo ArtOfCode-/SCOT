@@ -193,7 +193,8 @@ Rails.application.routes.draw do
       get ':id/edit', to: 'rescue_requests#edit', as: :cad_edit_request
       patch ':id/edit', to: 'rescue_requests#update', as: :cad_update_request
       delete ':id', to: 'rescue_requests#destroy', as: :cad_destroy_request
-      post ':id/crew', to: 'dispatch/requests#assign_crew', as: :cad_assign_crew
+      post ':id/crew', to: 'rescue_requests#assign_crew', as: :cad_assign_crew
+      post ':id/close', to: 'rescue_requests#close', as: :cad_close_request
     end
 
     scope 'notes' do

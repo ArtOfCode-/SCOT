@@ -43,7 +43,7 @@ class RescueRequestsController < ApplicationController
   def create
     medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
                                .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
-    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), status: RequestStatus['New'], priority: RequestPriority['New'], medical_conditions: {medical_conditions})
+    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), status: RequestStatus['New'], priority: RequestPriority['New'], medical_conditions: {medical_conditions: medical_conditions})
     if @request.save
       flash[:success] = 'Saved request successfully.'
       redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key])
@@ -163,14 +163,18 @@ class RescueRequestsController < ApplicationController
 
   def assign_crew
     @crew = Dispatch::RescueCrew.find params[:crew_id]
-    success = @request.update(rescue_crew: @crew)
-    response = { success: success }
-    response[:crew] = @crew if success
-    response[:errors] = @request.errors.full_messages unless success
-    render json: response
+    @success = ApplicationRecord.status_transaction do
+      @request.update!(status: RequestStatus['Dispatched'], rescue_crew: @crew)
+      @crew.update!(status: Dispatch::CrewStatus['Assigned'])
+    end
+    render format: :json
   end
 
-  def available_crews
+  def close
+    success = @request.update status: RequestStatus['Closed']
+    response = { success: success }
+    response[:errors] = @request.errors.full_messages unless success
+    render json: response
   end
 
   private

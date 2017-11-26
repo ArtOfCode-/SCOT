@@ -85,3 +85,11 @@ input[type=hidden] + .invalid-feedback {
     width: 100% !important;
   }
 }
+
+.request-spinner {
+  visibility: hidden;
+}
+
+.request-disabled {
+  filter: opacity(40%);
+}

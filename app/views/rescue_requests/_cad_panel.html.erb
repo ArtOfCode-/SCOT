@@ -1,18 +1,27 @@
-<div class="col-sm-4">
+<div class="col-sm-4 cad-panel" data-request-id="<%= request.id %>">
   <div class="card border-<%= request.priority.color_class %> mb-4">
     <div class="card-body">
-      <h5><%= request.name %> <span class="text-muted">(#<%= request.id %>)</span></h5>
+      <h5><%= request.name %> <span class="text-muted">(#<%= request.id %>)</span><i class="fa fa-fw fa-pulse fa-spinner request-spinner"></i></h5>
       <h6 class="text-muted"><%= pluralize(request.people_count, 'person') %></h6>
 
       <div class="map" data-center="<%= request.lat %>,<%= request.long %>" data-marker-type="<%= request.status.marker_type %>"></div>
       <div class="map-coords"><%= request.lat %>&deg; N, <%= request.long %>&deg; E</div>
 
-      <p class="row">
-        <span class="col-sm-6 text-center"><%= status_el request.status, 'strong' %></span>
-        <span class="col-sm-6 text-center"><%= priority_el request.priority, 'strong' %></span>
+      <p class="row statuses">
+        <span class="col-sm-6 text-center request-status"><%= status_el request.status, 'strong' %></span>
+        <span class="col-sm-6 text-center request-priority"><%= priority_el request.priority, 'strong' %></span>
       </p>
 
-      <button type="button" class="btn btn-success mx-2" data-toggle="modal" data-target="#dispatch-crew-<%= request.id %>">Dispatch crew</button>
+      <% if request.rescue_crew.present? %>
+       <p>
+         <strong>Assigned Crew:</strong>
+         <span class="assigned-crew"><%= request.rescue_crew.callsign %> (<%= request.rescue_crew.contact_name %>)</span>
+        </p>
+      <% end %>
+
+      <div class="request-buttons">
+        <%= render 'buttons', request: request %>
+      </div>
     </div>
   </div>
 </div>

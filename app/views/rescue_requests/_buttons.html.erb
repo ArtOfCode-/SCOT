@@ -1,0 +1,14 @@
+<% case request.status.name %>
+<% when 'New', 'PendingDispatch' %>
+  <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#dispatch-crew-<%= request.id %>">
+    Dispatch Crew
+  </button>
+  <%= link_to 'Close Request', cad_close_request_path(@disaster, request), class: 'btn btn-danger close-request', method: :post,
+              data: { confirm: 'Are you sure?' }, remote: true %>
+<% when 'Dispatched' %>
+  <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#relief-center-<%= request.id %>">
+    Find Relief Center
+  </button>
+  <%= link_to 'Close Request', cad_close_request_path(@disaster, request), class: 'btn btn-danger close-request', method: :post,
+              data: { confirm: 'Are you sure?' }, remote: true %>
+<% end %>
