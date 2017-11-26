@@ -1,0 +1,133 @@
+<%= form_for @rescue_request, url: url do |f| %>
+  <div id="form-accordion" data-children=".acc-item">
+    <div class="acc-item">
+      <a data-toggle="collapse" data-parent="#form-accordion" href="#section-1">
+        <i class="fa fa-caret-down fa-fw section-caret"></i> Section 1: Location <i class="section-icon fa fa-spinner"></i>
+      </a>
+      <div id="section-1" class="collapse section show" role="tabpanel" data-key="<%= Settings.maps_api_key %>">
+        <div class="mb-3">
+          <%= f.hidden_field :lat, required: true %>
+          <%= f.hidden_field :long, required: true %>
+          <div class="invalid-feedback">
+            Please select a location: either use your current location, input and select an address below, or click on the map.
+          </div>
+
+          <p>We need a location to be able to respond to this request.</p>
+          <p>Either <a href="#" id="use-my-location">use your current location</a>, input and select an address below, or click on the map.</p>
+          <p><input id="autocomplete" size="50" placeholder="Enter your address" type="text" class="form-control"></p>
+          <div id="map"></div>
+          <br/>
+          <button type="button" class="btn btn-primary next-section">Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <a data-toggle="collapse" data-parent="#form-accordion" href="#section-2">
+        <i class="fa fa-caret-right fa-fw section-caret"></i> Section 2: Address <i class="section-icon fa"></i>
+      </a>
+      <div id="section-2" class="collapse section" role="tabpanel">
+        <div class="mb-3">
+          <p>From the location you just provided, we came up with this address. Correct any mistakes in this address, then hit Next.</p>
+
+          <%= f.label :street_address, 'Street Address' %><br/>
+          <%= f.text_field :street_address, class: 'form-control', id: 'street_address' %><br/>
+
+          <%= f.label :apt_no, 'Apartment Number' %><br/>
+          <%= f.text_field :apt_no, class: 'form-control', id: 'apt_no' %><br/>
+
+          <%= f.label :city, 'City' %><br/>
+          <%= f.text_field :city, class: 'form-control', id: 'city' %><br/>
+
+          <%= f.label :zip_code, 'Zip/Postal Code' %><br/>
+          <%= f.text_field :zip_code, class: 'form-control', id: 'zip_code' %><br/>
+
+          <%= f.label :state, 'State' %><br/>
+          <%= f.text_field :state, class: 'form-control', id: 'state' %><br/>
+
+          <%= f.label :country, 'Country' %><br/>
+          <%= f.text_field :country, class: 'form-control', id: 'country' %><br/>
+
+          <br/>
+
+          <button type="button" class="btn btn-primary next-section">Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <a data-toggle="collapse" data-parent="#form-accordion" href="#section-3">
+        <i class="fa fa-caret-right fa-fw section-caret"></i> Section 3: Contact <i class="section-icon fa"></i>
+      </a>
+      <div id="section-3" class="collapse section" role="tabpanel">
+        <div class="mb-3">
+          <p>We need contact information for this request so that we can keep everyone involved up to date.</p>
+
+          <%= f.label :name do %>
+            Name <small class="text-muted">Required</small>
+          <% end %><br/>
+          <%= f.text_field :name, class: 'form-control', required: true %>
+          <div class="invalid-feedback">
+            Please provide a contact name.
+          </div><br/>
+
+          <%= f.label :twitter, 'Twitter handle' %><br/>
+          <%= f.text_field :twitter, class: 'form-control' %><br/>
+
+          <%= f.label :phone, 'Phone number' %><br/>
+          <%= f.phone_field :phone, class: 'form-control' %><br/>
+
+          <%= f.label :email, 'Email address' %><br/>
+          <%= f.email_field :email, class: 'form-control' %><br/>
+
+          <%= f.label :media, 'Related Tweet' %>
+          <%= f.text_field :media, class: 'form-control' %><br/>
+
+          <%= f.label :source, 'Source' %><br/>
+          <%= f.text_field :source, class: 'form-control' %><br/>
+
+          <br/>
+          <button type="button" class="btn btn-primary next-section">Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <a data-toggle="collapse" data-parent="#form-accordion" href="#section-4">
+        <i class="fa fa-caret-right fa-fw section-caret"></i> Section 4: Details <i class="section-icon fa"></i>
+      </a>
+      <div id="section-4" class="collapse section" role="tabpanel">
+        <div class="mb-3">
+          <p>Finally, we need details of the situation to be able to correctly prioritise this request.</p>
+
+          <%= f.label :people_count, 'Number of people needing assistance' %><br/>
+          <%= f.number_field :people_count, class: 'form-control' %><br/>
+
+          <% @conditions = MedicalCondition.all %>
+
+          <table class="table">
+          <% @conditions.each do |condition| %>
+              <tr>
+                <td><%= check_box_tag "conditions_#{condition.id}" %></td>
+                <td><%= label_tag "conditions_#{condition.id}", condition.name %></td>
+              </tr>
+          <% end %>
+          </table>
+          <br>
+
+          <%= f.label :medical_details, 'Medical details' %><br/>
+          <span class="field-description">If anyone in this group has any medical conditions, please provide details here.
+            The more details, the better - what is it, what treatment/medication does it require, how much medication do you
+            have available, etc. Please <strong>also include injuries or wounds here</strong>.</span><br/>
+          <%= f.text_area :medical_details, rows: 10, cols: 100, class: 'form-control' %><br/>
+
+          <%= f.label :extra_details, 'Extra details' %><br/>
+          <%= f.text_area :extra_details, rows: 7, cols: 100, class: 'form-control' %><br/>
+
+          <br/>
+          <p>Please review that the information you have entered is accurate before submitting.</p>
+          <%= f.submit 'Submit', class: 'btn btn-success request-submit' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= maps_javascript 'initMap' %>

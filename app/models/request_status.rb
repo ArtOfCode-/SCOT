@@ -7,4 +7,8 @@ class RequestStatus < ApplicationRecord
   def self.[](key)
       find_by name: key
   end
+
+  def marker_type
+    %w[danger warning success info][index]
+  end
 end

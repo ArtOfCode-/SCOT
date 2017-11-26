@@ -20,6 +20,13 @@
   <strong>Assigned to: </strong> <%= @request.assignee&.username || '(nobody)' %>
     <%= link_to '(change)', change_request_assignee_path(disaster_id: @disaster.id, num: @request.incident_number) %>
 </p>
+
+<!-- This will be duplicated, when visually testing it will be cleaned up -->
+<div class="statuses">
+  <%= status_el @request.status, 'strong' %> |
+  <%= priority_el @request.priority, 'strong' %>
+</div>
+
 <p class="text-warning">
   <strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %>
   <% if has_any_role? :developer, :admin, :medical %>
@@ -35,84 +42,10 @@
 <p>Duplicate of: <%= link_to "##{@disaster.id}-#{@duplicate_of.id}", disaster_request_path(disaster_id: @disaster.id, num: @duplicate_of.id) %></p>
 <% end %>
 
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Location Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Position (rought lat/long)</td>
-      <td><%= @request.lat %>, <%= @request.long %></td>
-    </tr>
-    <tr>
-      <td>Address</td>
-      <td>
-        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
-        <%= @request.city %> <%= @request.zip_code %>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div id="map" data-center="<%= @request.lat %>,<%= @request.long %>" data-marker-type="<%= @request.status.marker_type %>"></div>
+<div class="map-coords"><%= @request.lat %>&deg; N, <%= @request.long %>&deg; E</div>
 
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Contact Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Reported by</td>
-      <td><%= @request.name %></td>
-    </tr>
-    <tr>
-      <td>Tel. no</td>
-      <td><%= @request.phone %></td>
-    </tr>
-    <tr>
-      <td>Email address</td>
-      <td><%= @request.email %></td>
-    </tr>
-    <tr>
-      <td>Twitter</td>
-      <td><%= @request.twitter %></td>
-    </tr>
-    <tr>
-      <td>Original Post</td>
-      <td><%= @request.media %></td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Incident Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if current_user.present? && current_user.has_any_role?(:medical, :developer) %>
-    <tr>
-      <td>Chart Code</td>
-      <td><%= @request.chart_code %></td>
-    </tr>
-    <% end %>
-    <tr>
-      <td>People needing assistance</td>
-      <td><%= @request.people_count %></td>
-    </tr>
-    <tr>
-      <td>Medical conditions</td>
-      <td><%= @request.medical_details %></td>
-    </tr>
-    <tr>
-      <td>Extra details</td>
-      <td><%= @request.extra_details %></td>
-    </tr>
-  </tbody>
-</table>
+<%= render 'details_tables' %>
 
 <br>
 
@@ -140,3 +73,6 @@
   <%= link_to 'Admin: access logs', resource_access_logs_path(resource_type: @request.class.to_s, resource_id: @request.id), class: 'text-danger' %><br>
   <%= link_to 'Admin: manage authorizations', request_authorizations_path(disaster_id: @disaster.id, num: @request.id), class: 'text-danger' %>
 <% end %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initShowMap' %>

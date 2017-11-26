@@ -3,6 +3,8 @@
   <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
 </h1>
 
+<!-- This edit form needs touchups (see _form.html.erb), but it's significantly different from the form view -->
+
 <%= form_tag @suggesting ? suggested_edit_submit_path(disaster_id: @disaster.id, num: @request.incident_number) :
                            update_disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) do %>
 <%= hidden_field_tag :request_id, @request.id %>
