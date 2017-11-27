@@ -11,7 +11,7 @@ class Dispatch::Resource < ApplicationRecord
 
   def self.rest_stops
     limit(50).includes(:resource_type).where(resource_type: Dispatch::ResourceType['Rest Stop'])
-        .order("SQRT(POW(`long` - #{request.long}, 2) POW(`lat` - #{request.lat}, 2))")
-        .map { |r| ["#{r.name} (#{r.resource_type.name})", r.id] }
+             .order("SQRT(POW(`long` - #{request.long}, 2) POW(`lat` - #{request.lat}, 2))")
+             .map { |r| ["#{r.name} (#{r.resource_type.name})", r.id] }
   end
 end

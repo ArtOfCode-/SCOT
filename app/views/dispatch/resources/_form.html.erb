@@ -1,0 +1,43 @@
+<%= form_for @resource, url: url do |f| %>
+  <div class="field">
+    <label><i class="fa fa-fw fa-map-marker"></i> Location</label>
+    <div class="new-resource-map" <% if center %>data-center="<%= @resource.lat %>,<%= @resource.long %>"<% end %>></div>
+    <%= f.hidden_field :lat %>
+    <%= f.hidden_field :long %>
+    <div class="form-text text-muted">Click on the map to select a location.</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :resource_type_id do %>
+      <i class="fa fa-fw fa-list-alt"></i> Resource Type
+    <% end %><br/>
+    <%= f.select :resource_type_id,
+                 options_from_collection_for_select(Dispatch::ResourceType.all, 'id', 'name', selected: @resource.resource_type_id),
+                 { include_blank: true }, class: 'form-control', required: true %>
+    <div class="form-text text-muted">Required. What type of resource are you adding?</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :name do %>
+      <i class="fa fa-fw fa-question"></i> Name
+    <% end %><br/>
+    <%= f.text_field :name, class: 'form-control', required: true %>
+    <div class="form-text text-muted">Required. What's the name of this resource?</div>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :details do %>
+      <i class="fa fa-fw fa-align-left"></i> Details
+    <% end %><br/>
+    <%= f.text_area :details, rows: 5, cols: 100, class: 'form-control' %>
+    <div class="form-text text-muted">Optional. Provide further details about this resource here.</div>
+  </div><br/>
+
+  <div class="actions">
+    <%= f.submit 'Save', class: 'btn btn-success' %>
+    <input type="reset" class="btn btn-danger" value="Cancel" />
+  </div>
+<% end %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initResourceFormMap' %>

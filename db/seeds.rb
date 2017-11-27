@@ -11,7 +11,7 @@ Dir.glob(Rails.root.join('db/seeds/**/*.yml')).each do |f|
   begin
     type.create data
   rescue StandardError => e
-    puts "Seeding error:"
+    puts 'Seeding error:'
     puts e
   end
 end

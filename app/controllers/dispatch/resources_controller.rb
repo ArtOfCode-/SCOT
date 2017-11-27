@@ -43,7 +43,9 @@ class Dispatch::ResourcesController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    @cases = @resource.requests.paginate(page: params[:page], per_page: 50)
+  end
 
   def edit; end
 
@@ -74,5 +76,9 @@ class Dispatch::ResourcesController < ApplicationController
 
   def set_resource
     @resource = Dispatch::Resource.find params[:id]
+  end
+
+  def resource_params
+    params.require(:dispatch_resource).permit(:name, :details, :lat, :long, :resource_type_id)
   end
 end

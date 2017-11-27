@@ -43,7 +43,7 @@ class RescueRequestsController < ApplicationController
   def create
     medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
                                .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
-    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), status: RequestStatus['New'], priority: RequestPriority['New'], medical_conditions: {medical_conditions: medical_conditions})
+    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), status: RequestStatus['New'], priority: RequestPriority['New'], medical_conditions: { medical_conditions: medical_conditions })
     if @request.save
       flash[:success] = 'Saved request successfully.'
       redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key])
@@ -153,10 +153,10 @@ class RescueRequestsController < ApplicationController
 
   def cad
     @rescue_requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { status: [RequestStatus['Closed'],
-                                                                                          RequestStatus['Safe']] })
-                                  .joins(:request_priority).order('request_priorities.index + rescue_request_statuses.index ASC')
-                                  .includes(:status, :priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
-                                  .paginate(page: params[:page], per_page: 15)
+                                                                                                              RequestStatus['Safe']] })
+                                .joins(:request_priority).order('request_priorities.index + rescue_request_statuses.index ASC')
+                                .includes(:status, :priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
+                                .paginate(page: params[:page], per_page: 15)
     @crews = Dispatch::RescueCrew.dispatch_menu
   end
 
@@ -186,7 +186,7 @@ class RescueRequestsController < ApplicationController
     @success = @use.save
     render format: :json
   end
- 
+
   def set_status
     status = Dispatch::RequestStatus.find params[:status_id]
     @success = @request.update status: status
@@ -246,7 +246,7 @@ class RescueRequestsController < ApplicationController
 
   def request_params
     params.require(:rescue_request).permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
-                                             :medical_details, :extra_details, :street_address, :apt_no, :source)
+                                           :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
   protected

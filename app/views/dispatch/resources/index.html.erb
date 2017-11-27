@@ -1,0 +1,18 @@
+<h1>Resources</h1>
+<p>This is a list of all resources currently in the database.</p>
+<p><%= link_to '+ Create New', cad_new_resource_path %></p>
+
+<% @resources.in_groups_of(3).map(&:compact).each do |g| %>
+  <div class="row">
+    <% g.each do |r| %>
+      <div class="col-sm-4">
+        <%= render 'resource', resource: r %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= will_paginate @resources, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initResourceMaps' %>

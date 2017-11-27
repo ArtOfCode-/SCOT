@@ -1,0 +1,23 @@
+<h1>
+  <%= @resource.resource_type.name %>: <%= @resource.name %>
+  <small><%= link_to cad_edit_resource_path(@resource) do %><i class="fa fa-pencil"></i><% end %></small>
+</h1>
+
+<div class="show-resource-map" data-center="<%= @resource.lat %>,<%= @resource.long %>"></div>
+<div class="map-coords"><%= @resource.lat %>&deg; N, <%= @resource.long %>&deg; E</div>
+
+<p><%= @resource.details %></p>
+
+<h3>Cases</h3>
+<p>This resource has been used for these cases.</p>
+
+<% unless @cases.any? %>
+  <em>No cases yet.</em>
+<% end %>
+<hr/>
+<% @cases.each do |r| %>
+  <%= render 'dispatch/requests/list_format', request: r, disaster: r.disaster %>
+<% end %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initShowResourceMap' %>
