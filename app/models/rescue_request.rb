@@ -4,7 +4,7 @@ class RescueRequest < ApplicationRecord
   belongs_to :medical_status, optional: true
   belongs_to :request_priority, optional: true
   belongs_to :assignee, class_name: 'User', optional: true
-  belongs_to :rescue_crew, class_name: 'Dispatch::RescueCrew'
+  belongs_to :rescue_crew, class_name: 'Dispatch::RescueCrew', optional: true
   has_many :case_notes
   has_many :contact_attempts
   has_many :dedupe_reviews

@@ -103,7 +103,7 @@
           </div>
           <div class="tab-pane fade" id="notes-tab-<%= request.id %>">
             <% request.case_notes.each do |cn| %>
-              <%= render 'dispatch/case_notes/case_note', case_note: cn %>
+              <%= render 'case_notes/case_note', case_note: cn, rid: request.id %>
             <% end %>
             <%= link_to 'New note', new_case_note_path(request) %>
           </div>
