@@ -1,5 +1,5 @@
 class RescueRequestsController < ApplicationController
-  before_action :set_disaster, except: [:index]
+  before_action :set_disaster, except: [:index, :assign_crew, :close, :add_resource, :set_status]
   before_action :set_request, except: [:index, :new, :create, :disaster_index]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe, :update]
   before_action :check_access, only: [:show, :edit, :update, :assignee, :apply_assignee]
@@ -155,6 +155,45 @@ class RescueRequestsController < ApplicationController
       flash[:warning] = 'Failed to save suggested edit.'
       redirect_to action: :suggest_edit
     end
+  end
+
+  def cad
+    @requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { request_status: [RequestStatus['Closed'],
+                                                                                                               RequestStatus['Safe']] })
+                         .joins(:request_priority).order('request_priorities.index + request_statuses.index ASC')
+                         .includes(:request_status, :request_priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
+                         .paginate(page: params[:page], per_page: 15)
+    @crews = Dispatch::RescueCrew.dispatch_menu
+  end
+
+  def assign_crew
+    @crew = Dispatch::RescueCrew.find params[:crew_id]
+    @success = ApplicationRecord.status_transaction do
+      @request.update!(request_status: RequestStatus['Dispatched'], rescue_crew: @crew)
+      @crew.update!(status: Dispatch::CrewStatus['Assigned'])
+    end
+    render format: :json
+  end
+
+  def close
+    success = @request.update request_status: RequestStatus['Closed']
+    response = { success: success }
+    response[:errors] = @request.errors.full_messages unless success
+    render json: response
+  end
+
+  def add_resource
+    @center = Dispatch::Resource.find params[:resource_id]
+    @use = Dispatch::ResourceUse.new request: @request, resource: @center
+    @success = @use.save
+    render format: :json
+  end
+
+  def set_status
+    status = RequestStatus.find params[:status_id]
+    @success = @request.update request_status: status
+    @request = @request.reload
+    render format: :json
   end
 
   private

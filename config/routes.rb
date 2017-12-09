@@ -75,6 +75,11 @@ Rails.application.routes.draw do
         post ':id/approve', to: 'suggested_edits#approve', as: :approve_suggested_edit
         post ':id/reject', to: 'suggested_edits#reject', as: :reject_suggested_edit
       end
+
+      post 'close', to: 'rescue_requests#close', as: :cad_close_request
+      post 'status/:status_id', to: 'rescue_requests#set_status', as: :cad_set_request_status
+      post 'crew', to: 'rescue_requests#assign_crew', as: :cad_assign_crew
+      post 'resources', to: 'rescue_requests#add_resource', as: :cad_add_resource
     end
   end
 
@@ -181,6 +186,8 @@ Rails.application.routes.draw do
   end
 
   scope '/cad' do
+    get ':disaster_id/dashboard', to: 'rescue_requests#cad', as: :cad_dashboard
+
     scope 'crews' do
       root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
       get 'new', to: 'dispatch/rescue_crews#new', as: :cad_new_crew

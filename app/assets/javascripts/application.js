@@ -13,7 +13,8 @@
 //= require rails-ujs
 //= require_tree .
 
-window.scot = {
+window.scot = window.scot || {};
+Object.assign(window.scot, {
   initialize: function () {
     $('[data-toggle="tooltip"]').tooltip();
   },
@@ -42,7 +43,7 @@ window.scot = {
       '<div><strong>#' + item.id + '</strong><br/>' + text + '</div>'
     );
   }
-};
+});
 
 $(document).ready(function() {
   scot.initialize();
