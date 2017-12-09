@@ -179,4 +179,28 @@ Rails.application.routes.draw do
     post 'impersonate/stop', to: 'developers#verify_elevation', as: :stop_impersonating
     get 'impersonate/:id', to: 'developers#change_users', as: :change_user
   end
+
+  scope '/cad' do
+    scope 'crews' do
+      root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
+      get 'new', to: 'dispatch/rescue_crews#new', as: :cad_new_crew
+      post 'new', to: 'dispatch/rescue_crews#create', as: :cad_create_crew
+      get ':id', to: 'dispatch/rescue_crews#show', as: :cad_rescue_crew
+      get ':id/edit', to: 'dispatch/rescue_crews#edit', as: :cad_edit_crew
+      patch ':id/edit', to: 'dispatch/rescue_crews#update', as: :cad_update_crew
+      post ':id/status', to: 'dispatch/rescue_crews#set_status', as: :cad_set_crew_status
+      delete ':id', to: 'dispatch/rescue_crews#destroy', as: :cad_destroy_crew
+    end
+
+    scope 'resources' do
+      root to: 'dispatch/resources#index', as: :cad_resources
+      get 'rest-stops', to: 'dispatch/resources#rest_stops', as: :cad_rest_stops
+      get 'new', to: 'dispatch/resources#new', as: :cad_new_resource
+      post 'new', to: 'dispatch/resources#create', as: :cad_create_resource
+      get ':id', to: 'dispatch/resources#show', as: :cad_resource
+      get ':id/edit', to: 'dispatch/resources#edit', as: :cad_edit_resource
+      patch ':id/edit', to: 'dispatch/resources#update', as: :cad_update_resource
+      delete ':id', to: 'dispatch/resources#destroy', as: :cad_destroy_resource
+    end
+  end
 end

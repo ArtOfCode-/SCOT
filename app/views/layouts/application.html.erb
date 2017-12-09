@@ -154,7 +154,7 @@
         </div>
       <% end %>
 
-      <% @unread.each do |n| %>
+      <% @unread&.each do |n| %>
         <%= render 'notifications/notification', notification: n %>
       <% end %>
 
