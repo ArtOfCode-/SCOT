@@ -17,7 +17,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def disaster_index
-    status_ids = [RequestStatus.find_by(name: 'Safe').id, RequestStatus.find_by(name: 'Closed').id]
+    status_ids = [RequestStatus['Safe'].id, RequestStatus['Closed'].id]
     status_query = status_ids.map { |s| "request_status_id = #{s.to_i}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
@@ -255,7 +255,7 @@ class RescueRequestsController < ApplicationController
 
   def request_params
     params.permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
-                                           :medical_details, :extra_details, :street_address, :apt_no, :source)
+                  :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
   protected
