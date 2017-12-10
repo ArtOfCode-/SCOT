@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209200635) do
+ActiveRecord::Schema.define(version: 20171210164703) do
 
   create_table "access_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -22,6 +22,28 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.string "url"
     t.index ["resource_type", "resource_id"], name: "index_access_logs_on_resource_type_and_resource_id"
     t.index ["user_id"], name: "index_access_logs_on_user_id"
+  end
+
+  create_table "api_keys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "name"
+    t.string "key"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
+  create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.bigint "user_id"
+    t.string "token"
+    t.string "code"
+    t.text "scopes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "api_key_id"
+    t.index ["api_key_id"], name: "index_api_tokens_on_api_key_id"
+    t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
   create_table "broadcast_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -47,7 +69,7 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "broadcast_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "broadcast_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
@@ -65,13 +87,13 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.index ["user_id"], name: "index_case_notes_on_user_id"
   end
 
-  create_table "channels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "channels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "channels_roles", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "channels_roles", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "channel_id", null: false
     t.integer "role_id", null: false
   end
@@ -109,14 +131,14 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.boolean "active"
   end
 
-  create_table "dispatch_crew_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "dispatch_crew_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "dispatch_rescue_crews", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "dispatch_rescue_crews", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "contact_name"
     t.string "contact_phone"
     t.string "contact_email"
@@ -128,14 +150,14 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.bigint "status_id"
   end
 
-  create_table "dispatch_resource_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "dispatch_resource_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "name"
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "dispatch_resource_uses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "dispatch_resource_uses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint "resource_id"
     t.bigint "request_id"
     t.string "purpose"
@@ -143,7 +165,7 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dispatch_resources", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "dispatch_resources", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "name"
     t.text "details"
     t.decimal "lat", precision: 20, scale: 15
@@ -173,7 +195,7 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.string "updated_at"
   end
 
-  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "title"
     t.text "content"
     t.datetime "expires_at"
@@ -182,7 +204,46 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.bigint "creator_id"
   end
 
-  create_table "read_notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "people_roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "people_roles_people_volunteers", primary_key: ["people_role_id", "people_volunteer_id"], force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "people_role_id", null: false
+    t.integer "people_volunteer_id", null: false
+  end
+
+  create_table "people_team_memberships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "people_volunteer_id"
+    t.bigint "people_team_id"
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["people_team_id"], name: "index_people_team_memberships_on_people_team_id"
+    t.index ["people_volunteer_id"], name: "index_people_team_memberships_on_people_volunteer_id"
+  end
+
+  create_table "people_teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "people_volunteers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.date "join_date"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "read_notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint "notification_id"
     t.bigint "user_id"
     t.boolean "read", default: false
@@ -241,10 +302,22 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.bigint "rescue_crew_id"
     t.bigint "request_priority_id"
     t.string "source"
+    t.string "state"
     t.index ["disaster_id"], name: "index_rescue_requests_on_disaster_id"
     t.index ["medical_status_id"], name: "index_rescue_requests_on_medical_status_id"
     t.index ["request_priority_id"], name: "index_rescue_requests_on_request_priority_id"
     t.index ["request_status_id"], name: "index_rescue_requests_on_request_status_id"
+  end
+
+  create_table "resource_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.bigint "user_id"
+    t.text "tracked_changes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id"], name: "index_resource_histories_on_resource_type_and_resource_id"
+    t.index ["user_id"], name: "index_resource_histories_on_user_id"
   end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -284,14 +357,14 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.index ["user_id"], name: "index_suggested_edits_on_user_id"
   end
 
-  create_table "translation_languages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "translation_languages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "translation_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "translation_priorities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.text "description"
     t.integer "index"
@@ -299,18 +372,18 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "translation_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "translation_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "translations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.text "content"
+  create_table "translations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.text "content", limit: 16777215, collation: "utf8_general_ci"
     t.integer "source_lang_id"
     t.integer "target_lang_id"
-    t.string "deliver_to"
+    t.string "deliver_to", collation: "utf8_general_ci"
     t.datetime "due"
     t.integer "requester_id"
     t.integer "assignee_id"
@@ -318,7 +391,7 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.datetime "updated_at", null: false
     t.integer "status_id"
     t.integer "priority_id"
-    t.text "final"
+    t.text "final", limit: 16777215, collation: "utf8_general_ci"
     t.bigint "broadcast_item_id"
     t.bigint "duplicate_of_id"
     t.text "notes"
@@ -367,7 +440,20 @@ ActiveRecord::Schema.define(version: 20171209200635) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  create_table "volunteers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.date "join_date"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "access_logs", "users"
+  add_foreign_key "api_keys", "users"
+  add_foreign_key "api_tokens", "api_keys"
+  add_foreign_key "api_tokens", "users"
   add_foreign_key "broadcast_items", "broadcast_municipalities"
   add_foreign_key "broadcast_items", "users"
   add_foreign_key "case_notes", "rescue_requests"
@@ -376,6 +462,8 @@ ActiveRecord::Schema.define(version: 20171209200635) do
   add_foreign_key "contact_attempts", "users"
   add_foreign_key "dedupe_reviews", "rescue_requests"
   add_foreign_key "dedupe_reviews", "users"
+  add_foreign_key "people_team_memberships", "people_teams"
+  add_foreign_key "people_team_memberships", "people_volunteers"
   add_foreign_key "read_notifications", "notifications"
   add_foreign_key "read_notifications", "users"
   add_foreign_key "request_priorities", "rescue_requests"
@@ -383,6 +471,7 @@ ActiveRecord::Schema.define(version: 20171209200635) do
   add_foreign_key "rescue_requests", "medical_statuses"
   add_foreign_key "rescue_requests", "request_priorities"
   add_foreign_key "rescue_requests", "request_statuses"
+  add_foreign_key "resource_histories", "users"
   add_foreign_key "spam_reviews", "rescue_requests"
   add_foreign_key "spam_reviews", "users"
   add_foreign_key "suggested_edits", "users"

@@ -421,8 +421,8 @@ function markerPath(name) {
 }
 
 function moveToSecondStage(lat, lng) {
-  $('#dispatch_request_lat').val(lat);
-  $('#dispatch_request_long').val(lng);
+  $('#rescue_request_lat').val(lat);
+  $('#rescue_request_long').val(lng);
   scot.cad.reverseGeocode(lat, lng, $('#section-1').data('key'));
   scot.cad.submitNextStep();
 }

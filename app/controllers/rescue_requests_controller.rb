@@ -28,7 +28,7 @@ class RescueRequestsController < ApplicationController
       @requests = @requests.where('name LIKE ?', "%#{params[:reporter]}%")
     end
     if params[:city].present?
-      @requests = @requests.where("city LIKE '%#{params[:city]}%'")
+      @requests = @requests.where('city LIKE ?', "%#{params[:city]}%")
     end
     if params[:status_id].present? && !params[:status_id].all?(&:empty?)
       @requests = @requests.where(request_status_id: params[:status_id])
@@ -37,17 +37,14 @@ class RescueRequestsController < ApplicationController
   end
 
   def new
-    @rescue_request = RescueRequest.new
+    @request = @disaster.rescue_requests.new
   end
 
   def create
-    medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
-                               .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
-    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), request_status: RequestStatus['New'], request_priority: RequestPriority['New'], medical_conditions: medical_conditions)
+    @request = @disaster.rescue_requests.new request_params.merge(request_status: RequestStatus['New'], request_priority: RequestPriority['New'])
     if @request.save
-      puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n\n\n\n"
       flash[:success] = 'Saved request successfully.'
-      redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: @request.key)
+      redirect_to disaster_request_path(@disaster, @request)
     else
       flash[:danger] = 'Failed to save your request.'
       render :new
@@ -55,23 +52,12 @@ class RescueRequestsController < ApplicationController
   end
 
   def update
-    @request = RescueRequest.find params[:request_id]
-    redirect = params[:com_redir].present? ? disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: params[:key]) : nil
-    cn = RescueRequest.column_names - PROHIBITED_FIELDS - %w[chart_code]
-    cn.push 'chart_code' if current_user.present? && current_user.has_any_role?(:medical, :developer)
-
-    medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
-                               .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
-
-    # Yes, there is a reason I did this in such a convoluted way.
-    if @request.update({ medical_conditions: medical_conditions }.merge(params.permit(params.keys).to_h.select { |k, _| cn.include? k }))
-      if params[:redirect]
-        redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number)
-      else
-        render json: { status: 'success', request: @request.as_json, location: redirect }
-      end
+    if @request.update request_params
+      flash[:success] = 'Saved request successfully.'
+      redirect_to cad_request_path(@disaster, @request)
     else
-      render json: { status: 'failed' }, status: 500
+      flash[:danger] = 'Failed to save your request.'
+      render :new
     end
   end
 
@@ -254,8 +240,8 @@ class RescueRequestsController < ApplicationController
   end
 
   def request_params
-    params.permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
-                  :medical_details, :extra_details, :street_address, :apt_no, :source)
+    params.require(:rescue_request).permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
+                                           :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
   protected
