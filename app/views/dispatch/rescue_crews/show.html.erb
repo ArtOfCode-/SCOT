@@ -1,0 +1,59 @@
+<p><%= link_to cad_rescue_crews_path do %>&laquo; Back to list<% end %></p>
+<h1>
+  Rescue Crew: <%= @crew.callsign %>
+  <%= link_to cad_edit_crew_path(@crew), title: 'Edit', 'aria-label': 'Edit' do %>
+    <small><i class="fa fa-fw fa-pencil"></i></small>
+  <% end %>
+  <%= link_to cad_destroy_crew_path(@crew), title: 'Delete', 'aria-label': 'Delete', method: :delete,
+              data: { confirm: 'Are you sure?' }, class: 'text-danger' do %>
+    <small><i class="fa fa-fw fa-trash"></i></small>
+  <% end %>
+</h1>
+<h3 class="text-muted">
+  Status: <span class="status-name"><%= @crew.status.name %></span>
+  <a href="#" data-toggle="modal" data-target="#crew-status-modal"><small><i class="fa fa-fw fa-pencil"></i></small></a>
+</h3>
+
+<p>
+  <strong><i class="fa fa-fw fa-user"></i> Contact:</strong>
+  <span data-toggle="tooltip" data-html="true"
+        title="<i class='fa fa-fw fa-phone'></i> <%= @crew.contact_phone %><br/><i class='fa fa-fw fa-envelope'></i> <%= @crew.contact_email %>">
+    <%= @crew.contact_name %>
+  </span><br/>
+
+  <strong><i class="fa fa-fw fa-medkit"></i> Medical:</strong>
+  <span class="<%= @crew.medical? ? 'text-success' : 'text-danger' %>">
+    <i class="fa fa-<%= @crew.medical? ? 'check' : 'times' %>"></i> <%= @crew.medical? ? 'Yes' : 'No' %>
+  </span><br/>
+
+  <strong><i class="fa fa-fw fa-users"></i> Capacity:</strong> <%= @crew.capacity %>
+</p>
+
+<h3>Cases Worked</h3>
+<% unless @crew.requests.any? %>
+  <em><%= @crew.callsign %> has not been assigned any cases yet.</em>
+<% end %>
+<hr/>
+<% @crew.requests.each do |r| %>
+  <%= render 'dispatch/requests/list_format', request: r, disaster: r.disaster %>
+<% end %>
+
+<div class="modal" id="crew-status-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_tag cad_set_crew_status_path(@crew), class: 'crew-status-form', remote: true do %>
+          <%= select_tag :status_id, options_from_collection_for_select(Dispatch::CrewStatus.all, 'id', 'name'), include_blank: true,
+                         class: 'form-control' %><br/>
+          <%= submit_tag 'Save', class: 'btn btn-success' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

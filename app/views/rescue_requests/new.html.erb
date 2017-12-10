@@ -12,7 +12,7 @@
 
 <h1>Rescue Request for <%= @disaster.name %></h1>
 
-<%= form_tag update_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', method: :post do %>
+<%= form_tag create_disaster_request_path(disaster_id: @disaster.id), class: 'js-form', method: :post do %>
 
   <h2>Location</h2>
   <p>We need a location to be able to respond to your request.</p>

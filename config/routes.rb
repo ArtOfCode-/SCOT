@@ -75,6 +75,11 @@ Rails.application.routes.draw do
         post ':id/approve', to: 'suggested_edits#approve', as: :approve_suggested_edit
         post ':id/reject', to: 'suggested_edits#reject', as: :reject_suggested_edit
       end
+
+      post 'close', to: 'rescue_requests#close', as: :cad_close_request
+      post 'status/:status_id', to: 'rescue_requests#set_status', as: :cad_set_request_status
+      post 'crew', to: 'rescue_requests#assign_crew', as: :cad_assign_crew
+      post 'resources', to: 'rescue_requests#add_resource', as: :cad_add_resource
     end
   end
 
@@ -178,5 +183,31 @@ Rails.application.routes.draw do
     get 'impersonate/stop', to: 'developers#change_back', as: :change_user_back
     post 'impersonate/stop', to: 'developers#verify_elevation', as: :stop_impersonating
     get 'impersonate/:id', to: 'developers#change_users', as: :change_user
+  end
+
+  scope '/cad' do
+    get ':disaster_id/dashboard', to: 'rescue_requests#cad', as: :cad_dashboard
+
+    scope 'crews' do
+      root to: 'dispatch/rescue_crews#index', as: :cad_rescue_crews
+      get 'new', to: 'dispatch/rescue_crews#new', as: :cad_new_crew
+      post 'new', to: 'dispatch/rescue_crews#create', as: :cad_create_crew
+      get ':id', to: 'dispatch/rescue_crews#show', as: :cad_rescue_crew
+      get ':id/edit', to: 'dispatch/rescue_crews#edit', as: :cad_edit_crew
+      patch ':id/edit', to: 'dispatch/rescue_crews#update', as: :cad_update_crew
+      post ':id/status', to: 'dispatch/rescue_crews#set_status', as: :cad_set_crew_status
+      delete ':id', to: 'dispatch/rescue_crews#destroy', as: :cad_destroy_crew
+    end
+
+    scope 'resources' do
+      root to: 'dispatch/resources#index', as: :cad_resources
+      get 'rest-stops', to: 'dispatch/resources#rest_stops', as: :cad_rest_stops
+      get 'new', to: 'dispatch/resources#new', as: :cad_new_resource
+      post 'new', to: 'dispatch/resources#create', as: :cad_create_resource
+      get ':id', to: 'dispatch/resources#show', as: :cad_resource
+      get ':id/edit', to: 'dispatch/resources#edit', as: :cad_edit_resource
+      patch ':id/edit', to: 'dispatch/resources#update', as: :cad_update_resource
+      delete ':id', to: 'dispatch/resources#destroy', as: :cad_destroy_resource
+    end
   end
 end

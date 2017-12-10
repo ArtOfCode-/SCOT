@@ -1,5 +1,5 @@
 class RescueRequestsController < ApplicationController
-  before_action :set_disaster, except: [:index]
+  before_action :set_disaster, except: [:index, :assign_crew, :close, :add_resource, :set_status]
   before_action :set_request, except: [:index, :new, :create, :disaster_index]
   before_action :set_loggable, only: [:show, :triage_status, :apply_triage_status, :mark_safe, :update]
   before_action :check_access, only: [:show, :edit, :update, :assignee, :apply_assignee]
@@ -17,7 +17,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def disaster_index
-    status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
+    status_ids = [RequestStatus['Safe'].id, RequestStatus['Closed'].id]
     status_query = status_ids.map { |s| "request_status_id = #{s.to_i}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
@@ -36,14 +36,21 @@ class RescueRequestsController < ApplicationController
     @requests = @requests.paginate(page: params[:page], per_page: 100)
   end
 
-  def new; end
+  def new
+    @rescue_request = RescueRequest.new
+  end
 
   def create
-    @request = @disaster.rescue_requests.new(lat: params[:lat], long: params[:long], key: SecureRandom.hex(32))
+    medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
+                               .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
+    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), request_status: RequestStatus['New'], request_priority: RequestPriority['New'], medical_conditions: medical_conditions)
     if @request.save
-      render json: { status: 'success', id: @request.id, key: @request.key }
+      puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n\n\n\n"
+      flash[:success] = 'Saved request successfully.'
+      redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: @request.key)
     else
-      render json: { status: 'failed' }, status: 500
+      flash[:danger] = 'Failed to save your request.'
+      render :new
     end
   end
 
@@ -157,6 +164,45 @@ class RescueRequestsController < ApplicationController
     end
   end
 
+  def cad
+    @requests = @disaster.rescue_requests.joins(:request_status).where.not(rescue_requests: { request_status: [RequestStatus['Closed'],
+                                                                                                               RequestStatus['Safe']] })
+                         .joins(:request_priority).order('request_priorities.index + request_statuses.index ASC')
+                         .includes(:request_status, :request_priority, :case_notes, resource_uses: [:resource], resources: [:resource_type])
+                         .paginate(page: params[:page], per_page: 15)
+    @crews = Dispatch::RescueCrew.dispatch_menu
+  end
+
+  def assign_crew
+    @crew = Dispatch::RescueCrew.find params[:crew_id]
+    @success = ApplicationRecord.status_transaction do
+      @request.update!(request_status: RequestStatus['Dispatched'], rescue_crew: @crew)
+      @crew.update!(status: Dispatch::CrewStatus['Assigned'])
+    end
+    render format: :json
+  end
+
+  def close
+    success = @request.update request_status: RequestStatus['Closed']
+    response = { success: success }
+    response[:errors] = @request.errors.full_messages unless success
+    render json: response
+  end
+
+  def add_resource
+    @center = Dispatch::Resource.find params[:resource_id]
+    @use = Dispatch::ResourceUse.new request: @request, resource: @center
+    @success = @use.save
+    render format: :json
+  end
+
+  def set_status
+    status = RequestStatus.find params[:status_id]
+    @success = @request.update request_status: status
+    @request = @request.reload
+    render format: :json
+  end
+
   private
 
   def set_disaster
@@ -205,6 +251,11 @@ class RescueRequestsController < ApplicationController
 
   def check_admin
     require_any :developer, :admin
+  end
+
+  def request_params
+    params.permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
+                  :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
   protected
