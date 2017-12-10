@@ -240,7 +240,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def request_params
-    params.require(:rescue_request).permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
+    params.require(:rescue_request).permit(:lat, :long, :name, :city, :country, :state, :zip_code, :twitter, :phone, :email, :people_count,
                                            :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
