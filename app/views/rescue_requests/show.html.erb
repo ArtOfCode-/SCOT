@@ -1,142 +1,44 @@
-<nav>
-  <%= link_to 'Disaster Home', disaster_requests_path(@disaster) %>&nbsp;|&nbsp;
-  <%= link_to 'Edit', suggest_edit_disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number) %>
-</nav>
-
-<h1>
-  Rescue Request for <%= @disaster.name %>
-  <span class="small text-muted">#<%= @disaster.id %>-<%= @request.incident_number %></span>
-</h1>
-
-<p class="text-info">
-  <strong>Current status:</strong> <%= @request.request_status&.name || '(no status)' %>
-  <% if has_any_role? :developer, :admin, :triage %>
-      <%= link_to '(change)', request_triage_status_path(disaster_id: @disaster.id, num: @request.incident_number) %>
-  <% end %>
-  <% if has_any_role? :developer, :admin, :rescue %>
-      <%= link_to '(mark safe)', request_rescue_safe_path(disaster_id: @disaster.id, num: @request.incident_number), method: :post %>
-  <% end %><br/>
-
-  <strong>Assigned to: </strong> <%= @request.assignee&.username || '(nobody)' %>
-    <%= link_to '(change)', change_request_assignee_path(disaster_id: @disaster.id, num: @request.incident_number) %>
-</p>
-<p class="text-warning">
-  <strong>Current medical status:</strong> <%= @request.medical_status&.name || '(no status)' %>
-  <% if has_any_role? :developer, :admin, :medical %>
-      <%= link_to '(change)', request_triage_status_path(disaster_id: @disaster.id, num: @request.incident_number) %>
-  <% end %>
-</p>
-
-<% if @duplicates.count > 0 %>
-<p><%= pluralize @duplicates.count, 'Duplicate' %>: <%= raw(@duplicates.map { |dupe| link_to "##{@disaster.id}-#{dupe.id}", disaster_request_path(disaster_id: @disaster.id, num: dupe.id) }.join(", ")) %></p>
+<h1>Assistance Request: <%= @request.name %> <span class="text-muted">(#<%= @request.id %>)</span></h1>
+<h4><span class="text-muted"><%= pluralize(@request.people_count, 'person') %></span></h4>
+<% if has_any_role? :developer, :admin, :dispatch %>
+    <p><%= link_to 'Edit', edit_disaster_request_path(@disaster, @request) %></p>
 <% end %>
 
-<% if @duplicate_of %>
-<p>Duplicate of: <%= link_to "##{@disaster.id}-#{@duplicate_of.id}", disaster_request_path(disaster_id: @disaster.id, num: @duplicate_of.id) %></p>
+<div id="map" data-center="<%= @request.lat %>,<%= @request.long %>" data-marker-type="<%= @request.request_status.marker_type %>"></div>
+<div class="map-coords"><%= @request.lat %>&deg; N, <%= @request.long %>&deg; E</div>
+
+<div class="statuses">
+  <%= status_el @request.request_status, 'strong' %> |
+  <%= priority_el @request.request_priority, 'strong' %>
+</div>
+
+<% if @request.rescue_crew.present? %>
+    <h4 class="mt-3">Assigned Crew</h4>
+    <%= render 'dispatch/rescue_crews/crew', crew: @request.rescue_crew %>
 <% end %>
 
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Location Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Position (rought lat/long)</td>
-      <td><%= @request.lat %>, <%= @request.long %></td>
-    </tr>
-    <tr>
-      <td>Address</td>
-      <td>
-        <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
-        <%= @request.city %> <%= @request.zip_code %>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<p><strong>Address: </strong> <%= @request.apt_no.present? ? "Apt. #{@request.apt_no}, ": '' %><%= @request.street_address %>,
+  <%= @request.city %> <%= @request.zip_code %></p>
 
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Contact Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Reported by</td>
-      <td><%= @request.name %></td>
-    </tr>
-    <tr>
-      <td>Tel. no</td>
-      <td><%= @request.phone %></td>
-    </tr>
-    <tr>
-      <td>Email address</td>
-      <td><%= @request.email %></td>
-    </tr>
-    <tr>
-      <td>Twitter</td>
-      <td><%= @request.twitter %></td>
-    </tr>
-    <tr>
-      <td>Original Post</td>
-      <td><%= @request.media %></td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="table table-sm details-table">
-  <thead>
-    <tr>
-      <th colspan="2">Incident Details</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if current_user.present? && current_user.has_any_role?(:medical, :developer) %>
-    <tr>
-      <td>Chart Code</td>
-      <td><%= @request.chart_code %></td>
-    </tr>
-    <% end %>
-    <tr>
-      <td>People needing assistance</td>
-      <td><%= @request.people_count %></td>
-    </tr>
-    <tr>
-      <td>Medical conditions</td>
-      <td><%= @request.medical_details %></td>
-    </tr>
-    <tr>
-      <td>Extra details</td>
-      <td><%= @request.extra_details %></td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
+<%= render 'details_tables', request: @request %>
 
 <h3>
   Timeline
-  <span class="text-small"><%= link_to '+ Case Note', new_case_note_path(request_id: @request.id) %></span>
+  <%= link_to new_case_note_path(@request) do %><small class="text-small">+ Case Note</small><% end %>
   <span class="text-small text-muted">|</span>
-  <span class="text-small"><%= link_to '+ Contact Attempt', new_contact_attempt_path(request_id: @request.id) %></span>
+  <%= link_to new_contact_attempt_path(@request) do %><small class="text-small">+ Contact Attempt</small><% end %>
 </h3>
-<% if @timeline.any? %>
-  <% @timeline.each do |te| %>
-    <% if te.class == CaseNote %>
-      <%= render 'case_notes/case_note', case_note: te, rid: @request.id unless te.medical && !current_user.has_any_role?(:developer, :medical) %>
-    <% elsif te.class == ContactAttempt %>
-      <%= render 'contact_attempts/attempt', attempt: te, rid: @request.id %>
-    <% elsif te.class == SuggestedEdit %>
-      <%= render 'suggested_edits/edit', edit: te, rid: @request.id %>
-    <% end %>
-  <% end %>
-<% else %>
-  <p><em>No events.</em></p>
+<% unless @timeline.any? %>
+  <em>No events yet.</em>
 <% end %>
 
-<% if has_any_role? :developer, :admin %>
-  <%= link_to 'Admin: access logs', resource_access_logs_path(resource_type: @request.class.to_s, resource_id: @request.id), class: 'text-danger' %><br>
-  <%= link_to 'Admin: manage authorizations', request_authorizations_path(disaster_id: @disaster.id, num: @request.id), class: 'text-danger' %>
+<% @timeline.each do |to| %>
+  <% if to.class == Dispatch::CaseNote %>
+    <%= render 'case_notes/case_note', case_note: to, rid: @request.id %>
+  <% elsif to.class == Dispatch::ContactAttempt %>
+    <%= render 'contact_attempts/attempt', attempt: to %>
+  <% end %>
 <% end %>
+
+<%= marker_paths %>
+<%= maps_javascript 'initShowMap' %>
