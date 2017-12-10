@@ -16,8 +16,8 @@ class RescueRequest < ApplicationRecord
 
   after_create do
     incident_id = (disaster.rescue_requests.maximum(:incident_number) || 0) + 1
-    status = RequestStatus['New'].first
-    priority = RequestPriority['New'].first
+    status = RequestStatus['New']
+    priority = RequestPriority['New']
     update(incident_number: incident_id, request_status: status, request_priority: priority)
   end
 end

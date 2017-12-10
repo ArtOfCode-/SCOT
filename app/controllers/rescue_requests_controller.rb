@@ -17,7 +17,7 @@ class RescueRequestsController < ApplicationController
   end
 
   def disaster_index
-    status_ids = [RequestStatus.find_by(name: 'Rescued').id, RequestStatus.find_by(name: 'Closed').id]
+    status_ids = [RequestStatus.find_by(name: 'Safe').id, RequestStatus.find_by(name: 'Closed').id]
     status_query = status_ids.map { |s| "request_status_id = #{s.to_i}" }.join(' OR ')
     @closed = @disaster.rescue_requests.where(status_query)
     @active = @disaster.rescue_requests.includes(:request_status).where.not(status_query)
@@ -36,14 +36,21 @@ class RescueRequestsController < ApplicationController
     @requests = @requests.paginate(page: params[:page], per_page: 100)
   end
 
-  def new; end
+  def new
+    @rescue_request = RescueRequest.new
+  end
 
   def create
-    @request = @disaster.rescue_requests.new(lat: params[:lat], long: params[:long], key: SecureRandom.hex(32))
+    medical_conditions = params.permit(MedicalCondition.all.map { |m| "conditions_#{m.id}".to_sym }).to_hash
+                               .map { |key| MedicalCondition.find(key.to_s.split('_').last.to_i) }
+    @request = @disaster.rescue_requests.new request_params.merge(key: SecureRandom.hex(32), request_status: RequestStatus['New'], request_priority: RequestPriority['New'], medical_conditions: medical_conditions)
     if @request.save
-      render json: { status: 'success', id: @request.id, key: @request.key }
+      puts "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n\n\n\n"
+      flash[:success] = 'Saved request successfully.'
+      redirect_to disaster_request_path(disaster_id: @disaster.id, num: @request.incident_number, key: @request.key)
     else
-      render json: { status: 'failed' }, status: 500
+      flash[:danger] = 'Failed to save your request.'
+      render :new
     end
   end
 
@@ -244,6 +251,11 @@ class RescueRequestsController < ApplicationController
 
   def check_admin
     require_any :developer, :admin
+  end
+
+  def request_params
+    params.permit(:lat, :long, :name, :city, :country, :zip_code, :twitter, :phone, :email, :people_count,
+                                           :medical_details, :extra_details, :street_address, :apt_no, :source)
   end
 
   protected
